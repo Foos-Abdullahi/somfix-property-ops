@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LeaseController;
+use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
@@ -12,8 +14,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('properties', PropertyController::class);
     Route::resource('units', UnitController::class);
     Route::resource('tenants', TenantController::class);
-    Route::inertia('leases', 'leases/index')->name('leases.index');
-    Route::inertia('maintenance', 'maintenance/index')->name('maintenance.index');
+    Route::resource('leases', LeaseController::class);
+    Route::resource('maintenance', MaintenanceController::class);
     Route::inertia('work-orders', 'work-orders/index')->name('work-orders.index');
     Route::inertia('service-team', 'service-team/index')->name('service-team.index');
     Route::inertia('inventory', 'inventory/index')->name('inventory.index');

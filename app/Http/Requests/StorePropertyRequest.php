@@ -35,4 +35,31 @@ class StorePropertyRequest extends FormRequest
             'notes' => ['nullable', 'string', 'max:5000'],
         ];
     }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Please enter a property name.',
+            'name.max' => 'Property name must be 255 characters or less.',
+            'property_type.required' => 'Please select a property type.',
+            'property_type.max' => 'Property type must be 100 characters or less.',
+            'owner_name.max' => 'Owner name must be 255 characters or less.',
+            'district.max' => 'District must be 100 characters or less.',
+            'city.required' => 'Please enter a city.',
+            'city.max' => 'City must be 100 characters or less.',
+            'address.max' => 'Address must be 255 characters or less.',
+            'units_count.required' => 'Please enter the number of units.',
+            'units_count.integer' => 'Units count must be a number.',
+            'units_count.min' => 'Units count cannot be negative.',
+            'units_count.max' => 'Units count cannot exceed 10,000.',
+            'status.required' => 'Please select a status.',
+            'status.in' => 'Please select a valid status.',
+            'notes.max' => 'Notes must be 5000 characters or less.',
+        ];
+    }
 }
