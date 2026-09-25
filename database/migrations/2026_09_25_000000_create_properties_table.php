@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('properties', function (Blueprint $table): void {
+            $table->id();
+            $table->string('name');
+            $table->string('property_type');
+            $table->string('owner_name')->nullable();
+            $table->string('district')->nullable();
+            $table->string('city')->default('Mogadishu');
+            $table->string('address')->nullable();
+            $table->unsignedInteger('units_count')->default(0);
+            $table->string('status')->default('active');
+            $table->text('notes')->nullable();
+            $table->timestamps();
+
+            $table->index(['status', 'created_at']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('properties');
+    }
+};

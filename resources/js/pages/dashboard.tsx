@@ -1,317 +1,409 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link } from "@inertiajs/react";
 import {
-    ArrowRight,
+    ArrowUpRight,
     Building2,
-    Check,
+    CalendarClock,
     ClipboardList,
-    FileText,
+    Layers3,
+    Package,
+    Plus,
+    TrendingUp,
     Wallet,
     Wrench,
-} from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { dashboard } from '@/routes';
-import { index as financeIndex } from '@/routes/finance';
-import { index as maintenanceIndex } from '@/routes/maintenance';
-import { index as propertiesIndex } from '@/routes/properties';
-import { index as workOrdersIndex } from '@/routes/work-orders';
-import type { NavItem } from '@/types';
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { dashboard } from "@/routes";
+import { index as propertiesIndex } from "@/routes/properties";
+import { index as workOrdersIndex } from "@/routes/work-orders";
 
-const overviewMetrics = [
+const metrics = [
     {
-        title: 'Properties',
-        value: '—',
-        detail: 'Registry not connected',
+        title: "Properties",
+        value: "—",
+        detail: "Connect the property registry to begin.",
         icon: Building2,
+        tone: "bg-primary/10 text-primary",
     },
     {
-        title: 'Open requests',
-        value: '—',
-        detail: 'Maintenance not connected',
+        title: "Open requests",
+        value: "—",
+        detail: "Maintenance requests will appear here.",
         icon: Wrench,
+        tone: "bg-accent/15 text-amber-700 dark:text-accent",
     },
     {
-        title: 'Scheduled jobs',
-        value: '—',
-        detail: 'Field service not connected',
-        icon: ClipboardList,
+        title: "Scheduled jobs",
+        value: "—",
+        detail: "Today’s field work will be tracked here.",
+        icon: CalendarClock,
+        tone: "bg-chart-4/10 text-chart-4",
     },
     {
-        title: 'Unpaid invoices',
-        value: '—',
-        detail: 'Finance not connected',
-        icon: FileText,
-    },
-];
-
-const workflowSteps = [
-    {
-        title: 'Report',
-        description: 'A tenant or staff member reports a property issue.',
-    },
-    {
-        title: 'Triage',
-        description: 'The team confirms urgency, scope, and next action.',
-    },
-    {
-        title: 'Quote',
-        description: 'An estimate is prepared and approved when needed.',
-    },
-    {
-        title: 'Schedule',
-        description: 'A qualified technician is assigned to the work.',
-    },
-    {
-        title: 'Complete',
-        description: 'Materials, evidence, and inspection are recorded.',
-    },
-    {
-        title: 'Invoice',
-        description: 'Payment is collected and history is retained.',
-    },
-];
-
-const readinessItems = [
-    {
-        title: 'Application foundation',
-        description: 'Authentication, layouts, brand tokens, and navigation.',
-        status: 'Ready',
-        ready: true,
-    },
-    {
-        title: 'Property and tenancy',
-        description: 'Properties, units, tenants, leases, and documents.',
-        status: 'Next',
-        ready: false,
-    },
-    {
-        title: 'Maintenance workflow',
-        description: 'Requests, triage, quotes, scheduling, and job orders.',
-        status: 'Planned',
-        ready: false,
-    },
-    {
-        title: 'Business operations',
-        description: 'Inventory, invoicing, payments, reports, and exports.',
-        status: 'Planned',
-        ready: false,
-    },
-];
-
-const quickLinks: NavItem[] = [
-    {
-        title: 'Properties',
-        href: propertiesIndex(),
-        icon: Building2,
-    },
-    {
-        title: 'Maintenance',
-        href: maintenanceIndex(),
-        icon: Wrench,
-    },
-    {
-        title: 'Work Orders',
-        href: workOrdersIndex(),
-        icon: ClipboardList,
-    },
-    {
-        title: 'Finance',
-        href: financeIndex(),
+        title: "Unpaid invoices",
+        value: "—",
+        detail: "Finance activity will appear when connected.",
         icon: Wallet,
+        tone: "bg-destructive/10 text-destructive",
     },
 ];
+
+const launchTrend = [
+    { label: "Foundation", value: 18 },
+    { label: "Registry", value: 34 },
+    { label: "Tenancy", value: 48 },
+    { label: "Requests", value: 65 },
+    { label: "Jobs", value: 79 },
+    { label: "Finance", value: 92 },
+    { label: "Live", value: 78 },
+];
+
+const moduleProgress = [
+    { name: "Foundation", value: 100, color: "bg-primary" },
+    { name: "Properties", value: 35, color: "bg-chart-4" },
+    { name: "Maintenance", value: 18, color: "bg-accent" },
+    { name: "Finance", value: 10, color: "bg-emerald-500" },
+];
+
+const deliveryRows = [
+    {
+        module: "Property & tenancy",
+        focus: "Properties, units, tenants and lease records",
+        team: "Operations",
+        status: "Next",
+        date: "Phase 2",
+    },
+    {
+        module: "Maintenance workflow",
+        focus: "Requests, triage, quotes and assignments",
+        team: "Service team",
+        status: "Planned",
+        date: "Phase 3",
+    },
+    {
+        module: "Finance & inventory",
+        focus: "Invoices, payments, expenses and stock controls",
+        team: "Finance",
+        status: "Planned",
+        date: "Phase 4",
+    },
+];
+
+const chartPoints = launchTrend
+    .map((item, index) => `${index * 88 + 18},${154 - item.value}`)
+    .join(" ");
+const chartAreaPoints = `18,154 ${chartPoints} 546,154`;
 
 export default function Dashboard() {
     return (
         <>
-            <Head title="Operations Dashboard" />
+            <Head title="Executive Dashboard — SOMFIX" />
 
-            <div className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col gap-6 p-4 md:p-6">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                        <div className="mb-3 flex flex-wrap items-center gap-2">
-                            <Badge className="gap-1.5">
-                                <Check className="size-3.5" />
-                                Foundation ready
-                            </Badge>
-                            <Badge variant="outline">
-                                Mogadishu operations
-                            </Badge>
+            <div className="mx-auto w-full max-w-[1440px] p-4 md:p-6">
+                <section className="flex flex-col gap-4 rounded-2xl bg-primary p-6 text-primary-foreground shadow-lg shadow-primary/20 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-white/80">
+                            <span className="relative flex size-2">
+                                <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent/80" />
+                                <span className="relative inline-flex size-2 rounded-full bg-accent" />
+                            </span>
+                            SOMFIX PROPERTY OPERATIONS
                         </div>
-                        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-                            Operations overview
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Welcome to your operations dashboard
                         </h1>
-                        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground md:text-base">
-                            A clear starting point for property records,
-                            maintenance execution, and the financial history
-                            that connects them.
+                        <p className="text-sm text-white/80">
+                            One clear place for property records, maintenance delivery, and
+                            financial control.
                         </p>
                     </div>
-
-                    <Button asChild className="w-fit">
-                        <Link href={propertiesIndex()} prefetch>
-                            <Building2 />
-                            Open property workspace
-                            <ArrowRight />
+                    <Button
+                        asChild
+                        size="sm"
+                        className="shrink-0 bg-white font-bold text-primary shadow-sm hover:bg-white/90"
+                    >
+                        <Link href={workOrdersIndex()} prefetch>
+                            <Plus className="size-4" />
+                            Create work order
                         </Link>
                     </Button>
-                </div>
+                </section>
 
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    {overviewMetrics.map((metric) => (
-                        <Card key={metric.title} className="gap-4">
-                            <CardHeader className="flex-row items-center justify-between space-y-0">
-                                <CardTitle className="text-sm font-medium text-muted-foreground">
-                                    {metric.title}
-                                </CardTitle>
-                                <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                    <metric.icon className="size-4" />
+                <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    {metrics.map((metric, index) => (
+                        <Card
+                            key={metric.title}
+                            className="border-border/70 py-0 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3"
+                            style={{ animationDelay: `${index * 75}ms` }}
+                        >
+                            <CardContent className="p-4">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div>
+                                        <p className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                                            {metric.title}
+                                        </p>
+                                        <p className="mt-3 text-3xl font-bold tracking-tight tabular-nums">
+                                            {metric.value}
+                                        </p>
+                                    </div>
+                                    <span
+                                        className={`flex size-10 items-center justify-center rounded-xl ${metric.tone}`}
+                                    >
+                                        <metric.icon className="size-5" />
+                                    </span>
                                 </div>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-3xl font-bold tracking-tight">
-                                    {metric.value}
-                                </p>
-                                <p className="mt-1 text-xs text-muted-foreground">
+                                <p className="mt-4 text-xs leading-5 text-muted-foreground">
                                     {metric.detail}
                                 </p>
                             </CardContent>
                         </Card>
                     ))}
-                </div>
+                </section>
 
-                <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,0.7fr)]">
-                    <Card>
+                <div className="mt-6 space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-5 motion-safe:duration-700">
+                    <section className="grid gap-6 lg:grid-cols-3">
+                        <Card className="overflow-hidden border-border/70 shadow-sm lg:col-span-2">
+                            <CardHeader className="pb-0">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div>
+                                        <CardTitle className="flex items-center gap-2 text-base">
+                                            <TrendingUp className="size-5 text-primary" />
+                                            SOMFIX delivery momentum
+                                        </CardTitle>
+                                        <CardDescription className="mt-1 text-xs">
+                                            A visual view of the connected operations roadmap.
+                                        </CardDescription>
+                                    </div>
+                                    <Badge
+                                        variant="outline"
+                                        className="border-primary/20 bg-primary/10 text-primary"
+                                    >
+                                        Foundation ready
+                                    </Badge>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="pt-5">
+                                <div className="h-[230px] w-full">
+                                    <svg
+                                        viewBox="0 0 564 180"
+                                        className="h-full w-full overflow-visible"
+                                        role="img"
+                                        aria-label="SOMFIX delivery momentum chart"
+                                    >
+                                        <defs>
+                                            <linearGradient
+                                                id="somfixMomentum"
+                                                x1="0"
+                                                x2="0"
+                                                y1="0"
+                                                y2="1"
+                                            >
+                                                <stop
+                                                    offset="0%"
+                                                    stopColor="hsl(var(--primary))"
+                                                    stopOpacity=".28"
+                                                />
+                                                <stop
+                                                    offset="100%"
+                                                    stopColor="hsl(var(--primary))"
+                                                    stopOpacity="0"
+                                                />
+                                            </linearGradient>
+                                        </defs>
+                                        {[32, 73, 114, 154].map((y) => (
+                                            <line
+                                                key={y}
+                                                x1="18"
+                                                x2="546"
+                                                y1={y}
+                                                y2={y}
+                                                className="stroke-border"
+                                                strokeDasharray="3 5"
+                                            />
+                                        ))}
+                                        <polygon
+                                            points={chartAreaPoints}
+                                            fill="url(#somfixMomentum)"
+                                        />
+                                        <polyline
+                                            points={chartPoints}
+                                            fill="none"
+                                            stroke="hsl(var(--primary))"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="3"
+                                        />
+                                        {launchTrend.map((item, index) => {
+                                            const x = index * 88 + 18;
+                                            const y = 154 - item.value;
+
+                                            return (
+                                                <g key={item.label}>
+                                                    <circle
+                                                        cx={x}
+                                                        cy={y}
+                                                        fill="hsl(var(--card))"
+                                                        r="5"
+                                                        stroke="hsl(var(--primary))"
+                                                        strokeWidth="3"
+                                                    />
+                                                    <text
+                                                        x={x}
+                                                        y="176"
+                                                        textAnchor="middle"
+                                                        className="fill-muted-foreground text-[10px]"
+                                                    >
+                                                        {item.label}
+                                                    </text>
+                                                </g>
+                                            );
+                                        })}
+                                    </svg>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="border-border/70 shadow-sm">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-base">
+                                    <Package className="size-5 text-primary" />
+                                    Workspace coverage
+                                </CardTitle>
+                                <CardDescription className="text-xs">
+                                    Delivery investment by operations area.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {moduleProgress.map((module) => (
+                                    <div key={module.name} className="space-y-2">
+                                        <div className="flex items-center justify-between text-xs font-semibold">
+                                            <span>{module.name}</span>
+                                            <span className="font-mono text-muted-foreground">
+                                                {module.value}%
+                                            </span>
+                                        </div>
+                                        <div className="h-2 overflow-hidden rounded-full bg-secondary">
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-700 ${module.color}`}
+                                                style={{ width: `${module.value}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </section>
+
+                    <Card className="border-border/70 shadow-sm">
                         <CardHeader>
-                            <Badge variant="outline" className="w-fit">
-                                Core workflow
-                            </Badge>
-                            <CardTitle className="text-xl">
-                                One connected repair lifecycle
+                            <CardTitle className="flex items-center gap-2 text-base">
+                                <Layers3 className="size-5 text-primary" />
+                                Module delivery progress
                             </CardTitle>
-                            <CardDescription>
-                                Every request follows a traceable path from
-                                tenant report to payment and retained history.
-                            </CardDescription>
-                        </CardHeader>
-
-                        <CardContent>
-                            <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                                {workflowSteps.map((step, index) => (
-                                    <li
-                                        key={step.title}
-                                        className="rounded-xl border bg-background p-4"
-                                    >
-                                        <div className="mb-3 flex size-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                                            {index + 1}
-                                        </div>
-                                        <p className="font-semibold">
-                                            {step.title}
-                                        </p>
-                                        <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                                            {step.description}
-                                        </p>
-                                    </li>
-                                ))}
-                            </ol>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Startup progress</CardTitle>
-                            <CardDescription>
-                                The application shell is prepared in delivery
-                                order.
+                            <CardDescription className="text-xs">
+                                Delivery maturity across the core SOMFIX workspaces.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <ul className="flex flex-col gap-4">
-                                {readinessItems.map((item) => (
-                                    <li
-                                        key={item.title}
-                                        className="flex gap-3 border-b pb-4 last:border-0 last:pb-0"
+                            <div className="grid min-h-[170px] grid-cols-4 items-end gap-4 border-b border-border/70 pt-4">
+                                {moduleProgress.map((module) => (
+                                    <div
+                                        key={module.name}
+                                        className="flex min-w-0 flex-col items-center gap-2"
                                     >
-                                        <div
-                                            className={`mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full ${item.ready ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
-                                        >
-                                            {item.ready ? (
-                                                <Check className="size-3.5" />
-                                            ) : (
-                                                <span className="size-1.5 rounded-full bg-current" />
-                                            )}
+                                        <span className="text-xs font-bold text-foreground">
+                                            {module.value}%
+                                        </span>
+                                        <div className="flex h-28 w-full max-w-24 items-end rounded-t-lg bg-secondary/60 px-2">
+                                            <div
+                                                className={`w-full rounded-t-md ${module.color}`}
+                                                style={{ height: `${module.value}%` }}
+                                            />
                                         </div>
-                                        <div className="min-w-0 flex-1">
-                                            <div className="flex items-center justify-between gap-3">
-                                                <p className="text-sm font-semibold">
-                                                    {item.title}
-                                                </p>
-                                                <Badge
-                                                    variant={
-                                                        item.ready
-                                                            ? 'default'
-                                                            : 'outline'
-                                                    }
-                                                >
-                                                    {item.status}
-                                                </Badge>
-                                            </div>
-                                            <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                                                {item.description}
-                                            </p>
-                                        </div>
-                                    </li>
+                                        <span className="truncate text-xs text-muted-foreground">
+                                            {module.name}
+                                        </span>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </CardContent>
                     </Card>
-                </div>
 
-                <Card>
-                    <CardHeader className="sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-                        <div>
-                            <CardTitle>Open a workspace</CardTitle>
-                            <CardDescription>
-                                Start with the operational area you need next.
-                            </CardDescription>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                        {quickLinks.map((item) => (
-                            <Button
-                                key={item.title}
-                                variant="outline"
-                                className="h-auto justify-between"
-                                asChild
-                            >
-                                <Link href={item.href} prefetch>
-                                    <span className="flex items-center gap-2">
-                                        {item.icon && <item.icon />}
-                                        {item.title}
-                                    </span>
-                                    <ArrowRight />
+                    <Card className="overflow-hidden border-border/70 shadow-sm">
+                        <CardHeader className="flex-row items-start justify-between space-y-0">
+                            <div>
+                                <CardTitle className="flex items-center gap-2 text-base">
+                                    <ClipboardList className="size-5 text-primary" />
+                                    Operations delivery roster
+                                </CardTitle>
+                                <CardDescription className="mt-1 text-xs">
+                                    The next modules that will complete the end-to-end property
+                                    workflow.
+                                </CardDescription>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="gap-1 text-xs">
+                                <Link href={propertiesIndex()} prefetch>
+                                    Open workspace
+                                    <ArrowUpRight className="size-3.5" />
                                 </Link>
                             </Button>
-                        ))}
-                    </CardContent>
-                </Card>
+                        </CardHeader>
+                        <CardContent className="px-0 pb-0">
+                            <div className="overflow-x-auto">
+                                <table className="w-full min-w-[720px] text-left text-xs">
+                                    <thead className="border-y border-border/70 bg-secondary/35 text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+                                        <tr>
+                                            <th className="px-6 py-3">Module</th>
+                                            <th className="px-6 py-3">Focus</th>
+                                            <th className="px-6 py-3">Team</th>
+                                            <th className="px-6 py-3">Status</th>
+                                            <th className="px-6 py-3 text-right">Target</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-border/70">
+                                        {deliveryRows.map((row) => (
+                                            <tr
+                                                key={row.module}
+                                                className="transition-colors hover:bg-secondary/25"
+                                            >
+                                                <td className="px-6 py-4 font-semibold text-foreground">
+                                                    {row.module}
+                                                </td>
+                                                <td className="px-6 py-4 text-muted-foreground">
+                                                    {row.focus}
+                                                </td>
+                                                <td className="px-6 py-4 font-medium">
+                                                    {row.team}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <Badge
+                                                        variant="outline"
+                                                        className={
+                                                            row.status === "Next"
+                                                                ? "border-accent/30 bg-accent/15 text-amber-800 dark:text-accent"
+                                                                : "border-border bg-muted text-muted-foreground"
+                                                        }
+                                                    >
+                                                        {row.status}
+                                                    </Badge>
+                                                </td>
+                                                <td className="px-6 py-4 text-right font-mono text-muted-foreground">
+                                                    {row.date}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </>
     );
 }
 
 Dashboard.layout = {
-    breadcrumbs: [
-        {
-            title: 'Dashboard',
-            href: dashboard(),
-        },
-    ],
+    breadcrumbs: [{ title: "Dashboard", href: dashboard() }],
 };
