@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -8,8 +10,8 @@ Route::inertia('/', 'welcome')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::resource('properties', PropertyController::class);
-    Route::inertia('units', 'units/index')->name('units.index');
-    Route::inertia('tenants', 'tenants/index')->name('tenants.index');
+    Route::resource('units', UnitController::class);
+    Route::resource('tenants', TenantController::class);
     Route::inertia('leases', 'leases/index')->name('leases.index');
     Route::inertia('maintenance', 'maintenance/index')->name('maintenance.index');
     Route::inertia('work-orders', 'work-orders/index')->name('work-orders.index');
