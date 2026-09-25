@@ -1,0 +1,167 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --background: 150 12.5% 96.9%;
+  --foreground: 156 17.9% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 156 17.9% 11%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 156 17.9% 11%;
+
+  --primary: 157.9 87.7% 25.5%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 154.3 38.9% 92.9%;
+  --secondary-foreground: 159.3 85.7% 19.2%;
+
+  --muted: 150 16.7% 95.3%;
+  --muted-foreground: 152.3 6% 42.5%;
+
+  --accent: 34 91.3% 54.9%;
+  --accent-foreground: 156 17.9% 11%;
+
+  --destructive: 2.3 55% 52.9%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 147.3 15.9% 86.5%;
+  --input: 147.3 15.9% 86.5%;
+  --ring: 34 91.3% 54.9%;
+
+  --chart-1: 157.9 87.7% 25.5%;
+  --chart-2: 34 91.3% 54.9%;
+  --chart-3: 159.3 85.7% 19.2%;
+  --chart-4: 218.8 73.6% 52.5%;
+  --chart-5: 2.3 55% 52.9%;
+
+  /* Light mode sidebar */
+  --sidebar: 159.3 85.7% 19.2%; /* #075B3E */
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-primary: 34 91.3% 54.9%; /* #F59A23 */
+  --sidebar-primary-foreground: 156 17.9% 11%;
+  --sidebar-accent: 157.9 87.7% 25.5%; /* #087A50 */
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 154.1 35.5% 24.3%;
+  --sidebar-ring: 34 91.3% 54.9%;
+
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 0 0% 5%; /* #0D0D0D */
+  --foreground: 0 0% 96%; /* #F5F5F5 */
+
+  --card: 0 0% 8%; /* #141414 */
+  --card-foreground: 0 0% 96%;
+
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 96%;
+
+  --primary: 157.9 87.7% 35%; /* Green */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 13%; /* #212121 */
+  --secondary-foreground: 0 0% 90%;
+
+  --muted: 0 0% 13%;
+  --muted-foreground: 0 0% 65%;
+
+  --accent: 34 91.3% 54.9%; /* #F59A23 */
+  --accent-foreground: 0 0% 5%;
+
+  --destructive: 4.2 81.6% 65.9%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 18%; /* #2E2E2E */
+  --input: 0 0% 18%;
+  --ring: 34 91.3% 54.9%;
+
+  --chart-1: 157.9 87.7% 45%;
+  --chart-2: 37.2 89.5% 62.5%;
+  --chart-3: 218.8 73.6% 62%;
+  --chart-4: 144 38.5% 75%;
+  --chart-5: 4.2 81.6% 65.9%;
+
+  /* Very dark green sidebar */
+  --sidebar: 163.8 87.1% 12.4%; /* #043B2B */
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-primary: 34 91.3% 54.9%; /* #F59A23 */
+  --sidebar-primary-foreground: 0 0% 5%;
+  --sidebar-accent: 159.3 85.7% 19.2%; /* #075B3E */
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 163.8 60% 18%;
+  --sidebar-ring: 34 91.3% 54.9%;
+
+  --radius: 0.75rem;
+}
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
