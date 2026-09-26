@@ -134,7 +134,7 @@ export function AppSidebar() {
                 <NavMain label="Property Management" items={propertyNavItems} />
                 <NavMain label="Operations" items={operationsNavItems} />
                 <NavMain label="Business" items={businessNavItems} />
-                <NavMain label="System" items={systemNavItems} />
+                {/* <NavMain label="System" items={systemNavItems} /> */}
             </SidebarContent>
 
             <SidebarFooter>

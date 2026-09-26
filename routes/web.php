@@ -3,8 +3,10 @@
 use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\ServiceTeamController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -16,8 +18,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('tenants', TenantController::class);
     Route::resource('leases', LeaseController::class);
     Route::resource('maintenance', MaintenanceController::class);
-    Route::inertia('work-orders', 'work-orders/index')->name('work-orders.index');
-    Route::inertia('service-team', 'service-team/index')->name('service-team.index');
+    Route::resource('work-orders', WorkOrderController::class);
+    Route::resource('service-team', ServiceTeamController::class);
     Route::inertia('inventory', 'inventory/index')->name('inventory.index');
     Route::inertia('finance', 'finance/index')->name('finance.index');
     Route::inertia('reports', 'reports/index')->name('reports.index');

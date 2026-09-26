@@ -71,12 +71,12 @@ export function MaintenanceForm({
         event.preventDefault();
 
         if (mode === "create") {
-            router.post(store.url(), form.data);
+            form.post(store.url());
 
             return;
         }
 
-        router.put(update.url(maintenance!.id), form.data);
+        form.put(update.url(maintenance!.id));
     }
 
     return (
