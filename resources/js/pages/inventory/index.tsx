@@ -1,32 +1,21 @@
-import { Package } from 'lucide-react';
-import { ModulePage } from '@/components/module-page';
-import { index as inventoryIndex } from '@/routes/inventory';
+import { Head, Link } from "@inertiajs/react";
+import { AlertTriangle, Box, Package, Plus, ShoppingBag } from "lucide-react";
+import { inventoryColumns, type InventoryRow } from "@/components/inventory/columns";
+import { StatsCard, type StatSection } from "@/components/tools/StatsCard";
+import { DataTable } from "@/components/tools/table/main-table";
+import { Button } from "@/components/ui/button";
+import { create, index } from "@/routes/inventory";
 
-export default function InventoryIndex() {
-    return (
-        <ModulePage
-            title="Inventory"
-            description="Track materials, stock movements, supplier purchases, job usage, and reorder levels."
-            phase="Phase 4"
-            icon={Package}
-            emptyTitle="No inventory items"
-            emptyDescription="Add stocked materials to connect purchases, job usage, supplier balances, and reorder alerts."
-            actionLabel="Add your first inventory item"
-            capabilities={[
-                'Item units, opening stock, and reorder levels',
-                'Supplier purchases and payment status',
-                'Usage and movements linked to work orders',
-                'On-hand quantities and low-stock alerts',
-            ]}
-        />
-    );
+export default function InventoryIndex({ inventories, stats }: { inventories: InventoryRow[]; stats: { totalItems: number; inStock: number; lowStock: number; outOfStock: number } }) {
+    const sections: StatSection[] = [{ title: "Total items", value: stats.totalItems, description: "All inventory items", icon: Package, color: "primary" }, { title: "In stock", value: stats.inStock, description: "Available items", icon: Box, color: "success" }, { title: "Low stock", value: stats.lowStock, description: "Below reorder level", icon: AlertTriangle, color: "warning" }, { title: "Out of stock", value: stats.outOfStock, description: "Unavailable items", icon: ShoppingBag, color: "destructive" }];
+    return <><Head title="Inventory — SOMFIX" /><div className="p-4 md:p-6"><div className="flex items-start justify-between gap-4"><div><h1 className="text-lg font-semibold">Inventory</h1><p className="text-xs text-muted-foreground">Track materials, stock levels, and supplier information.</p></div><Button asChild size="sm"><Link href={create()}><Plus className="size-4" />Add <span className="hidden sm:inline">item</span></Link></Button></div><StatsCard sections={sections} /><div className="mt-6 animate-in fade-in slide-in-from-bottom-6 duration-1000"><DataTable title="Inventory" searchTitle="Filter items by name, SKU, category or supplier..." columns={inventoryColumns} data={inventories} /></div></div></>;
 }
 
 InventoryIndex.layout = {
     breadcrumbs: [
         {
             title: 'Inventory',
-            href: inventoryIndex(),
+            href: index(),
         },
     ],
 };
