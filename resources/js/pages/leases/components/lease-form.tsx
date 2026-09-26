@@ -56,12 +56,12 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
         event.preventDefault();
 
         if (mode === "create") {
-            router.post(store.url(), form.data);
+            form.post(store.url());
 
             return;
         }
 
-        router.put(update.url(lease!.id), form.data);
+        form.put(update.url(lease!.id));
     }
 
     return (
