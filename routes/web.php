@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ServiceTeamController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
@@ -22,8 +24,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('work-orders', WorkOrderController::class);
     Route::resource('service-team', ServiceTeamController::class);
     Route::resource('inventory', InventoryController::class);
-    Route::inertia('finance', 'finance/index')->name('finance.index');
-    Route::inertia('reports', 'reports/index')->name('reports.index');
+    Route::resource('finance', FinanceController::class);
+    Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
 });
 
 require __DIR__.'/settings.php';
