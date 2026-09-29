@@ -1,9 +1,70 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useState } from "react";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { destroy, edit, index } from "@/routes/tenants";
-export default function TenantShow({ tenant }: { tenant: { id: number; first_name: string; last_name: string; phone: string; email: string | null; whatsapp: string | null; emergency_contact: string | null; status: string; move_in_date: string | null; notes: string | null; unit: { unit_number: string; property: { name: string } } | null } }) { const [confirming, setConfirming] = useState(false); return <><Head title={`${tenant.first_name} ${tenant.last_name} — SOMFIX`} /><div className="w-full p-4 md:p-6"><div className="flex flex-wrap items-start justify-between gap-4 border-b pb-5"><div><div className="flex gap-2"><h1 className="text-2xl font-bold">{tenant.first_name} {tenant.last_name}</h1><Badge variant="outline">{tenant.status}</Badge></div><p className="mt-1 text-sm text-muted-foreground">{tenant.unit ? `${tenant.unit.property.name} · ${tenant.unit.unit_number}` : "No unit assigned"}</p></div><div className="flex gap-2"><Button asChild size="sm" variant="outline"><Link href={edit(tenant.id)}><Edit />Edit</Link></Button>{confirming ? <Button size="sm" variant="destructive" onClick={() => router.delete(destroy.url(tenant.id))}>Confirm delete</Button> : <Button size="sm" variant="outline" onClick={() => setConfirming(true)}><Trash2 />Delete</Button>}<Button asChild size="sm" variant="outline"><Link href={index()}><ArrowLeft />Back</Link></Button></div></div><div className="mt-6 grid gap-4 rounded-2xl border bg-card p-5 sm:grid-cols-2"><Detail label="Phone" value={tenant.phone} /><Detail label="Email" value={tenant.email ?? "—"} /><Detail label="WhatsApp" value={tenant.whatsapp ?? "—"} /><Detail label="Emergency contact" value={tenant.emergency_contact ?? "—"} /><Detail label="Move-in date" value={tenant.move_in_date ?? "—"} /><div className="sm:col-span-2"><Detail label="Notes" value={tenant.notes ?? "No notes added."} /></div></div></div></>; }
-function Detail({ label, value }: { label: string; value: string }) { return <div><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 font-medium">{value}</p></div>; }
-TenantShow.layout = { breadcrumbs: [{ title: "Tenants", href: index() }, { title: "Tenant details", href: index() }] };
+import { UserRound } from 'lucide-react';
+import DetailPage, { date } from '@/components/detail-page';
+import { destroy, edit, index } from '@/routes/tenants';
+
+type RecordDetail = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string | null;
+    whatsapp: string | null;
+    emergency_contact: string | null;
+    status: string;
+    move_in_date: string | null;
+    notes: string | null;
+    unit: { unit_number: string; property: { name: string } } | null;
+};
+
+export default function TenantShow({ tenant }: { tenant: RecordDetail }) {
+    return (
+        <DetailPage
+            title={`${tenant.first_name} ${tenant.last_name}`}
+            summary={[
+                {
+                    title: 'Residence',
+                    fields: [
+                        {
+                            label: 'Property',
+                            value: tenant.unit?.property.name,
+                        },
+                        { label: 'Unit', value: tenant.unit?.unit_number },
+                        {
+                            label: 'Move-in date',
+                            value: date(tenant.move_in_date),
+                        },
+                    ],
+                },
+            ]}
+            sections={[
+                {
+                    title: 'Contact',
+                    fields: [
+                        { label: 'Phone', value: tenant.phone },
+                        { label: 'Email', value: tenant.email },
+                        ...(tenant.whatsapp && tenant.whatsapp !== tenant.phone
+                            ? [{ label: 'WhatsApp', value: tenant.whatsapp }]
+                            : []),
+                        {
+                            label: 'Emergency contact',
+                            value: tenant.emergency_contact,
+                        },
+                    ],
+                },
+                { title: 'Notes', text: tenant.notes },
+            ]}
+            status={tenant.status}
+            icon={UserRound}
+            backHref={index.url()}
+            editHref={edit.url(tenant.id)}
+            deleteHref={destroy.url(tenant.id)}
+        />
+    );
+}
+
+TenantShow.layout = {
+    breadcrumbs: [
+        { title: 'Tenants', href: index() },
+        { title: 'Tenant details', href: index() },
+    ],
+};

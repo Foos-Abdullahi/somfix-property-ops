@@ -29,10 +29,11 @@ class AdminUserSeeder extends Seeder
         $email = strtolower(trim($email));
         $admin = User::query()->firstOrNew(['email' => $email]);
         $admin->name = trim($name);
+        $admin->role_id = \App\Models\Role::where('slug', 'administrator')->sole()->id;
+        $admin->is_active = true;
 
-        if (! $admin->exists) {
-            $admin->password = $password;
-        }
+        // The User model's hashed cast securely hashes the configured password.
+        $admin->password = $password;
 
         if ($admin->email_verified_at === null) {
             $admin->email_verified_at = now();

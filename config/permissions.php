@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'properties.view' => 'View properties',
+    'properties.manage' => 'Manage properties',
+    'units.view' => 'View units',
+    'units.manage' => 'Manage units',
+    'tenants.view' => 'View tenants',
+    'tenants.manage' => 'Manage tenants',
+    'leases.view' => 'View leases',
+    'leases.manage' => 'Manage leases',
+    'maintenance.view' => 'View maintenance',
+    'maintenance.manage' => 'Manage maintenance',
+    'work-orders.view' => 'View work orders',
+    'work-orders.manage' => 'Manage work orders',
+    'service-team.view' => 'View service team',
+    'service-team.manage' => 'Manage service team',
+    'inventory.view' => 'View inventory',
+    'inventory.manage' => 'Manage inventory',
+    'finance.view' => 'View finance',
+    'finance.manage' => 'Manage finance',
+    'reports.view' => 'View reports',
+    'users.manage' => 'Manage users and assign roles',
+    'roles.manage' => 'Manage roles and permissions',
+    'audit-log.view' => 'View audit log',
+];
