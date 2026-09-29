@@ -9,6 +9,7 @@ import {
     LayoutDashboard,
     Package,
     Settings,
+    ShieldCheck,
     Users,
     Wallet,
     Wrench,
@@ -108,9 +109,24 @@ const businessNavItems: NavItem[] = [
 
 const systemNavItems: NavItem[] = [
     {
-        title: 'Settings',
-        href: settingsIndex(),
+        title: 'General Settings',
+        href: '/settings-general',
         icon: Settings,
+    },
+    {
+        title: 'User Management',
+        href: '/settings/users',
+        icon: Users,
+    },
+    {
+        title: 'Roles & Permissions',
+        href: '/settings/roles',
+        icon: ShieldCheck,
+    },
+    {
+        title: 'Audit Log',
+        href: '/settings/audit-log',
+        icon: ClipboardList,
     },
 ];
 
@@ -134,7 +150,7 @@ export function AppSidebar() {
                 <NavMain label="Property Management" items={propertyNavItems} />
                 <NavMain label="Operations" items={operationsNavItems} />
                 <NavMain label="Business" items={businessNavItems} />
-                {/* <NavMain label="System" items={systemNavItems} /> */}
+                <NavMain label="System Settings" items={systemNavItems} />
             </SidebarContent>
 
             <SidebarFooter>

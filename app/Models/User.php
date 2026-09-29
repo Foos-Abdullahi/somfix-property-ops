@@ -31,6 +31,28 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            $user->role_id ??= Role::where('slug', 'viewer')->value('id');
+        });
+        static::deleting(function (User $user) {
+            if ($user->role?->slug === 'administrator' && $user->is_active) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['user' => 'Deactivate or reassign this administrator through User Management before deletion.']);
+            }
+        });
+    }
+
+    public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->is_active && ($this->role?->slug === 'administrator' || in_array($permission, $this->role?->permissions ?? [], true));
+    }
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
 
@@ -42,6 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     protected function casts(): array
     {
         return [
+            'is_active' => 'boolean',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',

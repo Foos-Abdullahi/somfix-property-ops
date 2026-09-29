@@ -24,6 +24,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        foreach (['User', 'Role', 'Property', 'Unit', 'Tenant', 'Lease', 'Maintenance', 'WorkOrder', 'ServiceTeam', 'Inventory', 'Finance'] as $model) {
+            ('App\\Models\\'.$model)::observe(\App\Observers\AuditObserver::class);
+        }
+        foreach (array_keys(config('permissions')) as $permission) {
+            \Illuminate\Support\Facades\Gate::define($permission, fn (\App\Models\User $user) => $user->hasPermission($permission));
+        }
+        foreach ([\Illuminate\Auth\Events\Login::class => 'login', \Illuminate\Auth\Events\Logout::class => 'logout'] as $event => $action) {
+            \Illuminate\Support\Facades\Event::listen($event, function ($event) use ($action) {
+                if ($event->user) {
+                    \App\Models\AuditLog::create(['actor_id' => $event->user->id, 'actor_name' => $event->user->name, 'action' => $action, 'subject_type' => 'User', 'subject_id' => $event->user->id]);
+                }
+            });
+        }
     }
 
     /**
