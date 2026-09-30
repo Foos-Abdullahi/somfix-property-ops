@@ -38,6 +38,16 @@ This starts Laravel, the queue listener, and the frontend development server. Al
 
 Verify the installation with `php artisan test` and `npm.cmd run types:check`.
 
+## Access management
+
+The configured administrator can manage accounts at `/settings/users`, roles at `/settings/roles`, and audit history at `/settings/audit-log`. Run migrations before using these pages. The access-management migration assigns the configured `ADMIN_EMAIL` the protected Administrator role and preserves existing staff access with the Operator role. The admin seeder also assigns the Administrator role.
+
+New self-registered accounts receive the Viewer role. Administrators can create verified accounts, set passwords, assign roles, deactivate accounts, and delete non-administrator accounts. Deactivation blocks login and invalidates existing sessions. Password updates invalidate sessions too. An administrator cannot deactivate themselves or change their own role; at least one active administrator must remain.
+
+Permissions are enforced on backend routes. Manage permissions include view access. The administrator role cannot be edited or deleted, system roles cannot be deleted, and assigned custom roles must be reassigned before deletion. Delegated managers cannot grant permissions they do not hold.
+
+Audit history starts when the migration is installed and records Eloquent record creation, updates, deletion, login, and logout. The log is read-only in the application, supports filters and pagination, and excludes passwords, remember tokens, and two-factor secrets. Direct database changes outside the application are not captured.
+
 ## Product direction
 
 The platform combines property records with the SOMFIX repair workflow. A tenant or staff member reports a problem, the request is triaged, quoted, scheduled, assigned to a technician, completed, invoiced, paid, and retained in the property's maintenance history.

@@ -106,8 +106,8 @@ export default function DetailPage({
     status: string;
     icon: LucideIcon;
     backHref: string;
-    editHref: string;
-    deleteHref: string;
+    editHref?: string;
+    deleteHref?: string;
     summary: DetailSection[];
     sections: DetailSection[];
     aside?: DetailSection[];
@@ -178,25 +178,29 @@ export default function DetailPage({
                                 Back
                             </Link>
                         </Button>
-                        <Button asChild size="sm">
-                            <Link href={editHref}>
-                                <Pencil />
-                                Edit
-                            </Link>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            aria-expanded={confirming}
-                            onClick={() => setConfirming(!confirming)}
-                            className="text-destructive hover:text-destructive"
-                        >
-                            <Trash2 />
-                            Delete
-                        </Button>
+                        {editHref && (
+                            <Button asChild size="sm">
+                                <Link href={editHref}>
+                                    <Pencil />
+                                    Edit
+                                </Link>
+                            </Button>
+                        )}
+                        {deleteHref && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                aria-expanded={confirming}
+                                onClick={() => setConfirming(!confirming)}
+                                className="text-destructive hover:text-destructive"
+                            >
+                                <Trash2 />
+                                Delete
+                            </Button>
+                        )}
                     </div>
                 </header>
-                {confirming && (
+                {confirming && deleteHref && (
                     <div
                         role="alert"
                         className="flex flex-wrap items-center justify-between gap-3 rounded-xs border border-destructive/30 bg-card p-4"

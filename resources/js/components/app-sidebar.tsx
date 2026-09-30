@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     BarChart3,
     Building2,
@@ -131,6 +131,24 @@ const systemNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<{ auth: { permissions: string[] } }>().props;
+    const visible = (items: NavItem[]) =>
+        items.filter((item) => {
+            const href =
+                typeof item.href === 'string' ? item.href : item.href.url;
+            const path = href.split('?')[0];
+            const settings: Record<string, string> = {
+                '/settings/users': 'users.manage',
+                '/settings/roles': 'roles.manage',
+                '/settings/audit-log': 'audit-log.view',
+            };
+            const permission =
+                settings[path] ??
+                (path.startsWith('/settings') || path === '/dashboard'
+                    ? null
+                    : path.slice(1) + '.view');
+            return !permission || auth.permissions.includes(permission);
+        });
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -147,10 +165,19 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain label="Overview" items={overviewNavItems} />
-                <NavMain label="Property Management" items={propertyNavItems} />
-                <NavMain label="Operations" items={operationsNavItems} />
-                <NavMain label="Business" items={businessNavItems} />
-                <NavMain label="System Settings" items={systemNavItems} />
+                <NavMain
+                    label="Property Management"
+                    items={visible(propertyNavItems)}
+                />
+                <NavMain
+                    label="Operations"
+                    items={visible(operationsNavItems)}
+                />
+                <NavMain label="Business" items={visible(businessNavItems)} />
+                <NavMain
+                    label="System Settings"
+                    items={visible(systemNavItems)}
+                />
             </SidebarContent>
 
             <SidebarFooter>
