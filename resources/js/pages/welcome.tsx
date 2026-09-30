@@ -47,6 +47,7 @@ import '../../css/landing.css';
 const navigation = [
     { label: 'Solutions', href: '#solutions' },
     { label: 'About', href: '#about' },
+    { label: 'Contact', href: '#contact' },
 ];
 export default function Welcome() {
     const { auth } = usePage().props;
@@ -71,17 +72,22 @@ export default function Welcome() {
                         <a href="#" aria-label="SOMFIX home">
                             <Brand />
                         </a>
-                        <nav
-                            className="sf-desktop-nav"
-                            aria-label="Main navigation"
-                        >
-                            {navigation.map((item) => (
-                                <a key={item.href} href={item.href}>
-                                    {item.label}
-                                </a>
-                            ))}
-                        </nav>
-                        <div className="sf-nav-actions">
+                        <div className="sf-nav-right">
+                            <nav
+                                className="sf-desktop-nav"
+                                aria-label="Main navigation"
+                            >
+                                {navigation.map((item) => (
+                                    <a key={item.href} href={item.href}>
+                                        {item.label}
+                                    </a>
+                                ))}
+                            </nav>
+                            <span
+                                className="sf-nav-divider"
+                                aria-hidden="true"
+                            />
+                            <div className="sf-nav-actions">
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -175,7 +181,8 @@ export default function Welcome() {
                             </Sheet>
                         </div>
                     </div>
-                </header>
+                </div>
+            </header>
                 <main id="main">
                     <section className="sf-hero">
                         <div className="sf-hero-grid" aria-hidden="true" />
@@ -285,7 +292,10 @@ export default function Welcome() {
                         </Reveal>
                     </section>
 
-                    <section className="sf-cta-section sf-container">
+                    <section
+                        className="sf-cta-section sf-container"
+                        id="contact"
+                    >
                         <Reveal className="sf-cta">
                             <Photo
                                 name="service"
@@ -374,6 +384,7 @@ export default function Welcome() {
                                 <h3>Company</h3>
                                 <a href="#about">About SOMFIX</a>
                                 <a href="#about">Who it’s for</a>
+                                <a href="#contact">Contact</a>
                                 <button onClick={requestDemo}>
                                     Request a demo
                                 </button>
