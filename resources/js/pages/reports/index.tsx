@@ -1,3 +1,4 @@
+import { StatsCard, type StatSection } from "@/components/tools/StatsCard";
 import { Head } from "@inertiajs/react";
 import { Building2, DoorOpen, Package, UserCheck, Wallet, Wrench, Users, HardHat, TrendingUp, Layers3, ClipboardList } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,11 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { index } from "@/routes/reports";
 
 export default function ReportsIndex({ stats, occupancy, maintenance, finance, inventory }: { stats: { properties: number; units: number; tenants: number; leases: number; maintenance: number; workOrders: number; serviceTeam: number; inventory: number; finance: number }; occupancy: { totalUnits: number; occupiedUnits: number; vacantUnits: number; occupancyRate: number }; maintenance: { totalRequests: number; openRequests: number; inProgress: number; completed: number }; finance: { totalRevenue: number; totalPaid: number; totalBalance: number; totalExpenses: number }; inventory: { totalItems: number; inStock: number; lowStock: number; outOfStock: number } }) {
-    const topMetrics = [
-        { title: "Properties", value: stats.properties, detail: "Total properties in portfolio", icon: Building2, tone: "bg-primary/10 text-primary" },
-        { title: "Occupancy Rate", value: `${occupancy.occupancyRate}%`, detail: "Units currently occupied", icon: UserCheck, tone: "bg-green-500/10 text-green-700" },
-        { title: "Open Requests", value: maintenance.openRequests, detail: "Maintenance pending action", icon: Wrench, tone: "bg-orange-500/10 text-orange-700" },
-        { title: "Revenue", value: `$${finance.totalRevenue.toLocaleString()}`, detail: "Total invoice revenue", icon: Wallet, tone: "bg-blue-500/10 text-blue-700" },
+    const topMetrics: StatSection[] = [
+        { title: "Properties", value: stats.properties, icon: Building2, color: "primary" },
+        { title: "Occupancy Rate", value: `${occupancy.occupancyRate}%`, icon: UserCheck, color: "success" },
+        { title: "Open Requests", value: maintenance.openRequests, icon: Wrench, color: "warning" },
+        { title: "Revenue", value: `$${finance.totalRevenue.toLocaleString()}`, icon: Wallet, color: "info" },
     ];
 
     const moduleProgress = [
@@ -34,34 +35,7 @@ export default function ReportsIndex({ stats, occupancy, maintenance, finance, i
                         <p className="mt-1 text-xs text-muted-foreground">Review operational and financial performance across properties, repairs, teams, and cash movement.</p>
                     </div>
                 </div>
-                <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    {topMetrics.map((metric, index) => (
-                        <Card
-                            key={metric.title}
-                            className="border-border/70 py-0 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3"
-                            style={{ animationDelay: `${index * 75}ms` }}
-                        >
-                            <CardContent className="p-4">
-                                <div className="flex items-start justify-between gap-4">
-                                    <div>
-                                        <p className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-                                            {metric.title}
-                                        </p>
-                                        <p className="mt-3 text-3xl font-bold tracking-tight tabular-nums">
-                                            {metric.value}
-                                        </p>
-                                    </div>
-                                    <span className={`flex size-10 items-center justify-center rounded-xl ${metric.tone}`}>
-                                        <metric.icon className="size-5" />
-                                    </span>
-                                </div>
-                                <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                                    {metric.detail}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </section>
+                <StatsCard sections={topMetrics} />
 
                 <div className="mt-6 space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-5 motion-safe:duration-700">
                     <section className="grid gap-6 lg:grid-cols-3">

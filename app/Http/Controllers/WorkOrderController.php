@@ -41,13 +41,13 @@ class WorkOrderController extends Controller
     {
         return Inertia::render('work-orders/create', [
             'maintenances' => Maintenance::query()
-                ->where('status', 'open')
+
                 ->orderBy('created_at')
-                ->get(['id', 'title', 'category', 'priority']),
+                ->get(['id', 'title', 'category', 'priority', 'status']),
             'serviceTeams' => ServiceTeam::query()
-                ->where('status', 'active')
+
                 ->orderBy('name')
-                ->get(['id', 'name', 'specialization']),
+                ->get(['id', 'name', 'specialization', 'status']),
         ]);
     }
 
@@ -89,11 +89,11 @@ class WorkOrderController extends Controller
             'workOrder' => $workOrder,
             'maintenances' => Maintenance::query()
                 ->orderBy('created_at')
-                ->get(['id', 'title', 'category', 'priority']),
+                ->get(['id', 'title', 'category', 'priority', 'status']),
             'serviceTeams' => ServiceTeam::query()
-                ->where('status', 'active')
+
                 ->orderBy('name')
-                ->get(['id', 'name', 'specialization']),
+                ->get(['id', 'name', 'specialization', 'status']),
         ]);
     }
 

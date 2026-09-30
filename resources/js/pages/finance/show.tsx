@@ -1,15 +1,108 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useState } from "react";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { destroy, edit, index } from "@/routes/finance";
+import { Receipt } from 'lucide-react';
+import DetailPage, { date, label, money } from '@/components/detail-page';
+import { destroy, edit, index } from '@/routes/finance';
 
-export default function FinanceShow({ finance }: { finance: { id: number; invoice_number: string; title: string; description: string; type: string; currency: string; amount: string; paid_amount: string; balance: string; due_date: string | null; paid_date: string | null; status: string; property: { name: string } | null; unit: { unit_number: string } | null; tenant: { first_name: string; last_name: string } | null; recipient_name: string | null; recipient_email: string | null; notes: string | null } }) {
-    const [confirming, setConfirming] = useState(false);
-    return <><Head title={`${finance.invoice_number} — SOMFIX`} /><div className="w-full p-4 md:p-6"><div className="flex flex-wrap items-start justify-between gap-4 border-b pb-5"><div><div className="flex gap-2"><h1 className="text-2xl font-bold">{finance.invoice_number}</h1><Badge variant="outline">{finance.status.toUpperCase()}</Badge></div><p className="mt-1 text-sm text-muted-foreground">{finance.title} · {finance.type.toUpperCase()}</p></div><div className="flex gap-2"><Button asChild size="sm" variant="outline"><Link href={edit(finance.id)}><Edit />Edit</Link></Button>{confirming ? <Button size="sm" variant="destructive" onClick={() => router.delete(destroy.url(finance.id))}>Confirm delete</Button> : <Button size="sm" variant="outline" onClick={() => setConfirming(true)}><Trash2 />Delete</Button>}<Button asChild size="sm" variant="outline"><Link href={index()}><ArrowLeft />Back</Link></Button></div></div><div className="mt-6 grid gap-4 rounded-2xl border bg-card p-5 sm:grid-cols-3"><Detail label="Type" value={finance.type.toUpperCase()} /><Detail label="Currency" value={finance.currency} /><Detail label="Amount" value={`${finance.currency} ${Number(finance.amount).toFixed(2)}`} /><Detail label="Paid amount" value={`${finance.currency} ${Number(finance.paid_amount).toFixed(2)}`} /><Detail label="Balance" value={`${finance.currency} ${Number(finance.balance).toFixed(2)}`} /><Detail label="Due date" value={finance.due_date ?? "—"} /><Detail label="Paid date" value={finance.paid_date ?? "—"} /><Detail label="Property" value={finance.property?.name ?? "—"} /><Detail label="Unit" value={finance.unit?.unit_number ?? "—"} /><Detail label="Tenant" value={finance.tenant ? `${finance.tenant.first_name} ${finance.tenant.last_name}` : "—"} /><Detail label="Recipient name" value={finance.recipient_name ?? "—"} /><Detail label="Recipient email" value={finance.recipient_email ?? "—"} /><div className="sm:col-span-3"><Detail label="Description" value={finance.description} /></div><div className="sm:col-span-3"><Detail label="Notes" value={finance.notes ?? "No notes added."} /></div></div></div></>;
+type RecordDetail = {
+    id: number;
+    invoice_number: string;
+    title: string;
+    description: string;
+    type: string;
+    currency: string;
+    amount: string;
+    paid_amount: string;
+    balance: string;
+    due_date: string | null;
+    paid_date: string | null;
+    status: string;
+    property: { name: string } | null;
+    unit: { unit_number: string } | null;
+    tenant: { first_name: string; last_name: string } | null;
+    recipient_name: string | null;
+    recipient_email: string | null;
+    notes: string | null;
+};
+
+export default function FinanceShow({ finance }: { finance: RecordDetail }) {
+    return (
+        <DetailPage
+            title={finance.invoice_number}
+            subtitle={`${finance.title} · ${label(finance.type)}`}
+            summary={[
+                {
+                    title: 'Payment',
+                    metric: {
+                        label: 'Outstanding balance',
+                        value: money(finance.balance, finance.currency),
+                    },
+                    fields: [
+                        {
+                            label: 'Total amount',
+                            value: money(finance.amount, finance.currency),
+                        },
+                        {
+                            label: 'Paid amount',
+                            value: money(finance.paid_amount, finance.currency),
+                        },
+                    ],
+                },
+                {
+                    title: 'Dates',
+                    fields: [
+                        { label: 'Due date', value: date(finance.due_date) },
+                        { label: 'Paid date', value: date(finance.paid_date) },
+                    ],
+                },
+            ]}
+            sections={[
+                { title: 'Description', text: finance.description },
+                ...(finance.notes && finance.notes !== finance.description
+                    ? [{ title: 'Notes', text: finance.notes }]
+                    : []),
+            ]}
+            aside={[
+                {
+                    title: 'Billing details',
+                    fields: [
+                        { label: 'Property', value: finance.property?.name },
+                        { label: 'Unit', value: finance.unit?.unit_number },
+                        {
+                            label: 'Tenant',
+                            value: finance.tenant
+                                ? `${finance.tenant.first_name} ${finance.tenant.last_name}`
+                                : null,
+                        },
+                        ...(finance.recipient_name &&
+                        finance.recipient_name !==
+                            (finance.tenant
+                                ? `${finance.tenant.first_name} ${finance.tenant.last_name}`
+                                : null)
+                            ? [
+                                  {
+                                      label: 'Recipient',
+                                      value: finance.recipient_name,
+                                  },
+                              ]
+                            : []),
+                        {
+                            label: 'Recipient email',
+                            value: finance.recipient_email,
+                        },
+                    ],
+                },
+            ]}
+            status={finance.status}
+            icon={Receipt}
+            backHref={index.url()}
+            editHref={edit.url(finance.id)}
+            deleteHref={destroy.url(finance.id)}
+        />
+    );
 }
 
-function Detail({ label, value }: { label: string; value: string }) { return <div><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 font-medium">{value}</p></div>; }
-
-FinanceShow.layout = { breadcrumbs: [{ title: "Finance", href: index() }, { title: "Record details", href: index() }] };
+FinanceShow.layout = {
+    breadcrumbs: [
+        { title: 'Finance', href: index() },
+        { title: 'Record details', href: index() },
+    ],
+};
