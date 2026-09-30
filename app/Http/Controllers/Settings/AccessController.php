@@ -15,10 +15,22 @@ use Inertia\Inertia;
 
 class AccessController extends Controller
 {
+    public function showRole(Role $role)
+    {
+        return Inertia::render('roles/show', ['role' => $role->loadCount('users'), 'permissions' => config('permissions')]);
+    }
+
+    public function showAudit(AuditLog $auditLog)
+    {
+        return Inertia::render('audit-log/show', ['log' => $auditLog]);
+    }
+
     public function users(Request $request)
     {
         $filters = $request->validate(['search' => 'nullable|string|max:100', 'status' => 'nullable|in:active,inactive', 'role' => 'nullable|integer']);
-        return Inertia::render('settings/users', [
+
+        return Inertia::render('users/index', [
+            'stats' => ['total' => User::count(), 'active' => User::where('is_active', true)->count(), 'inactive' => User::where('is_active', false)->count(), 'roles' => Role::count()],
             'users' => User::query()->with('role:id,name,slug')
                 ->when($filters['search'] ?? null, fn ($query, $term) => $query->where(fn ($q) => $q->where('name', 'like', "%{$term}%")->orWhere('email', 'like', "%{$term}%")))
                 ->when($filters['status'] ?? null, fn ($q, $status) => $q->where('is_active', $status === 'active'))
@@ -51,6 +63,7 @@ class AccessController extends Controller
         if ($user?->id === $request->user()->id && (! $data['is_active'] || (int) $data['role_id'] !== $user->role_id)) {
             throw ValidationException::withMessages(['role_id' => 'You cannot deactivate yourself or change your own role.']);
         }
+
         return $data;
     }
 
@@ -64,6 +77,7 @@ class AccessController extends Controller
             $user->save();
         });
         Inertia::flash('toast', ['type' => 'success', 'message' => 'User created.']);
+
         return to_route('settings.users.index');
     }
 
@@ -89,6 +103,7 @@ class AccessController extends Controller
             }
         });
         Inertia::flash('toast', ['type' => 'success', 'message' => 'User updated.']);
+
         return back();
     }
 
@@ -103,12 +118,13 @@ class AccessController extends Controller
             $user->delete();
         });
         Inertia::flash('toast', ['type' => 'success', 'message' => 'User deleted.']);
+
         return back();
     }
 
     public function roles(Request $request)
     {
-        return Inertia::render('settings/roles', [
+        return Inertia::render('roles/index', [
             'roles' => Role::withCount('users')->orderBy('name')->get(),
             'permissions' => config('permissions'),
             'grantablePermissions' => array_values(array_filter(array_keys(config('permissions')), fn ($key) => $request->user()->hasPermission($key))),
@@ -127,9 +143,17 @@ class AccessController extends Controller
             'permissions' => ['present', 'array'],
             'permissions.*' => ['string', 'distinct', Rule::in(array_keys(config('permissions')))],
         ]);
+        foreach ($data['permissions'] as $permission) {
+            $view = str_replace('.manage', '.view', $permission);
+            if (array_key_exists($view, config('permissions'))) {
+                $data['permissions'][] = $view;
+            }
+        }
+        $data['permissions'] = array_values(array_unique($data['permissions']));
         foreach (array_unique([...$data['permissions'], ...($role?->permissions ?? [])]) as $permission) {
             abort_unless($request->user()->hasPermission($permission), 403);
         }
+
         return $data;
     }
 
@@ -142,6 +166,7 @@ class AccessController extends Controller
             $role->save();
         });
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Role created.']);
+
         return back();
     }
 
@@ -150,6 +175,7 @@ class AccessController extends Controller
         $data = $this->roleData($request, $role);
         DB::transaction(fn () => $role->update($data));
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Role updated.']);
+
         return back();
     }
 
@@ -163,6 +189,7 @@ class AccessController extends Controller
         }
         DB::transaction(fn () => $role->delete());
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Role deleted.']);
+
         return back();
     }
 
@@ -170,9 +197,11 @@ class AccessController extends Controller
     {
         $filters = $request->validate([
             'search' => 'nullable|string|max:100', 'action' => 'nullable|in:created,updated,deleted,login,logout',
-            'from' => 'nullable|date', 'to' => 'nullable|date|after_or_equal:from',
+            'from' => 'nullable|date', 'to' => ['nullable', 'date', ...($request->filled('from') ? ['after_or_equal:from'] : [])],
         ]);
-        return Inertia::render('settings/audit-log', [
+
+        return Inertia::render('audit-log/index', [
+            'stats' => ['total' => AuditLog::count(), 'today' => AuditLog::whereDate('created_at', today())->count(), 'changes' => AuditLog::whereIn('action', ['created', 'updated', 'deleted'])->count(), 'signIns' => AuditLog::where('action', 'login')->count()],
             'logs' => AuditLog::query()
                 ->when($filters['search'] ?? null, fn ($q, $term) => $q->where(fn ($q) => $q->where('actor_name', 'like', "%{$term}%")->orWhere('subject_type', 'like', "%{$term}%")->orWhere('subject_id', $term)))
                 ->when($filters['action'] ?? null, fn ($q, $value) => $q->where('action', $value))

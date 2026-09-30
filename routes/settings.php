@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\AccessController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Auth\Middleware\RequirePassword;
@@ -14,7 +15,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::controller(\App\Http\Controllers\Settings\AccessController::class)->group(function () {
+    Route::controller(AccessController::class)->group(function () {
         Route::middleware('can:users.manage')->group(function () {
             Route::get('settings/users', 'users')->name('settings.users.index');
             Route::post('settings/users', 'storeUser')->name('settings.users.store');
@@ -23,11 +24,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
         Route::middleware('can:roles.manage')->group(function () {
             Route::get('settings/roles', 'roles')->name('settings.roles.index');
+            Route::get('settings/roles/{role}', 'showRole')->name('settings.roles.show');
             Route::post('settings/roles', 'storeRole')->name('settings.roles.store');
             Route::put('settings/roles/{role}', 'updateRole')->name('settings.roles.update');
             Route::delete('settings/roles/{role}', 'destroyRole')->name('settings.roles.destroy');
         });
         Route::get('settings/audit-log', 'audit')->middleware('can:audit-log.view')->name('settings.audit-log.index');
+        Route::get('settings/audit-log/{auditLog}', 'showAudit')->middleware('can:audit-log.view')->name('settings.audit-log.show');
     });
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 

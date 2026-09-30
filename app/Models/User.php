@@ -8,8 +8,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -38,12 +40,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         });
         static::deleting(function (User $user) {
             if ($user->role?->slug === 'administrator' && $user->is_active) {
-                throw \Illuminate\Validation\ValidationException::withMessages(['user' => 'Deactivate or reassign this administrator through User Management before deletion.']);
+                throw ValidationException::withMessages(['user' => 'Deactivate or reassign this administrator through User Management before deletion.']);
             }
         });
     }
 
-    public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }

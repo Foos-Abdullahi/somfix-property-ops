@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\AuditLog;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -35,7 +36,7 @@ class AuditObserver
             return;
         }
         AuditLog::create([
-            'actor_id' => auth()->id(),
+            'actor_id' => $action === 'deleted' && $model instanceof User && $model->getKey() === auth()->id() ? null : auth()->id(),
             'actor_name' => auth()->user()?->name ?? 'System',
             'action' => $action,
             'subject_type' => class_basename($model),

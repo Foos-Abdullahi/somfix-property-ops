@@ -1,3 +1,4 @@
+import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { Head, Link } from "@inertiajs/react";
 import {
     ArrowUpRight,
@@ -18,34 +19,30 @@ import { dashboard } from "@/routes";
 import { index as propertiesIndex } from "@/routes/properties";
 import { index as workOrdersIndex } from "@/routes/work-orders";
 
-const metrics = [
+const metrics: StatSection[] = [
     {
         title: "Properties",
         value: "—",
-        detail: "Connect the property registry to begin.",
         icon: Building2,
-        tone: "bg-primary/10 text-primary",
+        color: "primary",
     },
     {
         title: "Open requests",
         value: "—",
-        detail: "Maintenance requests will appear here.",
         icon: Wrench,
-        tone: "bg-accent/15 text-amber-700 dark:text-accent",
+        color: "warning",
     },
     {
         title: "Scheduled jobs",
         value: "—",
-        detail: "Today’s field work will be tracked here.",
         icon: CalendarClock,
-        tone: "bg-chart-4/10 text-chart-4",
+        color: "info",
     },
     {
         title: "Unpaid invoices",
         value: "—",
-        detail: "Finance activity will appear when connected.",
         icon: Wallet,
-        tone: "bg-destructive/10 text-destructive",
+        color: "destructive",
     },
 ];
 
@@ -130,36 +127,7 @@ export default function Dashboard() {
                     </Button>
                 </section>
 
-                <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    {metrics.map((metric, index) => (
-                        <Card
-                            key={metric.title}
-                            className="border-border/70 py-0 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3"
-                            style={{ animationDelay: `${index * 75}ms` }}
-                        >
-                            <CardContent className="p-4">
-                                <div className="flex items-start justify-between gap-4">
-                                    <div>
-                                        <p className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-                                            {metric.title}
-                                        </p>
-                                        <p className="mt-3 text-3xl font-bold tracking-tight tabular-nums">
-                                            {metric.value}
-                                        </p>
-                                    </div>
-                                    <span
-                                        className={`flex size-10 items-center justify-center rounded-xl ${metric.tone}`}
-                                    >
-                                        <metric.icon className="size-5" />
-                                    </span>
-                                </div>
-                                <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                                    {metric.detail}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </section>
+                <StatsCard sections={metrics} />
 
                 <div className="mt-6 space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-5 motion-safe:duration-700">
                     <section className="grid gap-6 lg:grid-cols-3">

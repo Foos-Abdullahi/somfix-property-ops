@@ -18,6 +18,7 @@ class EnforceAccess
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return redirect('/login')->withErrors(['email' => 'This account is inactive. Contact your administrator.']);
         }
         $name = $request->route()?->getName() ?? '';
@@ -26,6 +27,7 @@ class EnforceAccess
             $permission = $module.(in_array($action, ['index', 'show']) ? '.view' : '.manage');
             abort_unless($user->hasPermission($permission), 403);
         }
+
         return $next($request);
     }
 }
