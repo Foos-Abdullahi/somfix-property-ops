@@ -145,14 +145,15 @@
   --chart-3: oklch(0.6731 0.1624 144.2083);
   --chart-4: oklch(0.6291 0.1543 144.2031);
   --chart-5: oklch(0.5752 0.1446 144.1813);
-  --sidebar: oklch(0.2683 0.0279 150.7681);
-  --sidebar-foreground: oklch(0.9423 0.0097 72.6595);
-  --sidebar-primary: oklch(0.6731 0.1624 144.2083);
-  --sidebar-primary-foreground: oklch(0.2157 0.0453 145.7256);
-  --sidebar-accent: oklch(0.5752 0.1446 144.1813);
-  --sidebar-accent-foreground: oklch(0.9423 0.0097 72.6595);
-  --sidebar-border: oklch(0.3942 0.0265 142.9926);
-  --sidebar-ring: oklch(0.6731 0.1624 144.2083);
+  /* A warm secondary-brand surface separates navigation from the dark workspace. */
+  --sidebar: #422b19;
+  --sidebar-foreground: #fff1d6;
+  --sidebar-primary: #f59a23;
+  --sidebar-primary-foreground: #24180e;
+  --sidebar-accent: #f59a23;
+  --sidebar-accent-foreground: #24180e;
+  --sidebar-border: #80542b;
+  --sidebar-ring: #ffbd66;
   --font-sans: Montserrat, sans-serif;
   --font-serif: Merriweather, serif;
   --font-mono: Source Code Pro, monospace;
