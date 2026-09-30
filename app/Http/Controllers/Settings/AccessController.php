@@ -15,9 +15,57 @@ use Inertia\Inertia;
 
 class AccessController extends Controller
 {
+    public function createUser(Request $request)
+    {
+        return $this->userForm($request);
+    }
+
+    public function editUser(Request $request, User $user)
+    {
+        if ($request->user()->role?->slug !== 'administrator') {
+            abort_if($user->role?->slug === 'administrator', 403);
+            abort_if(array_diff($user->role?->permissions ?? [], $request->user()->role?->permissions ?? []) !== [], 403);
+        }
+
+        return $this->userForm($request, $user);
+    }
+
+    private function userForm(Request $request, ?User $user = null)
+    {
+        return Inertia::render('users/form', [
+            'user' => $user,
+            'self' => $user?->id === $request->user()->id,
+            'roles' => Role::orderBy('name')->get()->filter(fn ($role) => $request->user()->role?->slug === 'administrator' || ($role->slug !== 'administrator' && array_diff($role->permissions, $request->user()->role?->permissions ?? []) === []))->values(),
+        ]);
+    }
+
+    public function createRole(Request $request)
+    {
+        return $this->roleForm($request);
+    }
+
+    public function editRole(Request $request, Role $role)
+    {
+        abort_if($role->slug === 'administrator' || $request->user()->role_id === $role->id, 403);
+        foreach ($role->permissions as $permission) {
+            abort_unless($request->user()->hasPermission($permission), 403);
+        }
+
+        return $this->roleForm($request, $role);
+    }
+
+    private function roleForm(Request $request, ?Role $role = null)
+    {
+        return Inertia::render('roles/form', [
+            'role' => $role,
+            'permissions' => config('permissions'),
+            'grantable' => array_values(array_filter(array_keys(config('permissions')), fn ($key) => $request->user()->hasPermission($key))),
+        ]);
+    }
+
     public function showRole(Role $role)
     {
-        return Inertia::render('roles/show', ['role' => $role->loadCount('users'), 'permissions' => config('permissions')]);
+        return Inertia::render('roles/show', ['role' => $role->load(['users' => fn ($query) => $query->select('id', 'role_id', 'name')->orderBy('name')])->loadCount('users'), 'permissions' => config('permissions')]);
     }
 
     public function showAudit(AuditLog $auditLog)
@@ -104,7 +152,7 @@ class AccessController extends Controller
         });
         Inertia::flash('toast', ['type' => 'success', 'message' => 'User updated.']);
 
-        return back();
+        return to_route('settings.users.index');
     }
 
     public function destroyUser(Request $request, User $user)
@@ -125,7 +173,7 @@ class AccessController extends Controller
     public function roles(Request $request)
     {
         return Inertia::render('roles/index', [
-            'roles' => Role::withCount('users')->orderBy('name')->get(),
+            'roles' => Role::with(['users' => fn ($query) => $query->select('id', 'role_id', 'name')->orderBy('name')])->withCount('users')->orderBy('name')->get(),
             'permissions' => config('permissions'),
             'grantablePermissions' => array_values(array_filter(array_keys(config('permissions')), fn ($key) => $request->user()->hasPermission($key))),
         ]);
@@ -167,7 +215,7 @@ class AccessController extends Controller
         });
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Role created.']);
 
-        return back();
+        return to_route('settings.roles.index');
     }
 
     public function updateRole(Request $request, Role $role)
@@ -176,7 +224,7 @@ class AccessController extends Controller
         DB::transaction(fn () => $role->update($data));
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Role updated.']);
 
-        return back();
+        return to_route('settings.roles.index');
     }
 
     public function destroyRole(Request $request, Role $role)

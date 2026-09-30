@@ -11,6 +11,32 @@ function accessAdmin(): User
     return User::factory()->create(['role_id' => Role::where('slug', 'administrator')->sole()->id]);
 }
 
+it('serves dedicated user and role forms with protected edit routes', function () {
+    $admin = accessAdmin();
+    $staff = User::factory()->create();
+    $role = Role::where('slug', 'viewer')->sole();
+    $this->actingAs($admin)->get('/settings/users/create')->assertOk()->assertInertia(fn (Assert $page) => $page->component('users/form')->where('user', null));
+    $this->get('/settings/users/'.$staff->id.'/edit')->assertOk()->assertInertia(fn (Assert $page) => $page->component('users/form')->where('user.id', $staff->id));
+    $this->get('/settings/roles/create')->assertOk()->assertInertia(fn (Assert $page) => $page->component('roles/form')->where('role', null));
+    $this->get('/settings/roles/'.$role->id.'/edit')->assertOk()->assertInertia(fn (Assert $page) => $page->component('roles/form')->where('role.id', $role->id));
+    $this->get('/settings/roles/'.$admin->role_id.'/edit')->assertForbidden();
+    $this->actingAs($staff)->get('/settings/users/create')->assertForbidden();
+    $this->get('/settings/roles/create')->assertForbidden();
+});
+
+it('shows record names for account activity and preserves names after deletion', function () {
+    $admin = accessAdmin();
+    $staff = User::factory()->create(['name' => 'Named Staff']);
+    $this->actingAs($admin);
+    $staff->forceFill(['is_active' => false])->save();
+    $log = AuditLog::where('subject_type', 'User')->where('subject_id', $staff->id)->where('action', 'updated')->latest('id')->firstOrFail();
+    $staff->delete();
+    expect($log->fresh()->record_name)->toBe('Named Staff');
+    $this->get('/settings/audit-log/'.$log->id)->assertOk()->assertInertia(fn (Assert $page) => $page->where('log.record_name', 'Named Staff'));
+    $login = new AuditLog(['subject_type' => 'User', 'subject_id' => $staff->id, 'actor_name' => 'Named Staff', 'action' => 'login']);
+    expect($login->record_name)->toBe('Named Staff');
+});
+
 it('restricts all administration pages and mutations', function () {
     $this->actingAs(User::factory()->create());
     foreach (['users', 'roles', 'audit-log'] as $page) {

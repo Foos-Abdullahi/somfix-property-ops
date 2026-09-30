@@ -18,12 +18,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(AccessController::class)->group(function () {
         Route::middleware('can:users.manage')->group(function () {
             Route::get('settings/users', 'users')->name('settings.users.index');
+            Route::get('settings/users/create', 'createUser')->name('settings.users.create');
+            Route::get('settings/users/{user}/edit', 'editUser')->name('settings.users.edit');
             Route::post('settings/users', 'storeUser')->name('settings.users.store');
             Route::put('settings/users/{user}', 'updateUser')->name('settings.users.update');
             Route::delete('settings/users/{user}', 'destroyUser')->name('settings.users.destroy');
         });
         Route::middleware('can:roles.manage')->group(function () {
             Route::get('settings/roles', 'roles')->name('settings.roles.index');
+            Route::get('settings/roles/create', 'createRole')->name('settings.roles.create');
+            Route::get('settings/roles/{role}/edit', 'editRole')->name('settings.roles.edit');
             Route::get('settings/roles/{role}', 'showRole')->name('settings.roles.show');
             Route::post('settings/roles', 'storeRole')->name('settings.roles.store');
             Route::put('settings/roles/{role}', 'updateRole')->name('settings.roles.update');

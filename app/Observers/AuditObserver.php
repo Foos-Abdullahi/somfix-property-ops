@@ -41,7 +41,7 @@ class AuditObserver
             'action' => $action,
             'subject_type' => class_basename($model),
             'subject_id' => $model->getKey(),
-            'changes' => ['before' => $before, 'after' => $after, 'password_changed' => $passwordChanged],
+            'changes' => ['before' => $before, 'after' => $after, 'password_changed' => $passwordChanged, 'record_name' => $model->getAttribute('name') ?? $model->getAttribute('title')],
         ]);
     }
 }

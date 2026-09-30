@@ -1,18 +1,17 @@
-import { ClipboardList, Calendar, Pencil, LogIn } from 'lucide-react';
+import { useAccessFilters } from '@/hooks/use-access-filters';
+import { FilterSelect } from '@/components/tools/table/filter-select';
+import { DatePicker } from '@/components/ui/date-picker';
+import { ClipboardList, Calendar, Pencil, LogIn, Eye } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/components/tools/table/main-table';
-import { Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     AccessPage,
     Errors,
     Pagination,
-    selectClass,
     type Paginated,
 } from '@/components/access-management';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 
 type Log = {
@@ -21,6 +20,7 @@ type Log = {
     action: string;
     subject_type: string;
     subject_id: number;
+    record_name: string;
     created_at: string;
     changes: {
         before: Record<string, unknown>;
@@ -37,14 +37,17 @@ export default function AuditLog({
     stats: { total: number; today: number; changes: number; signIns: number };
     filters: { search?: string; action?: string; from?: string; to?: string };
 }) {
-    const [search, setSearch] = useState(filters.search ?? '');
-    const [action, setAction] = useState(filters.action ?? '');
-    const [from, setFrom] = useState(filters.from ?? '');
-    const [to, setTo] = useState(filters.to ?? '');
+    const { values, update } = useAccessFilters('/settings/audit-log', {
+        search: filters.search ?? '',
+        action: filters.action ?? '',
+        from: filters.from ?? '',
+        to: filters.to ?? '',
+    });
     const { errors } = usePage().props;
     const columns: ColumnDef<Log>[] = [
         {
-            id: 'column0',
+            id: 'time',
+            accessorKey: 'created_at',
             header: 'Time',
             cell: ({ row }) => {
                 const log = row.original;
@@ -52,7 +55,8 @@ export default function AuditLog({
             },
         },
         {
-            id: 'column1',
+            id: 'actor',
+            accessorKey: 'actor_name',
             header: 'Actor',
             cell: ({ row }) => {
                 const log = row.original;
@@ -60,38 +64,49 @@ export default function AuditLog({
             },
         },
         {
-            id: 'column2',
+            accessorKey: 'action',
             header: 'Action',
             cell: ({ row }) => {
                 const log = row.original;
                 return (
                     <>
-                        <Badge variant="secondary">{log.action}</Badge>
+                        <Badge
+                            variant={
+                                log.action === 'deleted'
+                                    ? 'destructive'
+                                    : log.action === 'logout'
+                                      ? 'secondary'
+                                      : 'default'
+                            }
+                            className="capitalize"
+                        >
+                            {log.action}
+                        </Badge>
                     </>
                 );
             },
         },
         {
-            id: 'column3',
+            id: 'record',
+            accessorKey: 'record_name',
             header: 'Record',
             cell: ({ row }) => {
                 const log = row.original;
-                return (
-                    <>
-                        {log.subject_type} #{log.subject_id}
-                    </>
-                );
+                return <>{log.record_name}</>;
             },
         },
         {
-            id: 'column4',
-            header: 'Changes',
+            id: 'actions',
+            header: 'Actions',
             cell: ({ row }) => {
                 const log = row.original;
                 return (
-                    <Button asChild variant="outline" size="sm">
-                        <Link href={`/settings/audit-log/${log.id}`}>
-                            View changes
+                    <Button asChild variant="ghost" size="icon">
+                        <Link
+                            href={`/settings/audit-log/${log.id}`}
+                            aria-label={`View changes to ${log.record_name}`}
+                        >
+                            <Eye className="size-4" />
                         </Link>
                     </Button>
                 );
@@ -130,89 +145,64 @@ export default function AuditLog({
             description="Read-only history of account activity and record changes, recorded from the time audit logging was enabled."
         >
             <Errors errors={errors} />
-            <form
-                className="flex flex-wrap items-end gap-3"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    router.get(
-                        '/settings/audit-log',
-                        { search, action, from, to },
-                        { preserveState: true },
-                    );
-                }}
-            >
-                <div className="space-y-2">
-                    <Label htmlFor="audit-search">
-                        Actor, record type, or ID
-                    </Label>
-                    <Input
-                        id="audit-search"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="audit-action">Action</Label>
-                    <select
-                        id="audit-action"
-                        className={`${selectClass} block`}
-                        value={action}
-                        onChange={(e) => setAction(e.target.value)}
-                    >
-                        <option value="">All actions</option>
-                        {[
-                            'created',
-                            'updated',
-                            'deleted',
-                            'login',
-                            'logout',
-                        ].map((value) => (
-                            <option key={value} value={value}>
-                                {value}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="audit-from">From</Label>
-                    <Input
-                        id="audit-from"
-                        type="date"
-                        value={from}
-                        onChange={(e) => setFrom(e.target.value)}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="audit-to">To</Label>
-                    <Input
-                        id="audit-to"
-                        type="date"
-                        min={from || undefined}
-                        value={to}
-                        onChange={(e) => setTo(e.target.value)}
-                    />
-                </div>
-                <Button variant="outline">Filter</Button>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => {
-                        setSearch('');
-                        setAction('');
-                        setFrom('');
-                        setTo('');
-                        router.get('/settings/audit-log');
-                    }}
-                >
-                    Clear
-                </Button>
-            </form>
             <DataTable
                 title="Activity"
-                searchTitle="Search..."
+                searchTitle="Filter activity by actor, record type or ID..."
                 columns={columns}
                 data={logs.data}
-                searchable={false}
+                searchControl={{
+                    value: values.search,
+                    onChange: (search) => update({ ...values, search }, 300),
+                }}
+                filterControls={
+                    <>
+                        <FilterSelect
+                            label="All actions"
+                            value={values.action}
+                            options={[
+                                'created',
+                                'updated',
+                                'deleted',
+                                'login',
+                                'logout',
+                            ].map((action) => ({
+                                value: action,
+                                label:
+                                    action.charAt(0).toUpperCase() +
+                                    action.slice(1),
+                            }))}
+                            onChange={(action) => update({ ...values, action })}
+                        />
+                        <DatePicker
+                            label="From date"
+                            value={values.from}
+                            max={values.to || undefined}
+                            onChange={(from) => update({ ...values, from })}
+                        />
+                        <DatePicker
+                            label="To date"
+                            value={values.to}
+                            min={values.from || undefined}
+                            onChange={(to) => update({ ...values, to })}
+                        />
+                        {Object.values(values).some(Boolean) && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                    update({
+                                        search: '',
+                                        action: '',
+                                        from: '',
+                                        to: '',
+                                    })
+                                }
+                            >
+                                Reset
+                            </Button>
+                        )}
+                    </>
+                }
                 hidePagination
             />
             <Pagination page={logs} />

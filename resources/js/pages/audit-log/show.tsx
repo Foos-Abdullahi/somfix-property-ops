@@ -7,6 +7,7 @@ type Log = {
     action: string;
     subject_type: string;
     subject_id: number | null;
+    record_name: string;
     created_at: string;
     changes: {
         before: Record<string, unknown>;
@@ -40,7 +41,7 @@ export default function AuditShow({ log }: { log: Log }) {
                         { label: 'Actor', value: log.actor_name ?? 'System' },
                         {
                             label: 'Record',
-                            value: `${log.subject_type}${log.subject_id === null ? '' : ` #${log.subject_id}`}`,
+                            value: log.record_name,
                         },
                         {
                             label: 'Time',

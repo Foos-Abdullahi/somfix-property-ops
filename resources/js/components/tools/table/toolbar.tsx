@@ -10,6 +10,8 @@ import type { DataTableDateRangeFilter, DataTableServerFilter } from "./types";
 import { DataTableViewOptions } from "./view-options";
 
 interface DataTableToolbarProps<TData> {
+    searchControl?: { value: string; onChange: (value: string) => void };
+    filterControls?: React.ReactNode;
     table: Table<TData>;
     title: string;
     searchPlaceholder: string;
@@ -26,6 +28,8 @@ interface DataTableToolbarProps<TData> {
 }
 
 export function DataTableToolbar<TData>({
+    searchControl,
+    filterControls,
     table,
     title,
     searchPlaceholder,
@@ -189,7 +193,7 @@ export function DataTableToolbar<TData>({
         table.getAllColumns().find((col) => col.id === columnId);
 
     const renderClientFilters = () => {
-        if (usesServerFilters) {
+        if (usesServerFilters || filterControls) {
             return null;
         }
 
@@ -274,17 +278,19 @@ export function DataTableToolbar<TData>({
                         <div className="relative w-full md:w-1/2">
                             <Search className="absolute top-1/2 left-2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
+                                aria-label={searchPlaceholder}
                                 placeholder={searchPlaceholder}
-                                value={searchInput}
+                                value={searchControl?.value ?? searchInput}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleSearch(event.target.value);
+                                    if (searchControl) searchControl.onChange(event.target.value);
+                                    else handleSearch(event.target.value);
                                 }}
                                 className="h-10 rounded-xl border-border/70 pr-8 pl-8 text-sm text-foreground placeholder:text-xs"
                             />
-                            {searchInput && (
+                            {(searchControl?.value ?? searchInput) && (
                                 <button
                                     className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                    onClick={() => handleSearch("")}
+                                    onClick={() => searchControl ? searchControl.onChange("") : handleSearch("")}
                                     aria-label="Clear search"
                                 >
                                     <X className="h-4 w-4" />
@@ -329,6 +335,7 @@ export function DataTableToolbar<TData>({
                             variant={"outline"}
                             size={"sm"}
                             onClick={() => setShowFilters(!showFilters)}
+                            aria-expanded={showFilters}
                             className={`flex gap-1 rounded-lg px-2 py-0 ${showFilters ? "text-red-600 hover:bg-red-600/10 hover:text-red-600" : ""}`}
                         >
                             {!showFilters ? <Filter size={20} /> : <FilterX size={20} />} Filter
@@ -340,6 +347,7 @@ export function DataTableToolbar<TData>({
             <div>
                 {showFilters && (
                     <div className="flex flex-wrap gap-2">
+                        {filterControls}
                         {renderServerFilters()}
                         {renderClientFilters()}
 

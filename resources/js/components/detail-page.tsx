@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export type DetailSection = {
     title: string;
+    content?: ReactNode;
     fields?: { label: string; value: ReactNode }[];
     metric?: { label: string; value: ReactNode };
     text?: string | null;
@@ -46,6 +47,7 @@ function Section({ section }: { section: DetailSection }) {
                 </h2>
             </CardHeader>
             <CardContent className="space-y-4 px-4">
+                {section.content}
                 {section.metric && (
                     <div className="rounded-xs bg-muted/50 p-3">
                         <p className="text-xs text-muted-foreground">
