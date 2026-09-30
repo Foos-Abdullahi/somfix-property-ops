@@ -90,13 +90,13 @@
   --chart-3: oklch(0.5234 0.1347 144.1672);
   --chart-4: oklch(0.4254 0.1159 144.3078);
   --chart-5: oklch(0.2157 0.0453 145.7256);
-  --sidebar: oklch(0.9370 0.0142 74.4218);
+  --sidebar: #F0E9E0;
   --sidebar-foreground: oklch(0.3000 0.0358 30.2042);
   --sidebar-primary: oklch(0.5234 0.1347 144.1672);
   --sidebar-primary-foreground: oklch(1.0000 0 0);
-  --sidebar-accent: oklch(0.8952 0.0504 146.0366);
-  --sidebar-accent-foreground: oklch(0.4254 0.1159 144.3078);
-  --sidebar-border: oklch(0.8805 0.0208 74.6428);
+  --sidebar-accent: #E4DCCF;
+  --sidebar-accent-foreground: oklch(0.2200 0.0358 30.2042);
+  --sidebar-border: #DFD5C6;
   --sidebar-ring: oklch(0.5234 0.1347 144.1672);
   --font-sans: Montserrat, sans-serif;
   --font-serif: Merriweather, serif;
@@ -145,15 +145,15 @@
   --chart-3: oklch(0.6731 0.1624 144.2083);
   --chart-4: oklch(0.6291 0.1543 144.2031);
   --chart-5: oklch(0.5752 0.1446 144.1813);
-  /* A warm secondary-brand surface separates navigation from the dark workspace. */
-  --sidebar: #422b19;
-  --sidebar-foreground: #fff1d6;
-  --sidebar-primary: #f59a23;
-  --sidebar-primary-foreground: #24180e;
-  --sidebar-accent: #f59a23;
-  --sidebar-accent-foreground: #24180e;
-  --sidebar-border: #80542b;
-  --sidebar-ring: #ffbd66;
+  /* A clean, soft secondary dark surface separates navigation from the workspace canvas without green tint. */
+  --sidebar: #17181a;
+  --sidebar-foreground: #d1d5db;
+  --sidebar-primary: oklch(0.6731 0.1624 144.2083);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #232529;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #282a2e;
+  --sidebar-ring: oklch(0.6731 0.1624 144.2083);
   --font-sans: Montserrat, sans-serif;
   --font-serif: Merriweather, serif;
   --font-mono: Source Code Pro, monospace;
