@@ -110,10 +110,10 @@ export default function GeneralSettings() {
             <main className="mx-auto w-full max-w-[1440px] p-4 md:p-6">
                 <header className="flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h1 className="mt-2 text-xl font-semibold tracking-normal">
+                        <h1 className="page-title-enter mt-2 text-xl font-semibold tracking-normal">
                             General System Settings
                         </h1>
-                        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+                        <p className="page-description-enter mt-1 max-w-2xl text-sm text-muted-foreground">
                             Configure organization details, financial defaults,
                             and day-to-day operating standards.
                         </p>

@@ -4,7 +4,7 @@
     --sf-text: #17211d;
     --sf-muted: #606d66;
     --sf-line: #dfe7e1;
-    --sf-green: #075b3e;
+    --sf-green: #004317;
     --sf-soft: #e6f4ee;
     --sf-secondary: #fff0dd;
     --sf-secondary-text: #934600;
@@ -67,7 +67,7 @@ html:has(.somfix-landing) {
     left: 16px;
     transform: translateY(-150%);
     z-index: 100;
-    background: #075b3e;
+    background: #004317;
     color: #fff;
     padding: 12px 20px;
     border-radius: 8px;
@@ -102,7 +102,7 @@ html:has(.somfix-landing) {
     place-items: center;
     width: 38px;
     height: 42px;
-    background: #075b3e;
+    background: #004317;
     border-radius: 10px 10px 3px 10px;
     color: white;
 }
@@ -209,7 +209,7 @@ html:has(.somfix-landing) {
     width: 17px;
 }
 .sf-button {
-    background: #075b3e !important;
+    background: #004317 !important;
     color: #fff !important;
     border: 1px solid transparent;
     border-radius: 9px !important;
@@ -217,13 +217,13 @@ html:has(.somfix-landing) {
     padding: 0 20px;
     font-weight: 550;
     font-size: 12px;
-    box-shadow: 0 3px 4px #075b3e08;
+    box-shadow: 0 3px 4px #00431708;
     gap: 14px;
 }
 .sf-button:hover {
     background: #087a50 !important;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px #075b3e1a;
+    box-shadow: 0 6px 20px #0043171a;
 }
 .sf-button-large {
     height: 50px !important;
@@ -620,7 +620,7 @@ html:has(.somfix-landing) {
     gap: 5px;
     font-size: 8px;
     background: #e6f4ee;
-    color: #075b3e;
+    color: #004317;
     border-radius: 30px;
     padding: 5px 8px;
     white-space: nowrap;
@@ -657,7 +657,7 @@ html:has(.somfix-landing) {
     border-radius: 50%;
     margin-left: -5px;
     background: #d6e7db;
-    color: #075b3e;
+    color: #004317;
     font-size: 8px;
 }
 .sf-avatar-stack b:nth-child(2) {
@@ -842,9 +842,9 @@ html:has(.somfix-landing) {
 }
 .sf-workflow li:first-child .sf-workflow-icon,
 .sf-workflow li:last-child .sf-workflow-icon {
-    background: #075b3e;
+    background: #004317;
     color: #fff;
-    border-color: #075b3e;
+    border-color: #004317;
 }
 .sf-workflow strong {
     font-size: 9px;
@@ -1049,9 +1049,9 @@ html:has(.somfix-landing) {
     border-top: 1px solid var(--sf-line);
 }
 .sf-team-card-1 {
-    background: #075b3e;
+    background: #004317;
     color: #fff;
-    border-color: #075b3e;
+    border-color: #004317;
 }
 .sf-team-card-1 .sf-icon-box {
     background: #ffffff17;
@@ -1518,7 +1518,7 @@ html:has(.somfix-landing) {
     width: 29px;
     height: 29px;
     background: #e6f4ee;
-    color: #075b3e;
+    color: #004317;
     border-radius: 7px;
 }
 .sf-payment-row strong {
@@ -1586,7 +1586,7 @@ html:has(.somfix-landing) {
     isolation: isolate;
     overflow: hidden;
     border-radius: 20px;
-    background: #075b3e;
+    background: #004317;
     color: #fff;
     padding: 57px 62px;
     display: flex;
@@ -1609,7 +1609,7 @@ html:has(.somfix-landing) {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, #075b3efa, #075b3ed9 65%, #075b3e70);
+    background: linear-gradient(90deg, #004317fa, #004317d9 65%, #00431770);
     z-index: -1;
 }
 .sf-cta-copy {
@@ -1760,7 +1760,7 @@ html:has(.somfix-landing) {
     transform: none;
 }
 .landing-dialog {
-    --primary: #075b3e;
+    --primary: #004317;
     --primary-foreground: #fff;
 }
 @media (min-width: 1500px) {
@@ -2433,7 +2433,7 @@ html:has(.somfix-landing) {
         color: #365a43;
     }
     .sf-mobile-dash-tabs button[aria-pressed='true'] {
-        background: #075b3e;
+        background: #004317;
         color: white;
     }
     .sf-dashboard-stats {

@@ -31,8 +31,8 @@ export default function ReportsIndex({ stats, occupancy, maintenance, finance, i
             <div className="mx-auto w-full max-w-[1440px] p-4 md:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <h1 className="text-lg font-semibold">Reports management</h1>
-                        <p className="mt-1 text-xs text-muted-foreground">Review operational and financial performance across properties, repairs, teams, and cash movement.</p>
+                        <h1 className="page-title-enter text-lg font-semibold">Reports management</h1>
+                        <p className="page-description-enter mt-1 text-xs text-muted-foreground">Review operational and financial performance across properties, repairs, teams, and cash movement.</p>
                     </div>
                 </div>
                 <StatsCard sections={topMetrics} />

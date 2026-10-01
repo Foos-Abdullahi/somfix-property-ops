@@ -14,7 +14,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::controller(AccessController::class)->group(function () {
         Route::middleware('can:users.manage')->group(function () {
             Route::get('settings/users', 'users')->name('settings.users.index');

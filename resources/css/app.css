@@ -72,8 +72,8 @@
   --card-foreground: oklch(0.3000 0.0358 30.2042);
   --popover: oklch(0.9711 0.0074 80.7211);
   --popover-foreground: oklch(0.3000 0.0358 30.2042);
-  --primary: oklch(0.5234 0.1347 144.1672);
-  --primary-foreground: oklch(1.0000 0 0);
+  --primary: #004317;
+  --primary-foreground: #ffffff;
   --secondary: #fff0dd;
   --secondary-foreground: #934600;
   --muted: oklch(0.9370 0.0142 74.4218);
@@ -92,8 +92,8 @@
   --chart-5: oklch(0.2157 0.0453 145.7256);
   --sidebar: #F0E9E0;
   --sidebar-foreground: oklch(0.3000 0.0358 30.2042);
-  --sidebar-primary: oklch(0.5234 0.1347 144.1672);
-  --sidebar-primary-foreground: oklch(1.0000 0 0);
+  --sidebar-primary: #004317;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #E4DCCF;
   --sidebar-accent-foreground: oklch(0.2200 0.0358 30.2042);
   --sidebar-border: #DFD5C6;
@@ -128,8 +128,8 @@
   --card-foreground: #eeeeea;
   --popover: #30302d;
   --popover-foreground: #eeeeea;
-  --primary: oklch(0.6731 0.1624 144.2083);
-  --primary-foreground: oklch(0.2157 0.0453 145.7256);
+  --primary: #004317;
+  --primary-foreground: #ffffff;
   --secondary: #353532;
   --secondary-foreground: #e5e5df;
   --muted: #2c2c29;
@@ -149,8 +149,8 @@
   /* Brown navigation contrasts with the warm charcoal workspace. */
   --sidebar: #412910;
   --sidebar-foreground: #efdbc3;
-  --sidebar-primary: #83d3a5;
-  --sidebar-primary-foreground: #10251a;
+  --sidebar-primary: #004317;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #62421f;
   --sidebar-accent-foreground: #fff0dc;
   --sidebar-border: #705133;
@@ -240,5 +240,27 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+@keyframes page-heading-enter {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .page-title-enter,
+    .page-description-enter {
+        animation: page-heading-enter 400ms ease-out both;
+    }
+
+    .page-description-enter {
+        animation-delay: 60ms;
     }
 }
