@@ -97,20 +97,14 @@ export default function Dashboard() {
         <>
             <Head title="Executive Dashboard — SOMFIX" />
 
-            <div className="mx-auto w-full max-w-[1440px] p-4 md:p-6">
+            <div className="w-full p-4 md:p-6">
                 <section className="flex flex-col gap-4 rounded-2xl bg-primary p-6 text-primary-foreground shadow-lg shadow-primary/20 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-white/80">
-                            <span className="relative flex size-2">
-                                <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent/80" />
-                                <span className="relative inline-flex size-2 rounded-full bg-accent" />
-                            </span>
-                            SOMFIX PROPERTY OPERATIONS
-                        </div>
-                        <h1 className="text-2xl font-bold tracking-tight">
+
+                        <h1 className="page-title-enter text-lg font-semibold">
                             Welcome to your operations dashboard
                         </h1>
-                        <p className="text-sm text-white/80">
+                        <p className="page-description-enter mt-1 text-xs text-WHITE">
                             One clear place for property records, maintenance delivery, and
                             financial control.
                         </p>

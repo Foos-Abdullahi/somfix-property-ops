@@ -25,7 +25,7 @@ class UpdateInventoryRequest extends StoreInventoryRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'string'],
-            'sku' => ['sometimes', 'string', 'unique:inventories,sku,'.$this->route('inventory')],
+            'sku' => ['sometimes', 'string', Rule::unique('inventories', 'sku')->ignore($this->route('inventory'))],
             'unit_of_measure' => ['sometimes', 'string', 'max:50'],
             'category' => ['sometimes', 'string', 'max:255'],
             'opening_stock' => ['sometimes', 'integer', 'min:0'],

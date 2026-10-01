@@ -36,3 +36,9 @@ test('verified users can view workspace pages', function (string $pageName) use 
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page->component($component));
 })->with(array_keys($workspacePages));
+
+test('users can open the dashboard without email verification', function () {
+    $this->actingAs(User::factory()->unverified()->create())
+        ->get(route('dashboard'))
+        ->assertOk();
+});

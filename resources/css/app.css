@@ -72,10 +72,10 @@
   --card-foreground: oklch(0.3000 0.0358 30.2042);
   --popover: oklch(0.9711 0.0074 80.7211);
   --popover-foreground: oklch(0.3000 0.0358 30.2042);
-  --primary: oklch(0.5234 0.1347 144.1672);
-  --primary-foreground: oklch(1.0000 0 0);
-  --secondary: oklch(0.9571 0.0210 147.6360);
-  --secondary-foreground: oklch(0.4254 0.1159 144.3078);
+  --primary: #004317;
+  --primary-foreground: #ffffff;
+  --secondary: #fff0dd;
+  --secondary-foreground: #934600;
   --muted: oklch(0.9370 0.0142 74.4218);
   --muted-foreground: oklch(0.4495 0.0486 39.2110);
   --accent: oklch(0.8952 0.0504 146.0366);
@@ -90,13 +90,13 @@
   --chart-3: oklch(0.5234 0.1347 144.1672);
   --chart-4: oklch(0.4254 0.1159 144.3078);
   --chart-5: oklch(0.2157 0.0453 145.7256);
-  --sidebar: oklch(0.9370 0.0142 74.4218);
+  --sidebar: #F0E9E0;
   --sidebar-foreground: oklch(0.3000 0.0358 30.2042);
-  --sidebar-primary: oklch(0.5234 0.1347 144.1672);
-  --sidebar-primary-foreground: oklch(1.0000 0 0);
-  --sidebar-accent: oklch(0.8952 0.0504 146.0366);
-  --sidebar-accent-foreground: oklch(0.4254 0.1159 144.3078);
-  --sidebar-border: oklch(0.8805 0.0208 74.6428);
+  --sidebar-primary: #004317;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #E4DCCF;
+  --sidebar-accent-foreground: oklch(0.2200 0.0358 30.2042);
+  --sidebar-border: #DFD5C6;
   --sidebar-ring: oklch(0.5234 0.1347 144.1672);
   --font-sans: Montserrat, sans-serif;
   --font-serif: Merriweather, serif;
@@ -121,38 +121,40 @@
 }
 
 .dark {
-  --background: oklch(0.2683 0.0279 150.7681);
-  --foreground: oklch(0.9423 0.0097 72.6595);
-  --card: oklch(0.3327 0.0271 146.9867);
-  --card-foreground: oklch(0.9423 0.0097 72.6595);
-  --popover: oklch(0.3327 0.0271 146.9867);
-  --popover-foreground: oklch(0.9423 0.0097 72.6595);
-  --primary: oklch(0.6731 0.1624 144.2083);
-  --primary-foreground: oklch(0.2157 0.0453 145.7256);
-  --secondary: oklch(0.3942 0.0265 142.9926);
-  --secondary-foreground: oklch(0.8970 0.0166 142.5518);
-  --muted: oklch(0.2926 0.0212 147.7496);
-  --muted-foreground: oklch(0.8579 0.0174 76.0955);
-  --accent: oklch(0.5752 0.1446 144.1813);
-  --accent-foreground: oklch(0.9423 0.0097 72.6595);
+  color-scheme: dark;
+  --background: #20201e;
+  --foreground: #eeeeea;
+  --card: #292927;
+  --card-foreground: #eeeeea;
+  --popover: #30302d;
+  --popover-foreground: #eeeeea;
+  --primary: #004317;
+  --primary-foreground: #ffffff;
+  --secondary: #353532;
+  --secondary-foreground: #e5e5df;
+  --muted: #2c2c29;
+  --muted-foreground: #b0b0a7;
+  --accent: #393935;
+  --accent-foreground: #f2f2ec;
   --destructive: oklch(0.5386 0.1937 26.7249);
   --destructive-foreground: oklch(0.9423 0.0097 72.6595);
-  --border: oklch(0.3942 0.0265 142.9926);
-  --input: oklch(0.3942 0.0265 142.9926);
+  --border: #40403b;
+  --input: #4c4c45;
   --ring: oklch(0.6731 0.1624 144.2083);
-  --chart-1: oklch(0.7660 0.1179 145.2950);
-  --chart-2: oklch(0.7185 0.1417 144.8887);
-  --chart-3: oklch(0.6731 0.1624 144.2083);
-  --chart-4: oklch(0.6291 0.1543 144.2031);
-  --chart-5: oklch(0.5752 0.1446 144.1813);
-  --sidebar: oklch(0.2683 0.0279 150.7681);
-  --sidebar-foreground: oklch(0.9423 0.0097 72.6595);
-  --sidebar-primary: oklch(0.6731 0.1624 144.2083);
-  --sidebar-primary-foreground: oklch(0.2157 0.0453 145.7256);
-  --sidebar-accent: oklch(0.5752 0.1446 144.1813);
-  --sidebar-accent-foreground: oklch(0.9423 0.0097 72.6595);
-  --sidebar-border: oklch(0.3942 0.0265 142.9926);
-  --sidebar-ring: oklch(0.6731 0.1624 144.2083);
+  --chart-1: #83d3a5;
+  --chart-2: #f6ac60;
+  --chart-3: #75bcd5;
+  --chart-4: #b49bda;
+  --chart-5: #e4ce78;
+  /* Brown navigation contrasts with the warm charcoal workspace. */
+  --sidebar: #412910;
+  --sidebar-foreground: #efdbc3;
+  --sidebar-primary: #004317;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #62421f;
+  --sidebar-accent-foreground: #fff0dc;
+  --sidebar-border: #705133;
+  --sidebar-ring: #83d3a5;
   --font-sans: Montserrat, sans-serif;
   --font-serif: Merriweather, serif;
   --font-mono: Source Code Pro, monospace;
@@ -238,5 +240,27 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+@keyframes page-heading-enter {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .page-title-enter,
+    .page-description-enter {
+        animation: page-heading-enter 400ms ease-out both;
+    }
+
+    .page-description-enter {
+        animation-delay: 60ms;
     }
 }
