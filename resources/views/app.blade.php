@@ -26,20 +26,24 @@
             }
 
             html.dark {
-                background-color: oklch(0.145 0 0);
+                background-color: #20201e;
             }
         </style>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/favicon.ico?v=somfix-1" sizes="any">
+        <link rel="icon" href="/favicon-32x32.png?v=somfix-1" type="image/png" sizes="32x32">
+        <link rel="icon" href="/favicon.svg?v=somfix-1" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=somfix-1" sizes="180x180">
+        <link rel="manifest" href="/site.webmanifest">
+        <meta name="theme-color" content="#004317">
+        <meta name="apple-mobile-web-app-title" content="SOMFIX">
 
         @fonts
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
+            <title>{{ config('app.name', 'SOMFIX') }}</title>
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">

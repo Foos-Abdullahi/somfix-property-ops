@@ -2,11 +2,11 @@ import { Users, ShieldCheck, Pencil, Plus } from 'lucide-react';
 import { Eye, Edit, Trash2 } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/components/tools/table/main-table';
+import { FilterSelect } from '@/components/tools/table/filter-select';
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { AccessPage, DeleteRecord } from '@/components/access-management';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 type Role = {
     id: number;
@@ -27,8 +27,17 @@ export default function Roles({
 }) {
     const [deleting, setDeleting] = useState<Role | null>(null);
     const [search, setSearch] = useState('');
-    const matches = roles.filter((role) =>
-        role.name.toLowerCase().includes(search.toLowerCase()),
+    const [roleType, setRoleType] = useState('');
+    const [assignment, setAssignment] = useState('');
+    const matches = roles.filter(
+        (role) =>
+            role.name.toLowerCase().includes(search.trim().toLowerCase()) &&
+            (!roleType ||
+                (roleType === 'system' ? role.is_system : !role.is_system)) &&
+            (!assignment ||
+                (assignment === 'assigned'
+                    ? role.users_count > 0
+                    : role.users_count === 0)),
     );
     const columns: ColumnDef<Role>[] = [
         {
@@ -151,21 +160,47 @@ export default function Roles({
             ]}
             description="Define which records and settings each role can access."
         >
-            <div className="flex justify-between gap-3">
-                <Input
-                    aria-label="Search roles"
-                    placeholder="Search roles"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="max-w-xs"
-                />
-            </div>
             <DataTable
                 title="Roles"
-                searchTitle="Search..."
+                searchTitle="Filter roles by name..."
                 columns={columns}
                 data={matches}
-                searchable={false}
+                searchControl={{ value: search, onChange: setSearch }}
+                filterControls={
+                    <>
+                        <FilterSelect
+                            label="All role types"
+                            value={roleType}
+                            options={[
+                                { value: 'system', label: 'System roles' },
+                                { value: 'custom', label: 'Custom roles' },
+                            ]}
+                            onChange={setRoleType}
+                        />
+                        <FilterSelect
+                            label="All assignments"
+                            value={assignment}
+                            options={[
+                                { value: 'assigned', label: 'Assigned roles' },
+                                { value: 'unassigned', label: 'Unassigned roles' },
+                            ]}
+                            onChange={setAssignment}
+                        />
+                        {(search || roleType || assignment) && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                    setSearch('');
+                                    setRoleType('');
+                                    setAssignment('');
+                                }}
+                            >
+                                Reset
+                            </Button>
+                        )}
+                    </>
+                }
                 hidePagination
             />
             {deleting && (

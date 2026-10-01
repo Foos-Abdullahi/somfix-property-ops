@@ -6,6 +6,9 @@
     --sf-line: #dfe7e1;
     --sf-green: #075b3e;
     --sf-soft: #e6f4ee;
+    --sf-secondary: #fff0dd;
+    --sf-secondary-text: #934600;
+    --sf-secondary-line: #ebbd88;
     background: var(--sf-bg);
     color: var(--sf-text);
     font-family: 'Instrument Sans', sans-serif;
@@ -20,13 +23,16 @@ html:has(.somfix-landing) {
     color: #eef5f0;
 }
 .dark .somfix-landing {
-    --sf-bg: #0d0d0d;
-    --sf-surface: #151d18;
-    --sf-text: #eef5f0;
-    --sf-muted: #a8b8ae;
-    --sf-line: #2b3931;
+    --sf-bg: #20201e;
+    --sf-surface: #292927;
+    --sf-text: #eeeeea;
+    --sf-muted: #b0b0a7;
+    --sf-line: #40403b;
     --sf-green: #8dd3af;
-    --sf-soft: #193b2b;
+    --sf-soft: #2c2c29;
+    --sf-secondary: #353532;
+    --sf-secondary-text: #e5e5df;
+    --sf-secondary-line: #4c4c45;
 }
 .somfix-landing * {
     box-sizing: border-box;
@@ -226,13 +232,14 @@ html:has(.somfix-landing) {
     border-radius: 9px !important;
 }
 .sf-button-outline {
-    background: var(--sf-surface) !important;
-    border: 1px solid var(--sf-line) !important;
-    color: var(--sf-text) !important;
+    background: var(--sf-secondary) !important;
+    border: 1px solid var(--sf-secondary-line) !important;
+    color: var(--sf-secondary-text) !important;
     gap: 16px;
 }
 .sf-button-outline:hover {
-    border-color: var(--sf-green) !important;
+    background: var(--sf-secondary) !important;
+    border-color: var(--sf-secondary-text) !important;
     transform: translateY(-2px);
 }
 .sf-mobile-menu {
@@ -258,7 +265,7 @@ html:has(.somfix-landing) {
     background: radial-gradient(ellipse at 86% 45%, #dcece3 0, transparent 46%);
 }
 .dark .sf-hero {
-    background: radial-gradient(ellipse at 85% 35%, #113b26 0, transparent 53%);
+    background: var(--sf-bg);
 }
 .sf-hero-grid {
     position: absolute;
@@ -289,9 +296,9 @@ html:has(.somfix-landing) {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border: 1px solid #b8d5c4;
-    background: var(--sf-soft);
-    color: var(--sf-green);
+    border: 1px solid var(--sf-secondary-line);
+    background: var(--sf-secondary);
+    color: var(--sf-secondary-text);
     padding: 7px 12px;
     border-radius: 30px;
     font-size: 10px;
@@ -481,8 +488,8 @@ html:has(.somfix-landing) {
 .sf-icon-box {
     display: grid;
     place-items: center;
-    background: var(--sf-soft);
-    color: var(--sf-green);
+    background: var(--sf-secondary);
+    color: var(--sf-secondary-text);
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -1141,12 +1148,25 @@ html:has(.somfix-landing) {
     grid-template-columns: 185px 1fr;
 }
 .sf-dashboard-sidebar {
-    background: #083e2c;
+    background: #161e1a;
+    border-right: 1px solid #2c3a31;
     padding: 27px 16px;
     display: flex;
     flex-direction: column;
     gap: 5px;
     min-width: 0;
+}
+.dark .sf-dashboard-sidebar {
+    background: #412910;
+    border-color: #705133;
+}
+.dark .sf-dashboard-sidebar > button.sf-dash-active {
+    background: #62421f;
+    color: #fff0dc;
+}
+.dark .sf-workspace-card {
+    background: linear-gradient(135deg, #24543c, #193c2b);
+    border-color: #43594a;
 }
 .sf-dashboard-sidebar .sf-brand {
     gap: 8px;
@@ -1167,7 +1187,7 @@ html:has(.somfix-landing) {
 .sf-dashboard-sidebar > p {
     font-size: 7px;
     letter-spacing: 1.5px;
-    color: #94b8a4;
+    color: #a5a9b2;
     margin: 8px 10px;
 }
 .sf-dashboard-sidebar > button,
@@ -1178,11 +1198,11 @@ html:has(.somfix-landing) {
     padding: 10px;
     border-radius: 6px;
     font-size: 10px;
-    color: #bdd6c8;
+    color: #d1d5db;
     text-align: left;
 }
 .sf-dashboard-sidebar > button.sf-dash-active {
-    background: #ffffff17;
+    background: #294534;
     color: #fff;
 }
 .sf-dashboard-sidebar > button.sf-dash-active::after {
@@ -1195,7 +1215,7 @@ html:has(.somfix-landing) {
 }
 .sf-workspace-card {
     margin-top: auto;
-    background: linear-gradient(135deg, #196047, #105439);
+    background: linear-gradient(135deg, #24543c, #193c2b);
     border: 1px solid #ffffff16;
     border-radius: 8px;
     padding: 15px 10px;
