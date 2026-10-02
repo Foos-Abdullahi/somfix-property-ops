@@ -12,7 +12,7 @@ import {
     Wallet,
     Wrench,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeToneClasses } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { dashboard } from "@/routes";
@@ -139,7 +139,7 @@ export default function Dashboard() {
                                     </div>
                                     <Badge
                                         variant="outline"
-                                        className="border-primary/20 bg-primary/10 text-primary"
+                                        className={badgeToneClasses.success}
                                     >
                                         Foundation ready
                                     </Badge>
@@ -343,8 +343,8 @@ export default function Dashboard() {
                                                         variant="outline"
                                                         className={
                                                             row.status === "Next"
-                                                                ? "border-accent/30 bg-accent/15 text-amber-800 dark:text-accent"
-                                                                : "border-border bg-muted text-muted-foreground"
+                                                                ? badgeToneClasses.warning
+                                                                : badgeToneClasses.neutral
                                                         }
                                                     >
                                                         {row.status}

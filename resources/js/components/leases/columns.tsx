@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Calendar, Edit, Eye, MapPin, Users } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, show } from '@/routes/leases';
 
@@ -101,10 +101,10 @@ export const leaseColumns: ColumnDef<LeaseRow>[] = [
         header: 'Status',
         cell: ({ row }) => {
             const statusColors = {
-                active: 'border-success/20 bg-success/10 text-success',
-                expired: 'border-destructive/20 bg-destructive/10 text-destructive',
-                pending: 'border-warning/20 bg-warning/10 text-warning',
-                terminated: 'border-muted-foreground/20 bg-muted-foreground/10 text-muted-foreground',
+                active: badgeToneClasses.success,
+                expired: badgeToneClasses.danger,
+                pending: badgeToneClasses.warning,
+                terminated: badgeToneClasses.neutral,
             };
             return (
                 <Badge
@@ -124,12 +124,12 @@ export const leaseColumns: ColumnDef<LeaseRow>[] = [
             <div className="flex gap-1">
                 <Button asChild size="icon" variant="ghost">
                     <Link href={show(row.original.id)}>
-                        <Eye className="size-4" />
+                        <Eye className="size-4 text-[#FF8500]" />
                     </Link>
                 </Button>
                 <Button asChild size="icon" variant="ghost">
                     <Link href={edit(row.original.id)}>
-                        <Edit className="size-4" />
+                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
                     </Link>
                 </Button>
             </div>

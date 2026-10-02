@@ -92,7 +92,7 @@ export default function Users({
                 return (
                     <>
                         <Badge
-                            variant={user.is_active ? 'default' : 'secondary'}
+                            variant={user.is_active ? 'success' : 'neutral'}
                         >
                             {user.is_active ? 'Active' : 'Inactive'}
                         </Badge>
@@ -115,7 +115,7 @@ export default function Users({
                                         href={`/settings/users/${user.id}/edit`}
                                         aria-label={`Edit ${user.name}`}
                                     >
-                                        <Edit className="size-4" />
+                                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
                                     </Link>
                                 </Button>
                             )}
@@ -127,7 +127,7 @@ export default function Users({
                                         aria-label={`Delete ${user.name}`}
                                         onClick={() => setDeleting(user)}
                                     >
-                                        <Trash2 className="size-4" />
+                                        <Trash2 className="size-4 text-destructive" />
                                     </Button>
                                 )}
                         </div>

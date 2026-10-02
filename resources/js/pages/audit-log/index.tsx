@@ -73,10 +73,10 @@ export default function AuditLog({
                         <Badge
                             variant={
                                 log.action === 'deleted'
-                                    ? 'destructive'
+                                    ? 'danger'
                                     : log.action === 'logout'
-                                      ? 'secondary'
-                                      : 'default'
+                                      ? 'neutral'
+                                      : log.action === 'created' ? 'success' : 'info'
                             }
                             className="capitalize"
                         >
@@ -106,7 +106,7 @@ export default function AuditLog({
                             href={`/settings/audit-log/${log.id}`}
                             aria-label={`View changes to ${log.record_name}`}
                         >
-                            <Eye className="size-4" />
+                            <Eye className="size-4 text-[#FF8500]" />
                         </Link>
                     </Button>
                 );

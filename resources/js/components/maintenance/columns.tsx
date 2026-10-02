@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Calendar, Edit, Eye, MapPin } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, show } from '@/routes/maintenance';
 
@@ -75,10 +75,10 @@ export const maintenanceColumns: ColumnDef<MaintenanceRow>[] = [
         header: 'Priority',
         cell: ({ row }) => {
             const priorityColors = {
-                low: 'border-muted-foreground/20 bg-muted-foreground/10 text-muted-foreground',
-                medium: 'border-info/20 bg-info/10 text-info',
-                high: 'border-warning/20 bg-warning/10 text-warning',
-                urgent: 'border-destructive/20 bg-destructive/10 text-destructive',
+                low: badgeToneClasses.neutral,
+                medium: badgeToneClasses.info,
+                high: badgeToneClasses.warning,
+                urgent: badgeToneClasses.danger,
             };
             return (
                 <Badge
@@ -96,11 +96,11 @@ export const maintenanceColumns: ColumnDef<MaintenanceRow>[] = [
         header: 'Status',
         cell: ({ row }) => {
             const statusColors = {
-                open: 'border-warning/20 bg-warning/10 text-warning',
-                in_progress: 'border-info/20 bg-info/10 text-info',
-                scheduled: 'border-primary/20 bg-primary/10 text-primary',
-                completed: 'border-success/20 bg-success/10 text-success',
-                cancelled: 'border-muted-foreground/20 bg-muted-foreground/10 text-muted-foreground',
+                open: badgeToneClasses.warning,
+                in_progress: badgeToneClasses.info,
+                scheduled: badgeToneClasses.success,
+                completed: badgeToneClasses.success,
+                cancelled: badgeToneClasses.neutral,
             };
             const statusLabels = {
                 open: 'Open',
@@ -144,12 +144,12 @@ export const maintenanceColumns: ColumnDef<MaintenanceRow>[] = [
             <div className="flex gap-1">
                 <Button asChild size="icon" variant="ghost">
                     <Link href={show(row.original.id)}>
-                        <Eye className="size-4" />
+                        <Eye className="size-4 text-[#FF8500]" />
                     </Link>
                 </Button>
                 <Button asChild size="icon" variant="ghost">
                     <Link href={edit(row.original.id)}>
-                        <Edit className="size-4" />
+                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
                     </Link>
                 </Button>
             </div>

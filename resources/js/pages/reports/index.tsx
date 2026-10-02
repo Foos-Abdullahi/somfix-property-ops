@@ -28,7 +28,7 @@ export default function ReportsIndex({ stats, occupancy, maintenance, finance, i
     return (
         <>
             <Head title="Reports — SOMFIX" />
-            <div className="mx-auto w-full max-w-[1440px] p-4 md:p-6">
+            <div className="w-full flex-1 p-4 md:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <h1 className="page-title-enter text-lg font-semibold">Reports management</h1>

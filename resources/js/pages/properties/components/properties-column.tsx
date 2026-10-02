@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Eye, MapPin } from "lucide-react";
 import { Link } from "@inertiajs/react";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeToneClasses } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { edit, show } from "@/routes/properties";
 
@@ -64,8 +64,8 @@ export const propertyColumns: ColumnDef<PropertyRow>[] = [
                 variant="outline"
                 className={
                     row.original.status === "active"
-                        ? "border-primary/20 bg-primary/10 text-primary"
-                        : "border-border bg-muted text-muted-foreground"
+                        ? badgeToneClasses.success
+                        : badgeToneClasses.neutral
                 }
             >
                 {row.original.status === "active" ? "Active" : "Inactive"}
@@ -79,12 +79,12 @@ export const propertyColumns: ColumnDef<PropertyRow>[] = [
             <div className="flex justify-end gap-1">
                 <Button asChild size="icon" variant="ghost" className="size-8">
                     <Link href={show(row.original.id)} aria-label={`View ${row.original.name}`}>
-                        <Eye className="size-4" />
+                        <Eye className="size-4 text-[#FF8500]" />
                     </Link>
                 </Button>
                 <Button asChild size="icon" variant="ghost" className="size-8">
                     <Link href={edit(row.original.id)} aria-label={`Edit ${row.original.name}`}>
-                        <Edit className="size-4" />
+                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
                     </Link>
                 </Button>
             </div>
