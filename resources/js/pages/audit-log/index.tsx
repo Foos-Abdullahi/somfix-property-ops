@@ -73,10 +73,10 @@ export default function AuditLog({
                         <Badge
                             variant={
                                 log.action === 'deleted'
-                                    ? 'destructive'
+                                    ? 'danger'
                                     : log.action === 'logout'
-                                      ? 'secondary'
-                                      : 'default'
+                                      ? 'neutral'
+                                      : log.action === 'created' ? 'success' : 'info'
                             }
                             className="capitalize"
                         >

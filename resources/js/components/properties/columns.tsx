@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, show } from '@/routes/properties';
 
@@ -22,6 +22,6 @@ export const propertyColumns: ColumnDef<PropertyRow>[] = [
     { id: 'location', header: 'Location', cell: ({ row }) => [row.original.district, row.original.city].filter(Boolean).join(', ') },
     { accessorKey: 'units_count', header: 'Units' },
     { accessorKey: 'owner_name', header: 'Owner', cell: ({ row }) => row.original.owner_name ?? '—' },
-    { accessorKey: 'status', header: 'Status', cell: ({ row }) => <Badge variant="outline" className={row.original.status === 'active' ? 'border-primary/20 bg-primary/10 text-primary' : ''}>{row.original.status === 'active' ? 'Active' : 'Inactive'}</Badge> },
+    { accessorKey: 'status', header: 'Status', cell: ({ row }) => <Badge variant="outline" className={row.original.status === 'active' ? badgeToneClasses.success : ''}>{row.original.status === 'active' ? 'Active' : 'Inactive'}</Badge> },
     { id: 'actions', header: 'Actions', cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4" /></Link></Button></div> },
 ];
