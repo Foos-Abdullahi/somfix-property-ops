@@ -92,7 +92,7 @@ export default function Users({
                 return (
                     <>
                         <Badge
-                            variant={user.is_active ? 'default' : 'secondary'}
+                            variant={user.is_active ? 'success' : 'neutral'}
                         >
                             {user.is_active ? 'Active' : 'Inactive'}
                         </Badge>

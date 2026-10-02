@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Eye, MapPin } from "lucide-react";
 import { Link } from "@inertiajs/react";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeToneClasses } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { edit, show } from "@/routes/properties";
 
@@ -64,8 +64,8 @@ export const propertyColumns: ColumnDef<PropertyRow>[] = [
                 variant="outline"
                 className={
                     row.original.status === "active"
-                        ? "border-primary/20 bg-primary/10 text-primary"
-                        : "border-border bg-muted text-muted-foreground"
+                        ? badgeToneClasses.success
+                        : badgeToneClasses.neutral
                 }
             >
                 {row.original.status === "active" ? "Active" : "Inactive"}

@@ -15,34 +15,34 @@ export interface Stat {
 
 const colorStyles = {
     primary: {
-        bg: "bg-primary/10",
-        text: "text-primary",
-        border: "border-primary/20",
+        bg: "bg-primary/10 dark:bg-green-400/15",
+        text: "text-primary dark:text-green-300",
+        border: "border-primary/20 dark:border-green-400/30",
     },
     info: {
-        bg: "bg-info/10",
-        text: "text-info",
-        border: "border-info/20",
+        bg: "bg-info/10 dark:bg-sky-400/15",
+        text: "text-info dark:text-sky-300",
+        border: "border-info/20 dark:border-sky-400/30",
     },
     success: {
-        bg: "bg-emerald-500/10",
-        text: "text-emerald-600",
-        border: "border-emerald-500/20",
+        bg: "bg-emerald-500/10 dark:bg-emerald-400/15",
+        text: "text-emerald-600 dark:text-emerald-300",
+        border: "border-emerald-500/20 dark:border-emerald-400/30",
     },
     warning: {
-        bg: "bg-accent/10",
-        text: "text-accent",
-        border: "border-accent/20",
+        bg: "bg-accent/10 dark:bg-amber-400/15",
+        text: "text-accent dark:text-amber-300",
+        border: "border-accent/20 dark:border-amber-400/30",
     },
     destructive: {
-        bg: "bg-destructive/10",
-        text: "text-destructive",
-        border: "border-destructive/20",
+        bg: "bg-destructive/10 dark:bg-red-400/15",
+        text: "text-destructive dark:text-red-300",
+        border: "border-destructive/20 dark:border-red-400/30",
     },
     accent: {
-        bg: "bg-accent/10",
-        text: "text-accent-foreground",
-        border: "border-accent/20",
+        bg: "bg-accent/10 dark:bg-violet-400/15",
+        text: "text-accent-foreground dark:text-violet-300",
+        border: "border-accent/20 dark:border-violet-400/30",
     },
 };
 
