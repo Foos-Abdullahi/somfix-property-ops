@@ -2607,3 +2607,171 @@ html:has(.somfix-landing) {
         width: 142px;
     }
 }
+
+/* ── 2026 Design Upgrades ──────────────────────────────────────── */
+
+/* Hero status-dot pulse animation */
+@keyframes sf-pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.55; transform: scale(1.4); }
+}
+.sf-hero-pill .sf-status-dot,
+.sf-footer-bottom .sf-status-dot {
+    animation: sf-pulse-dot 2.4s ease-in-out infinite;
+}
+
+/* Button shine sweep on hover */
+.sf-button {
+    position: relative;
+    overflow: hidden;
+}
+.sf-button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.13) 50%,
+        transparent 65%
+    );
+    transform: translateX(-110%);
+    transition: transform 0.5s ease;
+    pointer-events: none;
+    border-radius: inherit;
+}
+.sf-button:hover::after {
+    transform: translateX(110%);
+}
+
+/* Nav CTA button refinement */
+.sf-nav-demo {
+    font-size: 12.5px !important;
+    letter-spacing: 0.1px;
+}
+
+/* ── Trust Bar ──────────────────────────────────────────────────── */
+.sf-trust-bar {
+    background: var(--sf-surface);
+    border-bottom: 1px solid var(--sf-line);
+}
+.sf-trust-inner {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    overflow: hidden;
+}
+.sf-trust-label {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--sf-muted);
+    white-space: nowrap;
+    padding-right: 26px;
+    border-right: 1px solid var(--sf-line);
+    margin-right: 24px;
+    flex-shrink: 0;
+}
+.sf-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 550;
+    color: var(--sf-muted);
+    white-space: nowrap;
+    padding-right: 22px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+.sf-trust-item:hover {
+    color: var(--sf-green);
+}
+.sf-trust-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--sf-green);
+    opacity: 0.55;
+    flex-shrink: 0;
+}
+@media (max-width: 900px) {
+    .sf-trust-inner {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .sf-trust-inner::-webkit-scrollbar { display: none; }
+    .sf-trust-label { display: none; }
+    .sf-trust-item { font-size: 10px; padding-right: 16px; }
+}
+@media (max-width: 640px) {
+    .sf-trust-bar { display: none; }
+}
+
+/* ── About section CTA button ───────────────────────────────────── */
+.sf-about-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 13px 22px;
+    background: #004317;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+    box-shadow: 0 4px 14px #0043171a;
+}
+.sf-about-cta-btn:hover {
+    background: #087a50;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px #0043172a;
+}
+.sf-about-cta-btn svg {
+    transition: transform 0.2s;
+}
+.sf-about-cta-btn:hover svg {
+    transform: translate(2px, -2px);
+}
+.dark .sf-about-cta-btn {
+    background: var(--sf-green);
+    color: #17211d;
+}
+.dark .sf-about-cta-btn:hover {
+    background: #aadebc;
+}
+@media (max-width: 640px) {
+    .sf-about-cta-btn {
+        font-size: 12px;
+        padding: 11px 18px;
+        margin-top: 20px;
+    }
+}
+
+/* ── Subtle backdrop blur on hero pill ──────────────────────────── */
+.sf-hero-pill {
+    backdrop-filter: blur(6px);
+}
+
+/* ── Springy team card hover ─────────────────────────────────────── */
+.sf-team-card {
+    transition:
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.25s ease;
+}
+
+/* ── CTA section hover glow ──────────────────────────────────────── */
+.sf-cta {
+    transition: box-shadow 0.35s;
+}
+.sf-cta:hover {
+    box-shadow: 0 32px 80px #00431720;
+}
+

@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/react';
+﻿import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { ArrowRight, CheckCircle2, LoaderCircle } from 'lucide-react';
 import {
@@ -50,13 +50,13 @@ export function DemoDialog({
                 <DialogHeader>
                     <DialogTitle className="text-2xl">
                         {complete
-                            ? 'Your request is saved.'
-                            : 'Let’s talk about your operations.'}
+                            ? "You're on the list."
+                            : "Let's show you how it works."}
                     </DialogTitle>
                     <DialogDescription>
                         {complete
-                            ? 'Thank you for your interest in SOMFIX. Your details have been submitted for a demo conversation.'
-                            : 'Tell us a little about your team. We’ll use these details to understand your needs.'}
+                            ? "Thanks for reaching out. We'll be in touch to schedule your walkthrough of SOMFIX."
+                            : "Tell us a little about your team and we'll set up a walkthrough tailored to your operations."}
                     </DialogDescription>
                 </DialogHeader>
                 {complete ? (
@@ -198,7 +198,7 @@ export function DemoDialog({
                         </div>
                         <p className="text-xs leading-5 text-muted-foreground">
                             Your name, email and company details are stored with
-                            this inquiry so SOMFIX can respond. Please don’t
+                            this inquiry so SOMFIX can respond. Please don&apos;t
                             include tenant or payment information.
                         </p>
                         <Button
@@ -212,7 +212,7 @@ export function DemoDialog({
                                 </>
                             ) : (
                                 <>
-                                    Request a Demo
+                                    Send My Request
                                     <ArrowRight />
                                 </>
                             )}
