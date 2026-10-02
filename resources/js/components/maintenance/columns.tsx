@@ -144,12 +144,12 @@ export const maintenanceColumns: ColumnDef<MaintenanceRow>[] = [
             <div className="flex gap-1">
                 <Button asChild size="icon" variant="ghost">
                     <Link href={show(row.original.id)}>
-                        <Eye className="size-4" />
+                        <Eye className="size-4 text-[#FF8500]" />
                     </Link>
                 </Button>
                 <Button asChild size="icon" variant="ghost">
                     <Link href={edit(row.original.id)}>
-                        <Edit className="size-4" />
+                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
                     </Link>
                 </Button>
             </div>

@@ -106,7 +106,7 @@ export default function AuditLog({
                             href={`/settings/audit-log/${log.id}`}
                             aria-label={`View changes to ${log.record_name}`}
                         >
-                            <Eye className="size-4" />
+                            <Eye className="size-4 text-[#FF8500]" />
                         </Link>
                     </Button>
                 );

@@ -12,5 +12,5 @@ export const serviceTeamColumns: ColumnDef<ServiceTeamRow>[] = [
     { accessorKey: "phone", header: "Phone", cell: ({ row }) => row.original.phone },
     { accessorKey: "email", header: "Email", cell: ({ row }) => row.original.email },
     { accessorKey: "status", header: "Status", cell: ({ row }) => <Badge variant="outline" className={statusClass[row.original.status]}>{row.original.status.replace("_", " ").toUpperCase()}</Badge> },
-    { id: "actions", header: "Actions", cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4" /></Link></Button></div> },
+    { id: "actions", header: "Actions", cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4 text-[#FF8500]" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4 text-[#004317] dark:text-green-300" /></Link></Button></div> },
 ];

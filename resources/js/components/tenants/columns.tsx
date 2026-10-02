@@ -11,5 +11,5 @@ export const tenantColumns: ColumnDef<TenantRow>[] = [
     { accessorKey: "phone", header: "Phone" },
     { id: "unit", header: "Assigned unit", cell: ({ row }) => row.original.unit ? <div><p>{row.original.unit.unit_number}</p><p className="text-xs text-muted-foreground">{row.original.unit.property.name}</p></div> : "Unassigned" },
     { accessorKey: "status", header: "Status", cell: ({ row }) => <Badge variant="outline" className={row.original.status === "active" ? badgeToneClasses.success : badgeToneClasses.neutral}>{row.original.status === "active" ? "Active" : "Inactive"}</Badge> },
-    { id: "actions", header: "Actions", cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4" /></Link></Button></div> },
+    { id: "actions", header: "Actions", cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4 text-[#FF8500]" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4 text-[#004317] dark:text-green-300" /></Link></Button></div> },
 ];

@@ -89,7 +89,7 @@ export default function Roles({
                                     href={`/settings/roles/${role.id}`}
                                     aria-label={`View ${role.name}`}
                                 >
-                                    <Eye className="size-4" />
+                                    <Eye className="size-4 text-[#FF8500]" />
                                 </Link>
                             </Button>
                             {role.slug !== 'administrator' && (
@@ -98,7 +98,7 @@ export default function Roles({
                                         href={`/settings/roles/${role.id}/edit`}
                                         aria-label={`Edit ${role.name}`}
                                     >
-                                        <Edit className="size-4" />
+                                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
                                     </Link>
                                 </Button>
                             )}

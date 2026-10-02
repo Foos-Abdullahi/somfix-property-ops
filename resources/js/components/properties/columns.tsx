@@ -23,5 +23,5 @@ export const propertyColumns: ColumnDef<PropertyRow>[] = [
     { accessorKey: 'units_count', header: 'Units' },
     { accessorKey: 'owner_name', header: 'Owner', cell: ({ row }) => row.original.owner_name ?? '—' },
     { accessorKey: 'status', header: 'Status', cell: ({ row }) => <Badge variant="outline" className={row.original.status === 'active' ? badgeToneClasses.success : ''}>{row.original.status === 'active' ? 'Active' : 'Inactive'}</Badge> },
-    { id: 'actions', header: 'Actions', cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4" /></Link></Button></div> },
+    { id: 'actions', header: 'Actions', cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4 text-[#FF8500]" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4 text-[#004317] dark:text-green-300" /></Link></Button></div> },
 ];

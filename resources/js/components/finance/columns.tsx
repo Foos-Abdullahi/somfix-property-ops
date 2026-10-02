@@ -15,5 +15,5 @@ export const financeColumns: ColumnDef<FinanceRow>[] = [
     { accessorKey: "paid_amount", header: "Paid", cell: ({ row }) => `${row.original.currency} ${Number(row.original.paid_amount).toFixed(2)}` },
     { accessorKey: "balance", header: "Balance", cell: ({ row }) => `${row.original.currency} ${Number(row.original.balance).toFixed(2)}` },
     { accessorKey: "status", header: "Status", cell: ({ row }) => <Badge variant="outline" className={statusClass[row.original.status]}>{row.original.status.toUpperCase()}</Badge> },
-    { id: "actions", header: "Actions", cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4" /></Link></Button></div> },
+    { id: "actions", header: "Actions", cell: ({ row }) => <div className="flex gap-1"><Button asChild size="icon" variant="ghost"><Link href={show(row.original.id)}><Eye className="size-4 text-[#FF8500]" /></Link></Button><Button asChild size="icon" variant="ghost"><Link href={edit(row.original.id)}><Edit className="size-4 text-[#004317] dark:text-green-300" /></Link></Button></div> },
 ];
