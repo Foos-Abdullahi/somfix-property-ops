@@ -14,9 +14,17 @@ use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
-Route::post('/demo-requests', [DemoRequestController::class, 'store'])->middleware('throttle:5,1')->name('demo-requests.store');
+Route::post('/demo-requests', [DemoRequestController::class, 'store'])->middleware('throttle:5,1')->name('demo-inquiries.store');
 
 Route::middleware('auth')->group(function () {
+    Route::get('demo-requests/create', [DemoRequestController::class, 'create'])->name('demo-requests.create');
+    Route::post('demo-requests/admin', [DemoRequestController::class, 'adminStore'])->name('demo-requests.store');
+    Route::get('demo-requests/{demoRequest}/edit', [DemoRequestController::class, 'edit'])->name('demo-requests.edit');
+    Route::delete('demo-requests/{demoRequest}', [DemoRequestController::class, 'destroy'])->name('demo-requests.destroy');
+    Route::patch('demo-requests/{demoRequest}/restore', [DemoRequestController::class, 'restore'])->withTrashed()->name('demo-requests.restore');
+    Route::get('demo-requests', [DemoRequestController::class, 'index'])->name('demo-requests.index');
+    Route::get('demo-requests/{demoRequest}', [DemoRequestController::class, 'show'])->name('demo-requests.show');
+    Route::put('demo-requests/{demoRequest}', [DemoRequestController::class, 'update'])->name('demo-requests.update');
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::resource('properties', PropertyController::class);
     Route::resource('units', UnitController::class);

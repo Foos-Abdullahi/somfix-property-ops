@@ -90,6 +90,7 @@ const operationsNavItems: NavItem[] = [
 ];
 
 const businessNavItems: NavItem[] = [
+    { title: 'Demo Requests', href: '/demo-requests', icon: ClipboardList },
     {
         title: 'Inventory',
         href: inventoryIndex(),

@@ -3,6 +3,22 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="SOMFIX Property Operations — manage properties, tenants, leases, maintenance, and finances in one place.">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="SOMFIX">
+        <meta property="og:title" content="SOMFIX | Property Operations">
+        <meta property="og:description" content="Manage properties, tenants, leases, maintenance, and finances in one place.">
+        <meta property="og:url" content="{{ rtrim(config('app.url'), '/') }}/">
+        <meta property="og:image" content="{{ rtrim(config('app.url'), '/') }}/icon-512.png?v=somfix-share-1">
+        <meta property="og:image:secure_url" content="{{ rtrim(config('app.url'), '/') }}/icon-512.png?v=somfix-share-1">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="512">
+        <meta property="og:image:height" content="512">
+        <meta property="og:image:alt" content="SOMFIX orange house and green wrench logo">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="SOMFIX | Property Operations">
+        <meta name="twitter:description" content="Manage properties, tenants, leases, maintenance, and finances in one place.">
+        <meta name="twitter:image" content="{{ rtrim(config('app.url'), '/') }}/icon-512.png?v=somfix-share-1">
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
@@ -43,7 +59,7 @@
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'SOMFIX') }}</title>
+            <title>{{ config('app.name', 'SOMFIX') }} | Property Operations</title>
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">
