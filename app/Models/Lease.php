@@ -57,6 +57,7 @@ class Lease extends Model
     /**
      * Get the tenant that owns the lease.
      */
+    /** @return BelongsTo<Tenant, $this> */
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
@@ -65,6 +66,7 @@ class Lease extends Model
     /**
      * Get the unit that belongs to the lease.
      */
+    /** @return BelongsTo<Unit, $this> */
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);

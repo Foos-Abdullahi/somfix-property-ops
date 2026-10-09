@@ -91,9 +91,7 @@ export default function Users({
                 const user = row.original;
                 return (
                     <>
-                        <Badge
-                            variant={user.is_active ? 'success' : 'neutral'}
-                        >
+                        <Badge variant={user.is_active ? 'success' : 'neutral'}>
                             {user.is_active ? 'Active' : 'Inactive'}
                         </Badge>
                     </>

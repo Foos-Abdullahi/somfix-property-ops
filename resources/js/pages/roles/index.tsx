@@ -182,7 +182,10 @@ export default function Roles({
                             value={assignment}
                             options={[
                                 { value: 'assigned', label: 'Assigned roles' },
-                                { value: 'unassigned', label: 'Unassigned roles' },
+                                {
+                                    value: 'unassigned',
+                                    label: 'Unassigned roles',
+                                },
                             ]}
                             onChange={setAssignment}
                         />

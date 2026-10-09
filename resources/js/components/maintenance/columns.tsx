@@ -51,7 +51,9 @@ export const maintenanceColumns: ColumnDef<MaintenanceRow>[] = [
         cell: ({ row }) => (
             <div>
                 <p className="font-semibold">{row.original.title}</p>
-                <p className="text-xs text-muted-foreground">{row.original.category}</p>
+                <p className="text-xs text-muted-foreground">
+                    {row.original.category}
+                </p>
             </div>
         ),
     },
@@ -62,7 +64,9 @@ export const maintenanceColumns: ColumnDef<MaintenanceRow>[] = [
             <div className="flex items-center gap-2">
                 <MapPin className="size-4 text-primary" />
                 <div>
-                    <p className="font-semibold">{row.original.property?.name || '—'}</p>
+                    <p className="font-semibold">
+                        {row.original.property?.name || '—'}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                         {row.original.unit?.unit_number || '—'}
                     </p>

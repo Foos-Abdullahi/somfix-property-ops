@@ -1,17 +1,21 @@
-import { Head } from "@inertiajs/react";
-import { Pencil } from "lucide-react";
+import { Head } from '@inertiajs/react';
+import { Pencil } from 'lucide-react';
 import {
     LeaseForm,
     type LeaseFormValues,
-} from "@/pages/leases/components/lease-form";
-import { index } from "@/routes/leases";
+} from '@/pages/leases/components/lease-form';
+import { index } from '@/routes/leases';
 
 type Lease = LeaseFormValues & { id: number };
 
 type Props = {
     lease: Lease;
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
-    units?: Array<{ id: number; unit_number: string; property?: { name: string } }>;
+    units?: Array<{
+        id: number;
+        unit_number: string;
+        property?: { name: string };
+    }>;
 };
 
 export default function LeaseEdit({ lease, tenants = [], units = [] }: Props) {
@@ -28,11 +32,17 @@ export default function LeaseEdit({ lease, tenants = [], units = [] }: Props) {
                             Edit lease
                         </h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Update the lease agreement details and payment terms.
+                            Update the lease agreement details and payment
+                            terms.
                         </p>
                     </div>
                 </div>
-                <LeaseForm mode="edit" lease={lease} tenants={tenants} units={units} />
+                <LeaseForm
+                    mode="edit"
+                    lease={lease}
+                    tenants={tenants}
+                    units={units}
+                />
             </div>
         </>
     );
@@ -40,7 +50,7 @@ export default function LeaseEdit({ lease, tenants = [], units = [] }: Props) {
 
 LeaseEdit.layout = {
     breadcrumbs: [
-        { title: "Leases", href: index() },
-        { title: "Edit lease", href: index() },
+        { title: 'Leases', href: index() },
+        { title: 'Edit lease', href: index() },
     ],
 };

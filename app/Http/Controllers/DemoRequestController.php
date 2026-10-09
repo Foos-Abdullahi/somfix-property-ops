@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\DemoRequest;
 use App\Models\Tenant;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\In;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,7 +49,8 @@ class DemoRequestController extends Controller
         return Inertia::render('demo-requests/edit', ['inquiry' => $demoRequest, 'tenants' => $this->tenants($request)]);
     }
 
-    private function tenants(Request $request)
+    /** @return Collection<int, Tenant>|array{} */
+    private function tenants(Request $request): Collection|array
     {
         return $request->user()->hasPermission('tenants.manage') ? Tenant::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'email']) : [];
     }
@@ -62,6 +65,7 @@ class DemoRequestController extends Controller
         return to_route('demo-requests.show', $inquiry);
     }
 
+    /** @return array<string, list<string|In>> */
     private function contactRules(string $presence): array
     {
         return ['name' => [$presence, 'required', 'string', 'max:120'], 'email' => [$presence, 'required', 'email', 'max:255'],
@@ -69,6 +73,7 @@ class DemoRequestController extends Controller
             'message' => ['nullable', 'string', 'max:2000']];
     }
 
+    /** @return array<string, list<string|In>> */
     private function followUpRules(): array
     {
         return ['status' => ['required', Rule::in(self::STATUSES)], 'follow_up_at' => ['nullable', 'date'],
@@ -105,7 +110,7 @@ class DemoRequestController extends Controller
         return to_route('demo-requests.show', $demoRequest);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],

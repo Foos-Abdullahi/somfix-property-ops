@@ -1,15 +1,23 @@
-import { Head } from "@inertiajs/react";
-import { Wrench } from "lucide-react";
-import { MaintenanceForm } from "@/pages/maintenance/components/maintenance-form";
-import { create, index } from "@/routes/maintenance";
+import { Head } from '@inertiajs/react';
+import { Wrench } from 'lucide-react';
+import { MaintenanceForm } from '@/pages/maintenance/components/maintenance-form';
+import { create, index } from '@/routes/maintenance';
 
 type Props = {
     properties?: Array<{ id: number; name: string }>;
-    units?: Array<{ id: number; unit_number: string; property?: { name: string } }>;
+    units?: Array<{
+        id: number;
+        unit_number: string;
+        property?: { name: string };
+    }>;
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
 };
 
-export default function MaintenanceCreate({ properties = [], units = [], tenants = [] }: Props) {
+export default function MaintenanceCreate({
+    properties = [],
+    units = [],
+    tenants = [],
+}: Props) {
     return (
         <>
             <Head title="Add maintenance request — SOMFIX" />
@@ -23,11 +31,17 @@ export default function MaintenanceCreate({ properties = [], units = [], tenants
                             Add a maintenance request
                         </h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Create a new maintenance request for property repairs or services.
+                            Create a new maintenance request for property
+                            repairs or services.
                         </p>
                     </div>
                 </div>
-                <MaintenanceForm mode="create" properties={properties} units={units} tenants={tenants} />
+                <MaintenanceForm
+                    mode="create"
+                    properties={properties}
+                    units={units}
+                    tenants={tenants}
+                />
             </div>
         </>
     );
@@ -35,7 +49,7 @@ export default function MaintenanceCreate({ properties = [], units = [], tenants
 
 MaintenanceCreate.layout = {
     breadcrumbs: [
-        { title: "Maintenance", href: index() },
-        { title: "Add request", href: create() },
+        { title: 'Maintenance', href: index() },
+        { title: 'Add request', href: create() },
     ],
 };

@@ -29,4 +29,3 @@ erDiagram
 ## Main entities
 
 `users`, `roles`, `properties`, `property_units`, `tenants`, `leases`, `maintenance_requests`, `service_catalog`, `quotations`, `job_orders`, `technicians`, `vendors`, `inventory_items`, `stock_movements`, `invoices`, `payments`, `expenses`, `documents`, `inspections`, `crm_interactions`, `notifications`, `audit_logs`.
-

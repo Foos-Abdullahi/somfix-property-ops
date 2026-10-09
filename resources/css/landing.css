@@ -2612,8 +2612,15 @@ html:has(.somfix-landing) {
 
 /* Hero status-dot pulse animation */
 @keyframes sf-pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.55; transform: scale(1.4); }
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.55;
+        transform: scale(1.4);
+    }
 }
 .sf-hero-pill .sf-status-dot,
 .sf-footer-bottom .sf-status-dot {
@@ -2701,12 +2708,21 @@ html:has(.somfix-landing) {
         overflow-x: auto;
         scrollbar-width: none;
     }
-    .sf-trust-inner::-webkit-scrollbar { display: none; }
-    .sf-trust-label { display: none; }
-    .sf-trust-item { font-size: 10px; padding-right: 16px; }
+    .sf-trust-inner::-webkit-scrollbar {
+        display: none;
+    }
+    .sf-trust-label {
+        display: none;
+    }
+    .sf-trust-item {
+        font-size: 10px;
+        padding-right: 16px;
+    }
 }
 @media (max-width: 640px) {
-    .sf-trust-bar { display: none; }
+    .sf-trust-bar {
+        display: none;
+    }
 }
 
 /* ── About section CTA button ───────────────────────────────────── */
@@ -2774,4 +2790,3 @@ html:has(.somfix-landing) {
 .sf-cta:hover {
     box-shadow: 0 32px 80px #00431720;
 }
-

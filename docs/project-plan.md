@@ -44,4 +44,3 @@
 ## First acceptance test
 
 Create one property with two units, add one tenant and active lease, submit a plumbing maintenance request, assign a technician, create a quote, convert it to a job, record a material, complete the job, issue an invoice, record a partial payment and confirm the activity appears in the property maintenance history.
-

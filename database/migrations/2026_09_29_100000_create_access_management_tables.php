@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('is_system')->default(false);
             $table->timestamps();
         });
-        $permissions = array_keys(config('permissions'));
+        $permissions = array_filter(array_keys(config('permissions')), 'is_string');
         $operational = array_values(array_filter($permissions, fn ($key) => ! in_array($key, ['users.manage', 'roles.manage', 'audit-log.view'])));
         foreach ([
             ['Administrator', 'administrator', $permissions],

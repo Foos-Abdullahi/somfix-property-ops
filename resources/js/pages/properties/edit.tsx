@@ -1,10 +1,10 @@
-import { Head } from "@inertiajs/react";
-import { Pencil } from "lucide-react";
+import { Head } from '@inertiajs/react';
+import { Pencil } from 'lucide-react';
 import {
     PropertyForm,
     type PropertyFormValues,
-} from "@/pages/properties/components/property-form";
-import { index } from "@/routes/properties";
+} from '@/pages/properties/components/property-form';
+import { index } from '@/routes/properties';
 
 type Property = PropertyFormValues & { id: number };
 
@@ -35,7 +35,7 @@ export default function PropertyEdit({ property }: { property: Property }) {
 
 PropertyEdit.layout = {
     breadcrumbs: [
-        { title: "Properties", href: index() },
-        { title: "Edit property", href: index() },
+        { title: 'Properties', href: index() },
+        { title: 'Edit property', href: index() },
     ],
 };

@@ -198,8 +198,8 @@ export function DemoDialog({
                         </div>
                         <p className="text-xs leading-5 text-muted-foreground">
                             Your name, email and company details are stored with
-                            this inquiry so SOMFIX can respond. Please don&apos;t
-                            include tenant or payment information.
+                            this inquiry so SOMFIX can respond. Please
+                            don&apos;t include tenant or payment information.
                         </p>
                         <Button
                             disabled={form.processing || !form.data.team_size}

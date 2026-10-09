@@ -64,6 +64,7 @@ class Maintenance extends Model
     /**
      * Get the property that owns the maintenance request.
      */
+    /** @return BelongsTo<Property, $this> */
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);
@@ -72,6 +73,7 @@ class Maintenance extends Model
     /**
      * Get the unit that belongs to the maintenance request.
      */
+    /** @return BelongsTo<Unit, $this> */
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
@@ -80,6 +82,7 @@ class Maintenance extends Model
     /**
      * Get the tenant that belongs to the maintenance request.
      */
+    /** @return BelongsTo<Tenant, $this> */
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);

@@ -17,4 +17,3 @@ Administrator accounts have inbox access. For other staff, Roles & Permissions c
 Administrator CRUD: Add request creates an inquiry received outside the landing page. The eye action opens View; the pencil action opens Edit. Delete is available in View and moves a request to Deleted requests. Open Filter → Deleted requests to restore it. The inbox uses the shared AppLayout, stats cards, table, breadcrumbs, and page entrance animations.
 
 Deployment verification: 10 inquiry feature tests passed (99 assertions), TypeScript check passed, and production assets built. The live migrations and administrator Create, View, Edit, Delete and Restore workflow were verified using a clearly labeled test record.
-

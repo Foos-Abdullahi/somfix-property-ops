@@ -59,6 +59,7 @@ class WorkOrder extends Model
     /**
      * Get the maintenance request that owns the work order.
      */
+    /** @return BelongsTo<Maintenance, $this> */
     public function maintenance(): BelongsTo
     {
         return $this->belongsTo(Maintenance::class);
@@ -67,6 +68,7 @@ class WorkOrder extends Model
     /**
      * Get the service team member assigned to the work order.
      */
+    /** @return BelongsTo<ServiceTeam, $this> */
     public function serviceTeam(): BelongsTo
     {
         return $this->belongsTo(ServiceTeam::class);

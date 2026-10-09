@@ -1,15 +1,228 @@
-import { Link, router, useForm } from "@inertiajs/react";
-import type { FormEvent } from "react";
-import { ArrowLeft, Save } from "lucide-react";
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { index, store, update } from "@/routes/tenants";
-export type TenantFormValues = { unit_id: string; first_name: string; last_name: string; phone: string; email: string; whatsapp: string; emergency_contact: string; status: "active" | "inactive"; move_in_date: string; notes: string };
-type UnitOption = { id: number; unit_number: string; property: { name: string } };
-const inputClass = "h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20";
-export function TenantForm({ mode, tenant, units }: { mode: "create" | "edit"; tenant?: TenantFormValues & { id: number }; units: UnitOption[] }) { const form = useForm<TenantFormValues>({ unit_id: String(tenant?.unit_id ?? ""), first_name: tenant?.first_name ?? "", last_name: tenant?.last_name ?? "", phone: tenant?.phone ?? "", email: tenant?.email ?? "", whatsapp: tenant?.whatsapp ?? "", emergency_contact: tenant?.emergency_contact ?? "", status: tenant?.status ?? "active", move_in_date: tenant?.move_in_date ?? "", notes: tenant?.notes ?? "" }); const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); mode === "create" ? form.post(store.url()) : form.put(update.url(tenant!.id)); }; return <form onSubmit={submit} className="space-y-6"><section className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm"><h2 className="font-semibold">Tenant profile</h2><p className="mt-1 text-xs text-muted-foreground">Contact information and current unit assignment.</p><div className="mt-5 grid gap-5 md:grid-cols-2"><Field label="First name" value={form.data.first_name} set={(value) => form.setData("first_name", value)} error={form.errors.first_name} /><Field label="Last name" value={form.data.last_name} set={(value) => form.setData("last_name", value)} error={form.errors.last_name} /><Field label="Phone" value={form.data.phone} set={(value) => form.setData("phone", value)} error={form.errors.phone} /><Field label="Email" type="email" value={form.data.email} set={(value) => form.setData("email", value)} error={form.errors.email} /><Field label="WhatsApp" value={form.data.whatsapp} set={(value) => form.setData("whatsapp", value)} error={form.errors.whatsapp} /><Field label="Emergency contact" value={form.data.emergency_contact} set={(value) => form.setData("emergency_contact", value)} error={form.errors.emergency_contact} /><div className="space-y-2"><Label>Assigned unit</Label><Select value={form.data.unit_id || "unassigned"} onValueChange={(value) => form.setData("unit_id", value === "unassigned" ? "" : value)}><SelectTrigger className={`w-full ${inputClass}`}><SelectValue /></SelectTrigger><SelectContent><SelectItem value="unassigned">Unassigned</SelectItem>{units.map((unit) => <SelectItem key={unit.id} value={String(unit.id)}>{unit.property.name} · {unit.unit_number}</SelectItem>)}</SelectContent></Select><InputError message={form.errors.unit_id} /></div><div className="space-y-2"><Label>Status</Label><Select value={form.data.status} onValueChange={(value) => form.setData("status", value as TenantFormValues["status"])}><SelectTrigger className={`w-full ${inputClass}`}><SelectValue /></SelectTrigger><SelectContent><SelectItem value="active">Active</SelectItem><SelectItem value="inactive">Inactive</SelectItem></SelectContent></Select></div><Field label="Move-in date" type="date" value={form.data.move_in_date} set={(value) => form.setData("move_in_date", value)} error={form.errors.move_in_date} /></div><div className="mt-5 space-y-2"><Label>Notes</Label><Textarea value={form.data.notes} onChange={(event) => form.setData("notes", event.target.value)} placeholder="Communication preferences or service notes." /></div></section><div className="flex justify-between"><Button asChild variant="outline"><Link href={index()}><ArrowLeft />Back to tenants</Link></Button><Button disabled={form.processing}><Save />{form.processing ? "Saving..." : mode === "create" ? "Create tenant" : "Save changes"}</Button></div></form>; }
-function Field({ label, value, set, error, type = "text" }: { label: string; value: string; set: (value: string) => void; error?: string; type?: string }) { return <div className="space-y-2"><Label>{label}</Label><Input type={type} value={value} onChange={(event) => set(event.target.value)} className={inputClass} /><InputError message={error} /></div>; }
+import { Link, useForm } from '@inertiajs/react';
+import type { FormEvent } from 'react';
+import { ArrowLeft, Save } from 'lucide-react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { index, store, update } from '@/routes/tenants';
+export type TenantFormValues = {
+    unit_id: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string;
+    whatsapp: string;
+    emergency_contact: string;
+    status: 'active' | 'inactive';
+    move_in_date: string;
+    notes: string;
+};
+type UnitOption = {
+    id: number;
+    unit_number: string;
+    property: { name: string };
+};
+const inputClass =
+    'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
+export function TenantForm({
+    mode,
+    tenant,
+    units,
+}: {
+    mode: 'create' | 'edit';
+    tenant?: TenantFormValues & { id: number };
+    units: UnitOption[];
+}) {
+    const form = useForm<TenantFormValues>({
+        unit_id: String(tenant?.unit_id ?? ''),
+        first_name: tenant?.first_name ?? '',
+        last_name: tenant?.last_name ?? '',
+        phone: tenant?.phone ?? '',
+        email: tenant?.email ?? '',
+        whatsapp: tenant?.whatsapp ?? '',
+        emergency_contact: tenant?.emergency_contact ?? '',
+        status: tenant?.status ?? 'active',
+        move_in_date: tenant?.move_in_date ?? '',
+        notes: tenant?.notes ?? '',
+    });
+    const submit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (mode === 'create') {
+            form.post(store.url());
+        } else {
+            form.put(update.url(tenant!.id));
+        }
+    };
+    return (
+        <form onSubmit={submit} className="space-y-6">
+            <section className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
+                <h2 className="font-semibold">Tenant profile</h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                    Contact information and current unit assignment.
+                </p>
+                <div className="mt-5 grid gap-5 md:grid-cols-2">
+                    <Field
+                        label="First name"
+                        value={form.data.first_name}
+                        set={(value) => form.setData('first_name', value)}
+                        error={form.errors.first_name}
+                    />
+                    <Field
+                        label="Last name"
+                        value={form.data.last_name}
+                        set={(value) => form.setData('last_name', value)}
+                        error={form.errors.last_name}
+                    />
+                    <Field
+                        label="Phone"
+                        value={form.data.phone}
+                        set={(value) => form.setData('phone', value)}
+                        error={form.errors.phone}
+                    />
+                    <Field
+                        label="Email"
+                        type="email"
+                        value={form.data.email}
+                        set={(value) => form.setData('email', value)}
+                        error={form.errors.email}
+                    />
+                    <Field
+                        label="WhatsApp"
+                        value={form.data.whatsapp}
+                        set={(value) => form.setData('whatsapp', value)}
+                        error={form.errors.whatsapp}
+                    />
+                    <Field
+                        label="Emergency contact"
+                        value={form.data.emergency_contact}
+                        set={(value) =>
+                            form.setData('emergency_contact', value)
+                        }
+                        error={form.errors.emergency_contact}
+                    />
+                    <div className="space-y-2">
+                        <Label>Assigned unit</Label>
+                        <Select
+                            value={form.data.unit_id || 'unassigned'}
+                            onValueChange={(value) =>
+                                form.setData(
+                                    'unit_id',
+                                    value === 'unassigned' ? '' : value,
+                                )
+                            }
+                        >
+                            <SelectTrigger className={`w-full ${inputClass}`}>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="unassigned">
+                                    Unassigned
+                                </SelectItem>
+                                {units.map((unit) => (
+                                    <SelectItem
+                                        key={unit.id}
+                                        value={String(unit.id)}
+                                    >
+                                        {unit.property.name} ·{' '}
+                                        {unit.unit_number}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={form.errors.unit_id} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Status</Label>
+                        <Select
+                            value={form.data.status}
+                            onValueChange={(value) =>
+                                form.setData(
+                                    'status',
+                                    value as TenantFormValues['status'],
+                                )
+                            }
+                        >
+                            <SelectTrigger className={`w-full ${inputClass}`}>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="active">Active</SelectItem>
+                                <SelectItem value="inactive">
+                                    Inactive
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <Field
+                        label="Move-in date"
+                        type="date"
+                        value={form.data.move_in_date}
+                        set={(value) => form.setData('move_in_date', value)}
+                        error={form.errors.move_in_date}
+                    />
+                </div>
+                <div className="mt-5 space-y-2">
+                    <Label>Notes</Label>
+                    <Textarea
+                        value={form.data.notes}
+                        onChange={(event) =>
+                            form.setData('notes', event.target.value)
+                        }
+                        placeholder="Communication preferences or service notes."
+                    />
+                </div>
+            </section>
+            <div className="flex justify-between">
+                <Button asChild variant="outline">
+                    <Link href={index()}>
+                        <ArrowLeft />
+                        Back to tenants
+                    </Link>
+                </Button>
+                <Button disabled={form.processing}>
+                    <Save />
+                    {form.processing
+                        ? 'Saving...'
+                        : mode === 'create'
+                          ? 'Create tenant'
+                          : 'Save changes'}
+                </Button>
+            </div>
+        </form>
+    );
+}
+function Field({
+    label,
+    value,
+    set,
+    error,
+    type = 'text',
+}: {
+    label: string;
+    value: string;
+    set: (value: string) => void;
+    error?: string;
+    type?: string;
+}) {
+    return (
+        <div className="space-y-2">
+            <Label>{label}</Label>
+            <Input
+                type={type}
+                value={value}
+                onChange={(event) => set(event.target.value)}
+                className={inputClass}
+            />
+            <InputError message={error} />
+        </div>
+    );
+}

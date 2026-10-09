@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Maintenance;
+use App\Models\ServiceTeam;
 use App\Models\WorkOrder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,8 +20,8 @@ class WorkOrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'maintenance_id' => \App\Models\Maintenance::factory(),
-            'service_team_id' => \App\Models\ServiceTeam::factory(),
+            'maintenance_id' => Maintenance::factory(),
+            'service_team_id' => ServiceTeam::factory(),
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'status' => $this->faker->randomElement(['pending', 'assigned', 'in_progress', 'completed', 'cancelled']),

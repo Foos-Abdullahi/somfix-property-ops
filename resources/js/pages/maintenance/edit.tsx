@@ -1,21 +1,30 @@
-import { Head } from "@inertiajs/react";
-import { Pencil } from "lucide-react";
+import { Head } from '@inertiajs/react';
+import { Pencil } from 'lucide-react';
 import {
     MaintenanceForm,
     type MaintenanceFormValues,
-} from "@/pages/maintenance/components/maintenance-form";
-import { index } from "@/routes/maintenance";
+} from '@/pages/maintenance/components/maintenance-form';
+import { index } from '@/routes/maintenance';
 
 type Maintenance = MaintenanceFormValues & { id: number };
 
 type Props = {
     maintenance: Maintenance;
     properties?: Array<{ id: number; name: string }>;
-    units?: Array<{ id: number; unit_number: string; property?: { name: string } }>;
+    units?: Array<{
+        id: number;
+        unit_number: string;
+        property?: { name: string };
+    }>;
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
 };
 
-export default function MaintenanceEdit({ maintenance, properties = [], units = [], tenants = [] }: Props) {
+export default function MaintenanceEdit({
+    maintenance,
+    properties = [],
+    units = [],
+    tenants = [],
+}: Props) {
     return (
         <>
             <Head title={`Edit maintenance request — SOMFIX`} />
@@ -33,7 +42,13 @@ export default function MaintenanceEdit({ maintenance, properties = [], units = 
                         </p>
                     </div>
                 </div>
-                <MaintenanceForm mode="edit" maintenance={maintenance} properties={properties} units={units} tenants={tenants} />
+                <MaintenanceForm
+                    mode="edit"
+                    maintenance={maintenance}
+                    properties={properties}
+                    units={units}
+                    tenants={tenants}
+                />
             </div>
         </>
     );
@@ -41,7 +56,7 @@ export default function MaintenanceEdit({ maintenance, properties = [], units = 
 
 MaintenanceEdit.layout = {
     breadcrumbs: [
-        { title: "Maintenance", href: index() },
-        { title: "Edit request", href: index() },
+        { title: 'Maintenance', href: index() },
+        { title: 'Edit request', href: index() },
     ],
 };

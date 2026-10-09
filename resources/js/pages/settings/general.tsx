@@ -1,5 +1,12 @@
 import { Head } from '@inertiajs/react';
-import { Building2, CircleDollarSign, Clock3, Pencil, Save, X } from 'lucide-react';
+import {
+    Building2,
+    CircleDollarSign,
+    Clock3,
+    Pencil,
+    Save,
+    X,
+} from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -121,7 +128,10 @@ export default function GeneralSettings() {
                     <div className="flex shrink-0 gap-2">
                         {isEditing ? (
                             <>
-                                <Button variant="outline" onClick={cancelEditing}>
+                                <Button
+                                    variant="outline"
+                                    onClick={cancelEditing}
+                                >
                                     <X />
                                     Cancel
                                 </Button>
@@ -145,7 +155,10 @@ export default function GeneralSettings() {
                 </header>
 
                 <div className="space-y-4">
-                    <Section icon={Building2} title="Organization & Contact Details">
+                    <Section
+                        icon={Building2}
+                        title="Organization & Contact Details"
+                    >
                         <Field
                             id="company-name"
                             label="Organization Name"
@@ -173,9 +186,15 @@ export default function GeneralSettings() {
                         </div>
                     </Section>
 
-                    <Section icon={CircleDollarSign} title="Financial Configuration">
+                    <Section
+                        icon={CircleDollarSign}
+                        title="Financial Configuration"
+                    >
                         <div className="grid gap-2">
-                            <Label htmlFor="currency" className="text-xs font-medium">
+                            <Label
+                                htmlFor="currency"
+                                className="text-xs font-medium"
+                            >
                                 Operating Currency
                             </Label>
                             <Input
@@ -225,15 +244,18 @@ export default function GeneralSettings() {
                             label="Target Maintenance Response (hours)"
                             type="number"
                             value={settings.maintenanceResponse}
-                            onChange={(value) => update('maintenanceResponse', value)}
+                            onChange={(value) =>
+                                update('maintenanceResponse', value)
+                            }
                             disabled={!isEditing}
                         />
                     </Section>
                 </div>
 
                 <p className="border-t pt-4 text-xs text-muted-foreground">
-                    Settings are currently stored in this page only and will reset
-                    when you leave until settings persistence is connected.
+                    Settings are currently stored in this page only and will
+                    reset when you leave until settings persistence is
+                    connected.
                 </p>
             </main>
         </>

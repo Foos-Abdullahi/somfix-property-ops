@@ -1,29 +1,29 @@
-import { Link, router, useForm } from "@inertiajs/react";
-import type { FormEvent } from "react";
-import { ArrowLeft, Save, Wrench } from "lucide-react";
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Link, useForm } from '@inertiajs/react';
+import type { FormEvent } from 'react';
+import { ArrowLeft, Save, Wrench } from 'lucide-react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { create, index, store, update } from "@/routes/maintenance";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { index, store, update } from '@/routes/maintenance';
 
 export type MaintenanceFormValues = {
     property_id: string;
     unit_id: string;
     tenant_id: string;
     category: string;
-    priority: "low" | "medium" | "high" | "urgent";
+    priority: 'low' | 'medium' | 'high' | 'urgent';
     title: string;
     description: string;
-    status: "open" | "in_progress" | "scheduled" | "completed" | "cancelled";
+    status: 'open' | 'in_progress' | 'scheduled' | 'completed' | 'cancelled';
     assigned_to: string;
     scheduled_date: string;
     completed_date: string;
@@ -33,15 +33,19 @@ export type MaintenanceFormValues = {
 };
 
 type MaintenanceFormProps = {
-    mode: "create" | "edit";
+    mode: 'create' | 'edit';
     maintenance?: MaintenanceFormValues & { id: number };
     properties?: Array<{ id: number; name: string }>;
-    units?: Array<{ id: number; unit_number: string; property?: { name: string } }>;
+    units?: Array<{
+        id: number;
+        unit_number: string;
+        property?: { name: string };
+    }>;
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
 };
 
 const fieldClassName =
-    "h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20";
+    'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
 
 export function MaintenanceForm({
     mode,
@@ -51,26 +55,26 @@ export function MaintenanceForm({
     tenants = [],
 }: MaintenanceFormProps) {
     const form = useForm<MaintenanceFormValues>({
-        property_id: maintenance?.property_id ?? "",
-        unit_id: maintenance?.unit_id ?? "",
-        tenant_id: maintenance?.tenant_id ?? "",
-        category: maintenance?.category ?? "general",
-        priority: maintenance?.priority ?? "medium",
-        title: maintenance?.title ?? "",
-        description: maintenance?.description ?? "",
-        status: maintenance?.status ?? "open",
-        assigned_to: maintenance?.assigned_to ?? "",
-        scheduled_date: maintenance?.scheduled_date ?? "",
-        completed_date: maintenance?.completed_date ?? "",
-        estimated_cost: maintenance?.estimated_cost ?? "",
-        actual_cost: maintenance?.actual_cost ?? "",
-        notes: maintenance?.notes ?? "",
+        property_id: maintenance?.property_id ?? '',
+        unit_id: maintenance?.unit_id ?? '',
+        tenant_id: maintenance?.tenant_id ?? '',
+        category: maintenance?.category ?? 'general',
+        priority: maintenance?.priority ?? 'medium',
+        title: maintenance?.title ?? '',
+        description: maintenance?.description ?? '',
+        status: maintenance?.status ?? 'open',
+        assigned_to: maintenance?.assigned_to ?? '',
+        scheduled_date: maintenance?.scheduled_date ?? '',
+        completed_date: maintenance?.completed_date ?? '',
+        estimated_cost: maintenance?.estimated_cost ?? '',
+        actual_cost: maintenance?.actual_cost ?? '',
+        notes: maintenance?.notes ?? '',
     });
 
     function submit(event: FormEvent<HTMLFormElement>): void {
         event.preventDefault();
 
-        if (mode === "create") {
+        if (mode === 'create') {
             form.post(store.url());
 
             return;
@@ -99,7 +103,9 @@ export function MaintenanceForm({
                         <Label htmlFor="property_id">Property</Label>
                         <Select
                             value={form.data.property_id}
-                            onValueChange={(value) => form.setData("property_id", value)}
+                            onValueChange={(value) =>
+                                form.setData('property_id', value)
+                            }
                         >
                             <SelectTrigger
                                 id="property_id"
@@ -110,7 +116,10 @@ export function MaintenanceForm({
                             </SelectTrigger>
                             <SelectContent>
                                 {properties.map((property) => (
-                                    <SelectItem key={property.id} value={String(property.id)}>
+                                    <SelectItem
+                                        key={property.id}
+                                        value={String(property.id)}
+                                    >
                                         {property.name}
                                     </SelectItem>
                                 ))}
@@ -122,7 +131,9 @@ export function MaintenanceForm({
                         <Label htmlFor="unit_id">Unit (optional)</Label>
                         <Select
                             value={form.data.unit_id}
-                            onValueChange={(value) => form.setData("unit_id", value)}
+                            onValueChange={(value) =>
+                                form.setData('unit_id', value)
+                            }
                         >
                             <SelectTrigger
                                 id="unit_id"
@@ -134,8 +145,13 @@ export function MaintenanceForm({
                             <SelectContent>
                                 <SelectItem value="">None</SelectItem>
                                 {units.map((unit) => (
-                                    <SelectItem key={unit.id} value={String(unit.id)}>
-                                        {unit.unit_number} — {unit.property?.name || 'Unknown Property'}
+                                    <SelectItem
+                                        key={unit.id}
+                                        value={String(unit.id)}
+                                    >
+                                        {unit.unit_number} —{' '}
+                                        {unit.property?.name ||
+                                            'Unknown Property'}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -146,7 +162,9 @@ export function MaintenanceForm({
                         <Label htmlFor="tenant_id">Tenant (optional)</Label>
                         <Select
                             value={form.data.tenant_id}
-                            onValueChange={(value) => form.setData("tenant_id", value)}
+                            onValueChange={(value) =>
+                                form.setData('tenant_id', value)
+                            }
                         >
                             <SelectTrigger
                                 id="tenant_id"
@@ -158,7 +176,10 @@ export function MaintenanceForm({
                             <SelectContent>
                                 <SelectItem value="">None</SelectItem>
                                 {tenants.map((tenant) => (
-                                    <SelectItem key={tenant.id} value={String(tenant.id)}>
+                                    <SelectItem
+                                        key={tenant.id}
+                                        value={String(tenant.id)}
+                                    >
                                         {tenant.first_name} {tenant.last_name}
                                     </SelectItem>
                                 ))}
@@ -170,7 +191,9 @@ export function MaintenanceForm({
                         <Label htmlFor="category">Category</Label>
                         <Select
                             value={form.data.category}
-                            onValueChange={(value) => form.setData("category", value)}
+                            onValueChange={(value) =>
+                                form.setData('category', value)
+                            }
                         >
                             <SelectTrigger
                                 id="category"
@@ -180,11 +203,19 @@ export function MaintenanceForm({
                                 <SelectValue placeholder="Select a category" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="plumbing">Plumbing</SelectItem>
-                                <SelectItem value="electrical">Electrical</SelectItem>
+                                <SelectItem value="plumbing">
+                                    Plumbing
+                                </SelectItem>
+                                <SelectItem value="electrical">
+                                    Electrical
+                                </SelectItem>
                                 <SelectItem value="hvac">HVAC</SelectItem>
-                                <SelectItem value="structural">Structural</SelectItem>
-                                <SelectItem value="appliances">Appliances</SelectItem>
+                                <SelectItem value="structural">
+                                    Structural
+                                </SelectItem>
+                                <SelectItem value="appliances">
+                                    Appliances
+                                </SelectItem>
                                 <SelectItem value="general">General</SelectItem>
                             </SelectContent>
                         </Select>
@@ -195,7 +226,10 @@ export function MaintenanceForm({
                         <Select
                             value={form.data.priority}
                             onValueChange={(value) =>
-                                form.setData("priority", value as MaintenanceFormValues["priority"])
+                                form.setData(
+                                    'priority',
+                                    value as MaintenanceFormValues['priority'],
+                                )
                             }
                         >
                             <SelectTrigger
@@ -219,7 +253,10 @@ export function MaintenanceForm({
                         <Select
                             value={form.data.status}
                             onValueChange={(value) =>
-                                form.setData("status", value as MaintenanceFormValues["status"])
+                                form.setData(
+                                    'status',
+                                    value as MaintenanceFormValues['status'],
+                                )
                             }
                         >
                             <SelectTrigger
@@ -231,10 +268,18 @@ export function MaintenanceForm({
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="open">Open</SelectItem>
-                                <SelectItem value="in_progress">In Progress</SelectItem>
-                                <SelectItem value="scheduled">Scheduled</SelectItem>
-                                <SelectItem value="completed">Completed</SelectItem>
-                                <SelectItem value="cancelled">Cancelled</SelectItem>
+                                <SelectItem value="in_progress">
+                                    In Progress
+                                </SelectItem>
+                                <SelectItem value="scheduled">
+                                    Scheduled
+                                </SelectItem>
+                                <SelectItem value="completed">
+                                    Completed
+                                </SelectItem>
+                                <SelectItem value="cancelled">
+                                    Cancelled
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={form.errors.status} />
@@ -244,7 +289,9 @@ export function MaintenanceForm({
                         <Input
                             id="title"
                             value={form.data.title}
-                            onChange={(event) => form.setData("title", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('title', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="Brief description of the issue"
                         />
@@ -255,7 +302,9 @@ export function MaintenanceForm({
                         <Textarea
                             id="description"
                             value={form.data.description}
-                            onChange={(event) => form.setData("description", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('description', event.target.value)
+                            }
                             className="min-h-28 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                             placeholder="Detailed description of the maintenance issue"
                         />
@@ -277,7 +326,9 @@ export function MaintenanceForm({
                         <Input
                             id="assigned_to"
                             value={form.data.assigned_to}
-                            onChange={(event) => form.setData("assigned_to", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('assigned_to', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="Technician or service provider name"
                         />
@@ -289,7 +340,12 @@ export function MaintenanceForm({
                             id="scheduled_date"
                             type="date"
                             value={form.data.scheduled_date}
-                            onChange={(event) => form.setData("scheduled_date", event.target.value)}
+                            onChange={(event) =>
+                                form.setData(
+                                    'scheduled_date',
+                                    event.target.value,
+                                )
+                            }
                             className={fieldClassName}
                         />
                         <InputError message={form.errors.scheduled_date} />
@@ -300,7 +356,12 @@ export function MaintenanceForm({
                             id="completed_date"
                             type="date"
                             value={form.data.completed_date}
-                            onChange={(event) => form.setData("completed_date", event.target.value)}
+                            onChange={(event) =>
+                                form.setData(
+                                    'completed_date',
+                                    event.target.value,
+                                )
+                            }
                             className={fieldClassName}
                         />
                         <InputError message={form.errors.completed_date} />
@@ -324,7 +385,12 @@ export function MaintenanceForm({
                             step="0.01"
                             min="0"
                             value={form.data.estimated_cost}
-                            onChange={(event) => form.setData("estimated_cost", event.target.value)}
+                            onChange={(event) =>
+                                form.setData(
+                                    'estimated_cost',
+                                    event.target.value,
+                                )
+                            }
                             className={fieldClassName}
                             placeholder="0.00"
                         />
@@ -338,7 +404,9 @@ export function MaintenanceForm({
                             step="0.01"
                             min="0"
                             value={form.data.actual_cost}
-                            onChange={(event) => form.setData("actual_cost", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('actual_cost', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="0.00"
                         />
@@ -349,7 +417,9 @@ export function MaintenanceForm({
                         <Textarea
                             id="notes"
                             value={form.data.notes}
-                            onChange={(event) => form.setData("notes", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('notes', event.target.value)
+                            }
                             className="min-h-28 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                             placeholder="Additional notes about the maintenance request"
                         />
@@ -367,10 +437,10 @@ export function MaintenanceForm({
                 <Button disabled={form.processing} className="rounded-xl">
                     <Save />
                     {form.processing
-                        ? "Saving..."
-                        : mode === "create"
-                          ? "Create request"
-                          : "Save changes"}
+                        ? 'Saving...'
+                        : mode === 'create'
+                          ? 'Create request'
+                          : 'Save changes'}
                 </Button>
             </div>
         </form>

@@ -25,11 +25,13 @@ class Unit extends Model
     /** @use HasFactory<UnitFactory> */
     use HasFactory;
 
+    /** @return BelongsTo<Property, $this> */
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);
     }
 
+    /** @return HasMany<Tenant, $this> */
     public function tenants(): HasMany
     {
         return $this->hasMany(Tenant::class);

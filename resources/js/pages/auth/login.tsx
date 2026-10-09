@@ -76,7 +76,9 @@ export default function Login({ status, canResetPassword }: Props) {
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">Remember device</Label>
+                                <Label htmlFor="remember">
+                                    Remember device
+                                </Label>
                             </div>
 
                             <Button

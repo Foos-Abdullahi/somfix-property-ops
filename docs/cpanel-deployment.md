@@ -36,19 +36,19 @@ to cPanel → Run workflow. The current local branch is `development`.
 
 Create Settings → Environments → `production`, and restrict deployment to `main`.
 
-| Environment secret | Value |
-| --- | --- |
-| `CPANEL_SSH_HOST` | Verified SSH hostname (confirm whether `somfix.so` is valid) |
-| `CPANEL_SSH_USER` | Hosting account SSH username |
-| `CPANEL_SSH_PRIVATE_KEY` | Dedicated SSH private key |
+| Environment secret       | Value                                                                 |
+| ------------------------ | --------------------------------------------------------------------- |
+| `CPANEL_SSH_HOST`        | Verified SSH hostname (confirm whether `somfix.so` is valid)          |
+| `CPANEL_SSH_USER`        | Hosting account SSH username                                          |
+| `CPANEL_SSH_PRIVATE_KEY` | Dedicated SSH private key                                             |
 | `CPANEL_SSH_KNOWN_HOSTS` | Verified server known_hosts line; nonstandard ports use `[host]:port` |
 
-| Optional environment variable | Default |
-| --- | --- |
-| `CPANEL_SSH_PORT` | `22` |
-| `CPANEL_DEPLOY_ROOT` | `/home/somfix/somfix-property-ops` |
-| `CPANEL_PHP_BIN` | `/opt/alt/php84/usr/bin/php` |
-| `CPANEL_WEB_ROOT` | `/home/somfix/public_html` (must resolve to `current/public`) |
+| Optional environment variable | Default                                                       |
+| ----------------------------- | ------------------------------------------------------------- |
+| `CPANEL_SSH_PORT`             | `22`                                                          |
+| `CPANEL_DEPLOY_ROOT`          | `/home/somfix/somfix-property-ops`                            |
+| `CPANEL_PHP_BIN`              | `/opt/alt/php84/usr/bin/php`                                  |
+| `CPANEL_WEB_ROOT`             | `/home/somfix/public_html` (must resolve to `current/public`) |
 
 The workflow verifies SSH host keys; obtain and verify the fingerprint through
 the hosting provider before saving the known_hosts entry.

@@ -1,11 +1,15 @@
-import { Head } from "@inertiajs/react";
-import { FileText } from "lucide-react";
-import { LeaseForm } from "@/pages/leases/components/lease-form";
-import { create, index } from "@/routes/leases";
+import { Head } from '@inertiajs/react';
+import { FileText } from 'lucide-react';
+import { LeaseForm } from '@/pages/leases/components/lease-form';
+import { create, index } from '@/routes/leases';
 
 type Props = {
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
-    units?: Array<{ id: number; unit_number: string; property?: { name: string } }>;
+    units?: Array<{
+        id: number;
+        unit_number: string;
+        property?: { name: string };
+    }>;
 };
 
 export default function LeaseCreate({ tenants = [], units = [] }: Props) {
@@ -22,7 +26,8 @@ export default function LeaseCreate({ tenants = [], units = [] }: Props) {
                             Add a lease
                         </h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Create a lease agreement to connect a tenant with a unit and define payment terms.
+                            Create a lease agreement to connect a tenant with a
+                            unit and define payment terms.
                         </p>
                     </div>
                 </div>
@@ -34,7 +39,7 @@ export default function LeaseCreate({ tenants = [], units = [] }: Props) {
 
 LeaseCreate.layout = {
     breadcrumbs: [
-        { title: "Leases", href: index() },
-        { title: "Add lease", href: create() },
+        { title: 'Leases', href: index() },
+        { title: 'Add lease', href: create() },
     ],
 };

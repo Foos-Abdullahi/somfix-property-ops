@@ -16,6 +16,7 @@ use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 /**
+ * @property Role|null $role
  * @property int $id
  * @property string $name
  * @property string $email
@@ -44,6 +45,7 @@ class User extends Authenticatable implements PasskeyUser
         });
     }
 
+    /** @return BelongsTo<Role, $this> */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
@@ -51,7 +53,7 @@ class User extends Authenticatable implements PasskeyUser
 
     public function hasPermission(string $permission): bool
     {
-        return $this->is_active && ($this->role?->slug === 'administrator' || in_array($permission, $this->role?->permissions ?? [], true));
+        return $this->is_active && ($this->role?->slug === 'administrator' || in_array($permission, $this->role->permissions ?? [], true));
     }
 
     /** @use HasFactory<UserFactory> */

@@ -6,45 +6,47 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class AccessController extends Controller
 {
-    public function createUser(Request $request)
+    public function createUser(Request $request): Response
     {
         return $this->userForm($request);
     }
 
-    public function editUser(Request $request, User $user)
+    public function editUser(Request $request, User $user): Response
     {
         if ($request->user()->role?->slug !== 'administrator') {
             abort_if($user->role?->slug === 'administrator', 403);
-            abort_if(array_diff($user->role?->permissions ?? [], $request->user()->role?->permissions ?? []) !== [], 403);
+            abort_if(array_diff($user->role->permissions ?? [], $request->user()->role->permissions ?? []) !== [], 403);
         }
 
         return $this->userForm($request, $user);
     }
 
-    private function userForm(Request $request, ?User $user = null)
+    private function userForm(Request $request, ?User $user = null): Response
     {
         return Inertia::render('users/form', [
             'user' => $user,
             'self' => $user?->id === $request->user()->id,
-            'roles' => Role::orderBy('name')->get()->filter(fn ($role) => $request->user()->role?->slug === 'administrator' || ($role->slug !== 'administrator' && array_diff($role->permissions, $request->user()->role?->permissions ?? []) === []))->values(),
+            'roles' => Role::orderBy('name')->get()->filter(fn ($role) => $request->user()->role?->slug === 'administrator' || ($role->slug !== 'administrator' && array_diff($role->permissions, $request->user()->role->permissions ?? []) === []))->values(),
         ]);
     }
 
-    public function createRole(Request $request)
+    public function createRole(Request $request): Response
     {
         return $this->roleForm($request);
     }
 
-    public function editRole(Request $request, Role $role)
+    public function editRole(Request $request, Role $role): Response
     {
         abort_if($role->slug === 'administrator' || $request->user()->role_id === $role->id, 403);
         foreach ($role->permissions as $permission) {
@@ -54,26 +56,26 @@ class AccessController extends Controller
         return $this->roleForm($request, $role);
     }
 
-    private function roleForm(Request $request, ?Role $role = null)
+    private function roleForm(Request $request, ?Role $role = null): Response
     {
         return Inertia::render('roles/form', [
             'role' => $role,
             'permissions' => config('permissions'),
-            'grantable' => array_values(array_filter(array_keys(config('permissions')), fn ($key) => $request->user()->hasPermission($key))),
+            'grantable' => array_values(array_filter(array_filter(array_keys(config('permissions')), 'is_string'), fn ($key) => $request->user()->hasPermission($key))),
         ]);
     }
 
-    public function showRole(Role $role)
+    public function showRole(Role $role): Response
     {
         return Inertia::render('roles/show', ['role' => $role->load(['users' => fn ($query) => $query->select('id', 'role_id', 'name')->orderBy('name')])->loadCount('users'), 'permissions' => config('permissions')]);
     }
 
-    public function showAudit(AuditLog $auditLog)
+    public function showAudit(AuditLog $auditLog): Response
     {
         return Inertia::render('audit-log/show', ['log' => $auditLog]);
     }
 
-    public function users(Request $request)
+    public function users(Request $request): Response
     {
         $filters = $request->validate(['search' => 'nullable|string|max:100', 'status' => 'nullable|in:active,inactive', 'role' => 'nullable|integer']);
 
@@ -91,6 +93,7 @@ class AccessController extends Controller
         ]);
     }
 
+    /** @return array<string, mixed> */
     private function userData(Request $request, ?User $user = null): array
     {
         $data = $request->validate([
@@ -100,12 +103,12 @@ class AccessController extends Controller
             'role_id' => ['required', 'integer', 'exists:roles,id'],
             'is_active' => ['required', 'boolean'],
         ]);
-        $role = Role::findOrFail($data['role_id']);
+        $role = Role::query()->whereKey($data['role_id'])->firstOrFail();
         if ($request->user()->role?->slug !== 'administrator') {
             abort_if($role->slug === 'administrator' || $user?->role?->slug === 'administrator', 403);
-            abort_if(array_diff($role->permissions, $request->user()->role?->permissions ?? []) !== [], 403);
+            abort_if(array_diff($role->permissions, $request->user()->role->permissions ?? []) !== [], 403);
             if ($user) {
-                abort_if(array_diff($user->role?->permissions ?? [], $request->user()->role?->permissions ?? []) !== [], 403);
+                abort_if(array_diff($user->role->permissions ?? [], $request->user()->role->permissions ?? []) !== [], 403);
             }
         }
         if ($user?->id === $request->user()->id && (! $data['is_active'] || (int) $data['role_id'] !== $user->role_id)) {
@@ -115,7 +118,7 @@ class AccessController extends Controller
         return $data;
     }
 
-    public function storeUser(Request $request)
+    public function storeUser(Request $request): RedirectResponse
     {
         $data = $this->userData($request);
         DB::transaction(function () use ($data) {
@@ -129,7 +132,7 @@ class AccessController extends Controller
         return to_route('settings.users.index');
     }
 
-    public function updateUser(Request $request, User $user)
+    public function updateUser(Request $request, User $user): RedirectResponse
     {
         $data = $this->userData($request, $user);
         DB::transaction(function () use ($user, $data) {
@@ -155,11 +158,11 @@ class AccessController extends Controller
         return to_route('settings.users.index');
     }
 
-    public function destroyUser(Request $request, User $user)
+    public function destroyUser(Request $request, User $user): RedirectResponse
     {
         abort_if($user->id === $request->user()->id || $user->role?->slug === 'administrator', 403);
         if ($request->user()->role?->slug !== 'administrator') {
-            abort_if(array_diff($user->role?->permissions ?? [], $request->user()->role?->permissions ?? []) !== [], 403);
+            abort_if(array_diff($user->role->permissions ?? [], $request->user()->role->permissions ?? []) !== [], 403);
         }
         DB::transaction(function () use ($user) {
             DB::table('sessions')->where('user_id', $user->id)->delete();
@@ -170,15 +173,16 @@ class AccessController extends Controller
         return back();
     }
 
-    public function roles(Request $request)
+    public function roles(Request $request): Response
     {
         return Inertia::render('roles/index', [
             'roles' => Role::with(['users' => fn ($query) => $query->select('id', 'role_id', 'name')->orderBy('name')])->withCount('users')->orderBy('name')->get(),
             'permissions' => config('permissions'),
-            'grantablePermissions' => array_values(array_filter(array_keys(config('permissions')), fn ($key) => $request->user()->hasPermission($key))),
+            'grantablePermissions' => array_values(array_filter(array_filter(array_keys(config('permissions')), 'is_string'), fn ($key) => $request->user()->hasPermission($key))),
         ]);
     }
 
+    /** @return array<string, mixed> */
     private function roleData(Request $request, ?Role $role = null): array
     {
         abort_if($role?->slug === 'administrator', 403);
@@ -189,7 +193,7 @@ class AccessController extends Controller
             'name' => ['required', 'string', 'max:100', Rule::unique('roles')->ignore($role)],
             'description' => ['nullable', 'string', 'max:1000'],
             'permissions' => ['present', 'array'],
-            'permissions.*' => ['string', 'distinct', Rule::in(array_keys(config('permissions')))],
+            'permissions.*' => ['string', 'distinct', Rule::in(array_filter(array_keys(config('permissions')), 'is_string'))],
         ]);
         foreach ($data['permissions'] as $permission) {
             $view = str_replace('.manage', '.view', $permission);
@@ -198,14 +202,14 @@ class AccessController extends Controller
             }
         }
         $data['permissions'] = array_values(array_unique($data['permissions']));
-        foreach (array_unique([...$data['permissions'], ...($role?->permissions ?? [])]) as $permission) {
+        foreach (array_unique([...$data['permissions'], ...($role->permissions ?? [])]) as $permission) {
             abort_unless($request->user()->hasPermission($permission), 403);
         }
 
         return $data;
     }
 
-    public function storeRole(Request $request)
+    public function storeRole(Request $request): RedirectResponse
     {
         $data = $this->roleData($request);
         DB::transaction(function () use ($data) {
@@ -218,7 +222,7 @@ class AccessController extends Controller
         return to_route('settings.roles.index');
     }
 
-    public function updateRole(Request $request, Role $role)
+    public function updateRole(Request $request, Role $role): RedirectResponse
     {
         $data = $this->roleData($request, $role);
         DB::transaction(fn () => $role->update($data));
@@ -227,7 +231,7 @@ class AccessController extends Controller
         return to_route('settings.roles.index');
     }
 
-    public function destroyRole(Request $request, Role $role)
+    public function destroyRole(Request $request, Role $role): RedirectResponse
     {
         if ($role->is_system || $role->users()->exists()) {
             throw ValidationException::withMessages(['role' => 'System roles and roles assigned to users cannot be deleted.']);
@@ -241,7 +245,7 @@ class AccessController extends Controller
         return back();
     }
 
-    public function audit(Request $request)
+    public function audit(Request $request): Response
     {
         $filters = $request->validate([
             'search' => 'nullable|string|max:100', 'action' => 'nullable|in:created,updated,deleted,login,logout',

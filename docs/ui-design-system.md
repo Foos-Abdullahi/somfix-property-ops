@@ -8,19 +8,19 @@ Brand attributes: trusted, practical, local, responsive and organized.
 
 ## Color palette
 
-| Token | Hex | Use |
-|---|---|---|
-| Forest 900 | `#075B3E` | Main brand, sidebar, headings |
-| Forest 700 | `#087A50` | Primary buttons and links |
-| Forest 100 | `#E6F4EE` | Soft backgrounds and success states |
+| Token      | Hex       | Use                                      |
+| ---------- | --------- | ---------------------------------------- |
+| Forest 900 | `#075B3E` | Main brand, sidebar, headings            |
+| Forest 700 | `#087A50` | Primary buttons and links                |
+| Forest 100 | `#E6F4EE` | Soft backgrounds and success states      |
 | Orange 600 | `#F59A23` | Calls to action, accents, active markers |
-| Orange 100 | `#FFF1D6` | Warning/attention surfaces |
-| Ink 900 | `#17211D` | Main text |
-| Slate 600 | `#66736D` | Secondary text |
-| Mist 100 | `#F6F8F7` | App background |
-| White | `#FFFFFF` | Cards and content surfaces |
-| Danger | `#C94A45` | Errors, urgent overdue items |
-| Info | `#2D6CDF` | Informational notices |
+| Orange 100 | `#FFF1D6` | Warning/attention surfaces               |
+| Ink 900    | `#17211D` | Main text                                |
+| Slate 600  | `#66736D` | Secondary text                           |
+| Mist 100   | `#F6F8F7` | App background                           |
+| White      | `#FFFFFF` | Cards and content surfaces               |
+| Danger     | `#C94A45` | Errors, urgent overdue items             |
+| Info       | `#2D6CDF` | Informational notices                    |
 
 Use Forest as the primary UI color and Orange as a measured accent. Avoid turning every table row orange or green; status colors should remain semantic.
 
@@ -81,4 +81,3 @@ Show customer/property context, scope of work, schedule, assigned technician, ch
 - Tables need search, filters, column visibility and export.
 - All destructive actions require confirmation and a reason.
 - Empty states should explain the next action: “Add your first property” or “Create a maintenance request.”
-
