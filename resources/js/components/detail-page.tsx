@@ -98,6 +98,7 @@ export default function DetailPage({
     backHref,
     editHref,
     deleteHref,
+    deleteMessage = 'This action cannot be undone.',
     summary,
     sections,
     aside = [],
@@ -110,6 +111,7 @@ export default function DetailPage({
     backHref: string;
     editHref?: string;
     deleteHref?: string;
+    deleteMessage?: string;
     summary: DetailSection[];
     sections: DetailSection[];
     aside?: DetailSection[];
@@ -208,8 +210,7 @@ export default function DetailPage({
                         className="flex flex-wrap items-center justify-between gap-3 rounded-xs border border-destructive/30 bg-card p-4"
                     >
                         <p className="text-sm">
-                            Delete <strong>{title}</strong>? This action cannot
-                            be undone.
+                            Delete <strong>{title}</strong>? {deleteMessage}
                         </p>
                         <div className="flex gap-2">
                             <Button
