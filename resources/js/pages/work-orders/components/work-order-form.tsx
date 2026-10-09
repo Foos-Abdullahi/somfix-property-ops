@@ -70,9 +70,11 @@ export function WorkOrderForm({
     });
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        mode === 'create'
-            ? form.post(store.url())
-            : form.put(update.url(workOrder!.id));
+        if (mode === 'create') {
+            form.post(store.url());
+        } else {
+            form.put(update.url(workOrder!.id));
+        }
     };
     return (
         <form onSubmit={submit} className="space-y-6">

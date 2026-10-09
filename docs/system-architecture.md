@@ -123,16 +123,16 @@ Items, units, opening stock, purchases, usage on jobs, on-hand quantity, reorder
 
 ## 6. Roles and permissions
 
-| Role | Main access |
-|---|---|
-| System Admin | Everything, settings, users, audit logs |
-| Property Manager | Properties, units, tenants, leases, maintenance, reports |
-| Operations Coordinator | Leads, requests, quotes, scheduling, job orders |
-| Accountant | Invoices, payments, expenses, payroll, financial reports |
-| Technician | Assigned jobs, schedule, work notes, materials, photos, status updates |
-| Vendor | Assigned work orders, estimates, completion evidence |
-| Tenant | Own unit, lease summary, maintenance requests, request status |
-| Viewer/Owner | Read-only property and financial summaries |
+| Role                   | Main access                                                            |
+| ---------------------- | ---------------------------------------------------------------------- |
+| System Admin           | Everything, settings, users, audit logs                                |
+| Property Manager       | Properties, units, tenants, leases, maintenance, reports               |
+| Operations Coordinator | Leads, requests, quotes, scheduling, job orders                        |
+| Accountant             | Invoices, payments, expenses, payroll, financial reports               |
+| Technician             | Assigned jobs, schedule, work notes, materials, photos, status updates |
+| Vendor                 | Assigned work orders, estimates, completion evidence                   |
+| Tenant                 | Own unit, lease summary, maintenance requests, request status          |
+| Viewer/Owner           | Read-only property and financial summaries                             |
 
 ## 7. Non-functional requirements
 
@@ -144,4 +144,3 @@ Items, units, opening stock, purchases, usage on jobs, on-hand quantity, reorder
 - Do not delete financial or lease history. Use archive/status fields.
 - Compress uploaded images and keep originals in private storage.
 - Use policy-based authorization, server-side validation and signed document URLs.
-

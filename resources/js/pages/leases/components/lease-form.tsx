@@ -1,19 +1,19 @@
-import { Link, router, useForm } from "@inertiajs/react";
-import type { FormEvent } from "react";
-import { ArrowLeft, FileText, Save } from "lucide-react";
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Link, useForm } from '@inertiajs/react';
+import type { FormEvent } from 'react';
+import { ArrowLeft, FileText, Save } from 'lucide-react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { create, index, store, update } from "@/routes/leases";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { index, store, update } from '@/routes/leases';
 
 export type LeaseFormValues = {
     tenant_id: string;
@@ -22,40 +22,49 @@ export type LeaseFormValues = {
     end_date: string;
     monthly_rent: string;
     deposit_amount: string;
-    status: "active" | "expired" | "pending" | "terminated";
+    status: 'active' | 'expired' | 'pending' | 'terminated';
     payment_due_day: string;
     currency: string;
     notes: string;
 };
 
 type LeaseFormProps = {
-    mode: "create" | "edit";
+    mode: 'create' | 'edit';
     lease?: LeaseFormValues & { id: number };
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
-    units?: Array<{ id: number; unit_number: string; property?: { name: string } }>;
+    units?: Array<{
+        id: number;
+        unit_number: string;
+        property?: { name: string };
+    }>;
 };
 
 const fieldClassName =
-    "h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20";
+    'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
 
-export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormProps) {
+export function LeaseForm({
+    mode,
+    lease,
+    tenants = [],
+    units = [],
+}: LeaseFormProps) {
     const form = useForm<LeaseFormValues>({
-        tenant_id: lease?.tenant_id ?? "",
-        unit_id: lease?.unit_id ?? "",
-        start_date: lease?.start_date ?? "",
-        end_date: lease?.end_date ?? "",
-        monthly_rent: lease?.monthly_rent ?? "",
-        deposit_amount: lease?.deposit_amount ?? "",
-        status: lease?.status ?? "active",
-        payment_due_day: lease?.payment_due_day ?? "1",
-        currency: lease?.currency ?? "USD",
-        notes: lease?.notes ?? "",
+        tenant_id: lease?.tenant_id ?? '',
+        unit_id: lease?.unit_id ?? '',
+        start_date: lease?.start_date ?? '',
+        end_date: lease?.end_date ?? '',
+        monthly_rent: lease?.monthly_rent ?? '',
+        deposit_amount: lease?.deposit_amount ?? '',
+        status: lease?.status ?? 'active',
+        payment_due_day: lease?.payment_due_day ?? '1',
+        currency: lease?.currency ?? 'USD',
+        notes: lease?.notes ?? '',
     });
 
     function submit(event: FormEvent<HTMLFormElement>): void {
         event.preventDefault();
 
-        if (mode === "create") {
+        if (mode === 'create') {
             form.post(store.url());
 
             return;
@@ -84,7 +93,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                         <Label htmlFor="tenant_id">Tenant</Label>
                         <Select
                             value={form.data.tenant_id}
-                            onValueChange={(value) => form.setData("tenant_id", value)}
+                            onValueChange={(value) =>
+                                form.setData('tenant_id', value)
+                            }
                         >
                             <SelectTrigger
                                 id="tenant_id"
@@ -95,7 +106,10 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                             </SelectTrigger>
                             <SelectContent>
                                 {tenants.map((tenant) => (
-                                    <SelectItem key={tenant.id} value={String(tenant.id)}>
+                                    <SelectItem
+                                        key={tenant.id}
+                                        value={String(tenant.id)}
+                                    >
                                         {tenant.first_name} {tenant.last_name}
                                     </SelectItem>
                                 ))}
@@ -107,7 +121,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                         <Label htmlFor="unit_id">Unit</Label>
                         <Select
                             value={form.data.unit_id}
-                            onValueChange={(value) => form.setData("unit_id", value)}
+                            onValueChange={(value) =>
+                                form.setData('unit_id', value)
+                            }
                         >
                             <SelectTrigger
                                 id="unit_id"
@@ -118,8 +134,13 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                             </SelectTrigger>
                             <SelectContent>
                                 {units.map((unit) => (
-                                    <SelectItem key={unit.id} value={String(unit.id)}>
-                                        {unit.unit_number} — {unit.property?.name || 'Unknown Property'}
+                                    <SelectItem
+                                        key={unit.id}
+                                        value={String(unit.id)}
+                                    >
+                                        {unit.unit_number} —{' '}
+                                        {unit.property?.name ||
+                                            'Unknown Property'}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -132,7 +153,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                             id="start_date"
                             type="date"
                             value={form.data.start_date}
-                            onChange={(event) => form.setData("start_date", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('start_date', event.target.value)
+                            }
                             className={fieldClassName}
                         />
                         <InputError message={form.errors.start_date} />
@@ -143,7 +166,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                             id="end_date"
                             type="date"
                             value={form.data.end_date}
-                            onChange={(event) => form.setData("end_date", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('end_date', event.target.value)
+                            }
                             className={fieldClassName}
                         />
                         <InputError message={form.errors.end_date} />
@@ -153,7 +178,10 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                         <Select
                             value={form.data.status}
                             onValueChange={(value) =>
-                                form.setData("status", value as LeaseFormValues["status"])
+                                form.setData(
+                                    'status',
+                                    value as LeaseFormValues['status'],
+                                )
                             }
                         >
                             <SelectTrigger
@@ -167,7 +195,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                                 <SelectItem value="active">Active</SelectItem>
                                 <SelectItem value="pending">Pending</SelectItem>
                                 <SelectItem value="expired">Expired</SelectItem>
-                                <SelectItem value="terminated">Terminated</SelectItem>
+                                <SelectItem value="terminated">
+                                    Terminated
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={form.errors.status} />
@@ -191,7 +221,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                             step="0.01"
                             min="0"
                             value={form.data.monthly_rent}
-                            onChange={(event) => form.setData("monthly_rent", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('monthly_rent', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="0.00"
                         />
@@ -205,7 +237,12 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                             step="0.01"
                             min="0"
                             value={form.data.deposit_amount}
-                            onChange={(event) => form.setData("deposit_amount", event.target.value)}
+                            onChange={(event) =>
+                                form.setData(
+                                    'deposit_amount',
+                                    event.target.value,
+                                )
+                            }
                             className={fieldClassName}
                             placeholder="0.00"
                         />
@@ -215,7 +252,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                         <Label htmlFor="currency">Currency</Label>
                         <Select
                             value={form.data.currency}
-                            onValueChange={(value) => form.setData("currency", value)}
+                            onValueChange={(value) =>
+                                form.setData('currency', value)
+                            }
                         >
                             <SelectTrigger
                                 id="currency"
@@ -237,18 +276,25 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                         <Label htmlFor="payment_due_day">Payment due day</Label>
                         <Select
                             value={form.data.payment_due_day}
-                            onValueChange={(value) => form.setData("payment_due_day", value)}
+                            onValueChange={(value) =>
+                                form.setData('payment_due_day', value)
+                            }
                         >
                             <SelectTrigger
                                 id="payment_due_day"
                                 className={`w-full ${fieldClassName}`}
-                                aria-invalid={Boolean(form.errors.payment_due_day)}
+                                aria-invalid={Boolean(
+                                    form.errors.payment_due_day,
+                                )}
                             >
                                 <SelectValue placeholder="Select due day" />
                             </SelectTrigger>
                             <SelectContent>
                                 {Array.from({ length: 28 }, (_, i) => (
-                                    <SelectItem key={i + 1} value={String(i + 1)}>
+                                    <SelectItem
+                                        key={i + 1}
+                                        value={String(i + 1)}
+                                    >
                                         Day {i + 1}
                                     </SelectItem>
                                 ))}
@@ -261,7 +307,9 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                         <Textarea
                             id="notes"
                             value={form.data.notes}
-                            onChange={(event) => form.setData("notes", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('notes', event.target.value)
+                            }
                             className="min-h-28 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                             placeholder="Special terms, conditions, or notes about this lease agreement."
                         />
@@ -279,10 +327,10 @@ export function LeaseForm({ mode, lease, tenants = [], units = [] }: LeaseFormPr
                 <Button disabled={form.processing} className="rounded-xl">
                     <Save />
                     {form.processing
-                        ? "Saving..."
-                        : mode === "create"
-                          ? "Create lease"
-                          : "Save changes"}
+                        ? 'Saving...'
+                        : mode === 'create'
+                          ? 'Create lease'
+                          : 'Save changes'}
                 </Button>
             </div>
         </form>

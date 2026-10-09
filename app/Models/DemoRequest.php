@@ -17,6 +17,7 @@ class DemoRequest extends Model
         return ['follow_up_at' => 'datetime', 'walkthrough_at' => 'datetime'];
     }
 
+    /** @return BelongsTo<Tenant, $this> */
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);

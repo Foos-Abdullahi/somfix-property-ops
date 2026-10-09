@@ -34,7 +34,6 @@ import { index as maintenanceIndex } from '@/routes/maintenance';
 import { index as propertiesIndex } from '@/routes/properties';
 import { index as reportsIndex } from '@/routes/reports';
 import { index as serviceTeamIndex } from '@/routes/service-team';
-import { index as settingsIndex } from '@/routes/settings';
 import { index as tenantsIndex } from '@/routes/tenants';
 import { index as unitsIndex } from '@/routes/units';
 import { index as workOrdersIndex } from '@/routes/work-orders';

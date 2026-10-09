@@ -1,7 +1,7 @@
-import { Head } from "@inertiajs/react";
-import { Building2 } from "lucide-react";
-import { PropertyForm } from "@/pages/properties/components/property-form";
-import { create, index } from "@/routes/properties";
+import { Head } from '@inertiajs/react';
+import { Building2 } from 'lucide-react';
+import { PropertyForm } from '@/pages/properties/components/property-form';
+import { create, index } from '@/routes/properties';
 
 export default function PropertyCreate() {
     return (
@@ -30,7 +30,7 @@ export default function PropertyCreate() {
 
 PropertyCreate.layout = {
     breadcrumbs: [
-        { title: "Properties", href: index() },
-        { title: "Add property", href: create() },
+        { title: 'Properties', href: index() },
+        { title: 'Add property', href: create() },
     ],
 };

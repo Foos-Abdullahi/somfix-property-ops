@@ -14,7 +14,7 @@ export default function AuthSimpleLayout({
     const { resolvedAppearance, updateAppearance } = useAppearance();
 
     return (
-        <main className="relative flex min-h-svh items-center justify-center overflow-hidden bg-[#f8faf9] px-4 py-16 dark:bg-[#20201e] sm:px-6">
+        <main className="relative flex min-h-svh items-center justify-center overflow-hidden bg-[#f8faf9] px-4 py-16 sm:px-6 dark:bg-[#20201e]">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_75%,rgba(0,67,23,0.12),transparent_35%),radial-gradient(circle_at_90%_15%,rgba(245,154,35,0.14),transparent_34%)] dark:bg-[radial-gradient(circle_at_10%_75%,rgba(0,67,23,0.35),transparent_36%),radial-gradient(circle_at_90%_15%,rgba(245,154,35,0.12),transparent_34%)]" />
 
             <Button
@@ -36,7 +36,7 @@ export default function AuthSimpleLayout({
                 )}
             </Button>
 
-            <section className="relative z-10 w-full max-w-[560px] border border-black/5 bg-white/95 px-5 py-8 shadow-[0_24px_70px_-28px_rgba(0,0,0,0.38)] backdrop-blur-sm dark:border-white/10 dark:bg-card/95 sm:px-12 sm:py-11">
+            <section className="relative z-10 w-full max-w-[560px] border border-black/5 bg-white/95 px-5 py-8 shadow-[0_24px_70px_-28px_rgba(0,0,0,0.38)] backdrop-blur-sm sm:px-12 sm:py-11 dark:border-white/10 dark:bg-card/95">
                 <div className="flex flex-col gap-8">
                     <header className="flex flex-col items-center gap-4">
                         <Link

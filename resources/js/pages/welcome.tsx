@@ -77,14 +77,20 @@ export default function Welcome() {
                             <Brand />
                         </a>
                         <div className="sf-nav-right">
-                            <nav className="sf-desktop-nav" aria-label="Main navigation">
+                            <nav
+                                className="sf-desktop-nav"
+                                aria-label="Main navigation"
+                            >
                                 {navigation.map((item) => (
                                     <a key={item.href} href={item.href}>
                                         {item.label}
                                     </a>
                                 ))}
                             </nav>
-                            <span className="sf-nav-divider" aria-hidden="true" />
+                            <span
+                                className="sf-nav-divider"
+                                aria-hidden="true"
+                            />
                             <div className="sf-nav-actions">
                                 <Button
                                     variant="ghost"
@@ -92,12 +98,18 @@ export default function Welcome() {
                                     className="sf-theme-button"
                                     onClick={() =>
                                         updateAppearance(
-                                            resolvedAppearance === 'dark' ? 'light' : 'dark',
+                                            resolvedAppearance === 'dark'
+                                                ? 'light'
+                                                : 'dark',
                                         )
                                     }
                                     aria-label={`Switch to ${resolvedAppearance === 'dark' ? 'light' : 'dark'} theme`}
                                 >
-                                    {resolvedAppearance === 'dark' ? <Sun /> : <Moon />}
+                                    {resolvedAppearance === 'dark' ? (
+                                        <Sun />
+                                    ) : (
+                                        <Moon />
+                                    )}
                                 </Button>
                                 <Link
                                     href={auth.user ? dashboard() : login()}
@@ -130,26 +142,46 @@ export default function Welcome() {
                                                 <Brand />
                                             </SheetTitle>
                                             <SheetDescription>
-                                                Your property operations, connected.
+                                                Your property operations,
+                                                connected.
                                             </SheetDescription>
                                         </SheetHeader>
-                                        <nav aria-label="Mobile navigation" className="sf-mobile-links">
+                                        <nav
+                                            aria-label="Mobile navigation"
+                                            className="sf-mobile-links"
+                                        >
                                             {navigation.map((item) => (
-                                                <SheetClose asChild key={item.href}>
+                                                <SheetClose
+                                                    asChild
+                                                    key={item.href}
+                                                >
                                                     <a href={item.href}>
                                                         {item.label}
-                                                        <ArrowUpRight size={18} />
+                                                        <ArrowUpRight
+                                                            size={18}
+                                                        />
                                                     </a>
                                                 </SheetClose>
                                             ))}
                                             <SheetClose asChild>
-                                                <Link href={auth.user ? dashboard() : login()}>
-                                                    {auth.user ? 'Dashboard' : 'Sign In'}
+                                                <Link
+                                                    href={
+                                                        auth.user
+                                                            ? dashboard()
+                                                            : login()
+                                                    }
+                                                >
+                                                    {auth.user
+                                                        ? 'Dashboard'
+                                                        : 'Sign In'}
                                                     <ArrowUpRight size={18} />
                                                 </Link>
                                             </SheetClose>
                                             <SheetClose asChild>
-                                                <Button onClick={requestDemo} className="sf-button">
+                                                <Button
+                                                    onClick={requestDemo}
+                                                    className="sf-button"
+                                                >
                                                     Get Early Access
                                                     <ArrowRight />
                                                 </Button>
@@ -177,9 +209,10 @@ export default function Welcome() {
                                     <span>from one place.</span>
                                 </h1>
                                 <p>
-                                    SOMFIX connects properties, tenants, maintenance
-                                    teams, quotations, inventory, invoices, and payments
-                                    into one clear workflow.
+                                    SOMFIX connects properties, tenants,
+                                    maintenance teams, quotations, inventory,
+                                    invoices, and payments into one clear
+                                    workflow.
                                 </p>
                                 <div className="sf-hero-buttons">
                                     <Button
@@ -221,7 +254,8 @@ export default function Welcome() {
                                     <p>
                                         Local understanding. A bigger picture.
                                         <small>
-                                            For growing property companies in Somalia &amp; East Africa.
+                                            For growing property companies in
+                                            Somalia &amp; East Africa.
                                         </small>
                                     </p>
                                 </div>
@@ -259,7 +293,10 @@ export default function Welcome() {
                     <FeatureSections onDemo={requestDemo} />
 
                     {/* ── About ── */}
-                    <section className="sf-about-section sf-container" id="about">
+                    <section
+                        className="sf-about-section sf-container"
+                        id="about"
+                    >
                         <Reveal className="sf-about-inner">
                             <div>
                                 <Eyebrow>BUILT AROUND REAL OPERATIONS</Eyebrow>
@@ -268,33 +305,42 @@ export default function Welcome() {
                                     <br />
                                     behind every property.
                                 </h2>
-                                <button onClick={requestDemo} className="sf-about-cta-btn">
+                                <button
+                                    onClick={requestDemo}
+                                    className="sf-about-cta-btn"
+                                >
                                     See It in Action
                                     <ArrowUpRight size={16} />
                                 </button>
                             </div>
                             <div>
                                 <p>
-                                    Great property operations happen when people have what
-                                    they need to do good work. The right record. A clear
-                                    assignment. A payment that's easy to trace.
+                                    Great property operations happen when people
+                                    have what they need to do good work. The
+                                    right record. A clear assignment. A payment
+                                    that's easy to trace.
                                 </p>
                                 <p>
-                                    SOMFIX brings those everyday details together for
-                                    property companies and maintenance teams in Somalia and
-                                    East Africa—so growing your portfolio doesn't mean
-                                    growing the confusion.
+                                    SOMFIX brings those everyday details
+                                    together for property companies and
+                                    maintenance teams in Somalia and East
+                                    Africa—so growing your portfolio doesn't
+                                    mean growing the confusion.
                                 </p>
                                 <span className="sf-about-location">
                                     <Globe2 size={18} />
-                                    Designed with Somalia &amp; East Africa in mind
+                                    Designed with Somalia &amp; East Africa in
+                                    mind
                                 </span>
                             </div>
                         </Reveal>
                     </section>
 
                     {/* ── CTA ── */}
-                    <section className="sf-cta-section sf-container" id="contact">
+                    <section
+                        className="sf-cta-section sf-container"
+                        id="contact"
+                    >
                         <Reveal className="sf-cta">
                             <Photo
                                 name="service"
@@ -303,11 +349,13 @@ export default function Welcome() {
                             <div className="sf-cta-copy">
                                 <Eyebrow light>A CLEARER WAY TO WORK</Eyebrow>
                                 <h2>
-                                    Bring property and maintenance operations together.
+                                    Bring property and maintenance operations
+                                    together.
                                 </h2>
                                 <p>
-                                    Replace spreadsheets, disconnected calls, and manual
-                                    follow-ups with one connected SOMFIX workspace.
+                                    Replace spreadsheets, disconnected calls,
+                                    and manual follow-ups with one connected
+                                    SOMFIX workspace.
                                 </p>
                                 <div className="sf-cta-buttons">
                                     <Button
@@ -353,7 +401,10 @@ export default function Welcome() {
                                     <br />
                                     Better days for the people behind them.
                                 </p>
-                                <div className="sf-socials" aria-label="Social profiles coming soon">
+                                <div
+                                    className="sf-socials"
+                                    aria-label="Social profiles coming soon"
+                                >
                                     {[
                                         { icon: Linkedin, label: 'LinkedIn' },
                                         { icon: Instagram, label: 'Instagram' },
@@ -373,7 +424,9 @@ export default function Welcome() {
                             <div>
                                 <h3>Solutions</h3>
                                 <a href="#solutions">Property management</a>
-                                <a href="#solutions">Maintenance &amp; service</a>
+                                <a href="#solutions">
+                                    Maintenance &amp; service
+                                </a>
                                 <a href="#solutions">Finance &amp; inventory</a>
                             </div>
                             <div>
@@ -381,8 +434,12 @@ export default function Welcome() {
                                 <a href="#about">About SOMFIX</a>
                                 <a href="#about">Who it's for</a>
                                 <a href="#contact">Contact</a>
-                                <button onClick={requestDemo}>Book a Walkthrough</button>
-                                <button onClick={requestDemo}>Contact us</button>
+                                <button onClick={requestDemo}>
+                                    Book a Walkthrough
+                                </button>
+                                <button onClick={requestDemo}>
+                                    Contact us
+                                </button>
                             </div>
                             <div>
                                 <h3>Legal</h3>
@@ -396,7 +453,8 @@ export default function Welcome() {
                         </div>
                         <div className="sf-footer-bottom">
                             <span>
-                                © {new Date().getFullYear()} SOMFIX Property Operations.
+                                © {new Date().getFullYear()} SOMFIX Property
+                                Operations.
                             </span>
                             <span>
                                 <span className="sf-status-dot" />
@@ -422,7 +480,9 @@ export default function Welcome() {
                 <DialogContent className="max-h-[85dvh] overflow-y-auto rounded-2xl">
                     <DialogHeader>
                         <DialogTitle>
-                            {legal === 'privacy' ? 'Privacy overview' : 'Service information'}
+                            {legal === 'privacy'
+                                ? 'Privacy overview'
+                                : 'Service information'}
                         </DialogTitle>
                         <DialogDescription>
                             {legal === 'privacy'
@@ -433,33 +493,38 @@ export default function Welcome() {
                     {legal === 'privacy' ? (
                         <div className="space-y-4 text-sm leading-7">
                             <p>
-                                The inquiry form stores the name, email address, company,
-                                team size and optional message you submit. These details help
-                                SOMFIX understand and respond to your request.
+                                The inquiry form stores the name, email address,
+                                company, team size and optional message you
+                                submit. These details help SOMFIX understand and
+                                respond to your request.
                             </p>
                             <p>
-                                The site uses cookies for sessions and security. Your theme
-                                preference is saved in your browser. The dashboard examples
-                                are fictional and do not show customer or tenant data.
+                                The site uses cookies for sessions and security.
+                                Your theme preference is saved in your browser.
+                                The dashboard examples are fictional and do not
+                                show customer or tenant data.
                             </p>
                             <p>
-                                For a question about information submitted through this site,
-                                use Contact Us and describe your request without including
-                                sensitive records.
+                                For a question about information submitted
+                                through this site, use Contact Us and describe
+                                your request without including sensitive
+                                records.
                             </p>
                         </div>
                     ) : (
                         <div className="space-y-4 text-sm leading-7">
                             <p>
-                                This website introduces SOMFIX Property Operations. Dashboard
-                                figures, property names, schedules and payments are
-                                illustrative examples, not customer results or service
+                                This website introduces SOMFIX Property
+                                Operations. Dashboard figures, property names,
+                                schedules and payments are illustrative
+                                examples, not customer results or service
                                 guarantees.
                             </p>
                             <p>
-                                Submitting an inquiry does not create a subscription or
-                                payment obligation. Discuss availability, pricing, service
-                                terms and data-handling requirements with SOMFIX before
+                                Submitting an inquiry does not create a
+                                subscription or payment obligation. Discuss
+                                availability, pricing, service terms and
+                                data-handling requirements with SOMFIX before
                                 onboarding.
                             </p>
                         </div>

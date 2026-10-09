@@ -20,7 +20,10 @@ function display(value: unknown): string {
     if (value === null) return 'Empty';
     if (typeof value === 'boolean') return value ? 'Yes' : 'No';
     if (typeof value === 'object') return JSON.stringify(value, null, 2);
-    return String(value);
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number' || typeof value === 'bigint')
+        return String(value);
+    return 'Not present';
 }
 export default function AuditShow({ log }: { log: Log }) {
     const before = log.changes?.before ?? {};

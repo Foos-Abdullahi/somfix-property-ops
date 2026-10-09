@@ -1,5 +1,5 @@
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link } from '@inertiajs/react';
 import {
     ArrowUpRight,
     Building2,
@@ -11,85 +11,91 @@ import {
     TrendingUp,
     Wallet,
     Wrench,
-} from "lucide-react";
-import { Badge, badgeToneClasses } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { dashboard } from "@/routes";
-import { index as propertiesIndex } from "@/routes/properties";
-import { index as workOrdersIndex } from "@/routes/work-orders";
+} from 'lucide-react';
+import { Badge, badgeToneClasses } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { dashboard } from '@/routes';
+import { index as propertiesIndex } from '@/routes/properties';
+import { index as workOrdersIndex } from '@/routes/work-orders';
 
 const metrics: StatSection[] = [
     {
-        title: "Properties",
-        value: "—",
+        title: 'Properties',
+        value: '—',
         icon: Building2,
-        color: "primary",
+        color: 'primary',
     },
     {
-        title: "Open requests",
-        value: "—",
+        title: 'Open requests',
+        value: '—',
         icon: Wrench,
-        color: "warning",
+        color: 'warning',
     },
     {
-        title: "Scheduled jobs",
-        value: "—",
+        title: 'Scheduled jobs',
+        value: '—',
         icon: CalendarClock,
-        color: "info",
+        color: 'info',
     },
     {
-        title: "Unpaid invoices",
-        value: "—",
+        title: 'Unpaid invoices',
+        value: '—',
         icon: Wallet,
-        color: "destructive",
+        color: 'destructive',
     },
 ];
 
 const launchTrend = [
-    { label: "Foundation", value: 18 },
-    { label: "Registry", value: 34 },
-    { label: "Tenancy", value: 48 },
-    { label: "Requests", value: 65 },
-    { label: "Jobs", value: 79 },
-    { label: "Finance", value: 92 },
-    { label: "Live", value: 78 },
+    { label: 'Foundation', value: 18 },
+    { label: 'Registry', value: 34 },
+    { label: 'Tenancy', value: 48 },
+    { label: 'Requests', value: 65 },
+    { label: 'Jobs', value: 79 },
+    { label: 'Finance', value: 92 },
+    { label: 'Live', value: 78 },
 ];
 
 const moduleProgress = [
-    { name: "Foundation", value: 100, color: "bg-primary" },
-    { name: "Properties", value: 35, color: "bg-chart-4" },
-    { name: "Maintenance", value: 18, color: "bg-accent" },
-    { name: "Finance", value: 10, color: "bg-emerald-500" },
+    { name: 'Foundation', value: 100, color: 'bg-primary' },
+    { name: 'Properties', value: 35, color: 'bg-chart-4' },
+    { name: 'Maintenance', value: 18, color: 'bg-accent' },
+    { name: 'Finance', value: 10, color: 'bg-emerald-500' },
 ];
 
 const deliveryRows = [
     {
-        module: "Property & tenancy",
-        focus: "Properties, units, tenants and lease records",
-        team: "Operations",
-        status: "Next",
-        date: "Phase 2",
+        module: 'Property & tenancy',
+        focus: 'Properties, units, tenants and lease records',
+        team: 'Operations',
+        status: 'Next',
+        date: 'Phase 2',
     },
     {
-        module: "Maintenance workflow",
-        focus: "Requests, triage, quotes and assignments",
-        team: "Service team",
-        status: "Planned",
-        date: "Phase 3",
+        module: 'Maintenance workflow',
+        focus: 'Requests, triage, quotes and assignments',
+        team: 'Service team',
+        status: 'Planned',
+        date: 'Phase 3',
     },
     {
-        module: "Finance & inventory",
-        focus: "Invoices, payments, expenses and stock controls",
-        team: "Finance",
-        status: "Planned",
-        date: "Phase 4",
+        module: 'Finance & inventory',
+        focus: 'Invoices, payments, expenses and stock controls',
+        team: 'Finance',
+        status: 'Planned',
+        date: 'Phase 4',
     },
 ];
 
 const chartPoints = launchTrend
     .map((item, index) => `${index * 88 + 18},${154 - item.value}`)
-    .join(" ");
+    .join(' ');
 const chartAreaPoints = `18,154 ${chartPoints} 546,154`;
 
 export default function Dashboard() {
@@ -100,13 +106,12 @@ export default function Dashboard() {
             <div className="w-full p-4 md:p-6">
                 <section className="flex flex-col gap-4 rounded-2xl bg-primary p-6 text-primary-foreground shadow-lg shadow-primary/20 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
-
                         <h1 className="page-title-enter text-lg font-semibold">
                             Welcome to your operations dashboard
                         </h1>
-                        <p className="page-description-enter mt-1 text-xs text-WHITE">
-                            One clear place for property records, maintenance delivery, and
-                            financial control.
+                        <p className="page-description-enter text-WHITE mt-1 text-xs">
+                            One clear place for property records, maintenance
+                            delivery, and financial control.
                         </p>
                     </div>
                     <Button
@@ -123,7 +128,7 @@ export default function Dashboard() {
 
                 <StatsCard sections={metrics} />
 
-                <div className="mt-6 space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-5 motion-safe:duration-700">
+                <div className="mt-6 space-y-6 motion-safe:animate-in motion-safe:duration-700 motion-safe:slide-in-from-bottom-5 motion-safe:fade-in">
                     <section className="grid gap-6 lg:grid-cols-3">
                         <Card className="overflow-hidden border-border/70 shadow-sm lg:col-span-2">
                             <CardHeader className="pb-0">
@@ -134,7 +139,8 @@ export default function Dashboard() {
                                             SOMFIX delivery momentum
                                         </CardTitle>
                                         <CardDescription className="mt-1 text-xs">
-                                            A visual view of the connected operations roadmap.
+                                            A visual view of the connected
+                                            operations roadmap.
                                         </CardDescription>
                                     </div>
                                     <Badge
@@ -238,7 +244,10 @@ export default function Dashboard() {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 {moduleProgress.map((module) => (
-                                    <div key={module.name} className="space-y-2">
+                                    <div
+                                        key={module.name}
+                                        className="space-y-2"
+                                    >
                                         <div className="flex items-center justify-between text-xs font-semibold">
                                             <span>{module.name}</span>
                                             <span className="font-mono text-muted-foreground">
@@ -248,7 +257,9 @@ export default function Dashboard() {
                                         <div className="h-2 overflow-hidden rounded-full bg-secondary">
                                             <div
                                                 className={`h-full rounded-full transition-all duration-700 ${module.color}`}
-                                                style={{ width: `${module.value}%` }}
+                                                style={{
+                                                    width: `${module.value}%`,
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -264,7 +275,8 @@ export default function Dashboard() {
                                 Module delivery progress
                             </CardTitle>
                             <CardDescription className="text-xs">
-                                Delivery maturity across the core SOMFIX workspaces.
+                                Delivery maturity across the core SOMFIX
+                                workspaces.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -280,7 +292,9 @@ export default function Dashboard() {
                                         <div className="flex h-28 w-full max-w-24 items-end rounded-t-lg bg-secondary/60 px-2">
                                             <div
                                                 className={`w-full rounded-t-md ${module.color}`}
-                                                style={{ height: `${module.value}%` }}
+                                                style={{
+                                                    height: `${module.value}%`,
+                                                }}
                                             />
                                         </div>
                                         <span className="truncate text-xs text-muted-foreground">
@@ -300,11 +314,16 @@ export default function Dashboard() {
                                     Operations delivery roster
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-xs">
-                                    The next modules that will complete the end-to-end property
-                                    workflow.
+                                    The next modules that will complete the
+                                    end-to-end property workflow.
                                 </CardDescription>
                             </div>
-                            <Button asChild variant="ghost" size="sm" className="gap-1 text-xs">
+                            <Button
+                                asChild
+                                variant="ghost"
+                                size="sm"
+                                className="gap-1 text-xs"
+                            >
                                 <Link href={propertiesIndex()} prefetch>
                                     Open workspace
                                     <ArrowUpRight className="size-3.5" />
@@ -316,11 +335,17 @@ export default function Dashboard() {
                                 <table className="w-full min-w-[720px] text-left text-xs">
                                     <thead className="border-y border-border/70 bg-secondary/35 text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                                         <tr>
-                                            <th className="px-6 py-3">Module</th>
+                                            <th className="px-6 py-3">
+                                                Module
+                                            </th>
                                             <th className="px-6 py-3">Focus</th>
                                             <th className="px-6 py-3">Team</th>
-                                            <th className="px-6 py-3">Status</th>
-                                            <th className="px-6 py-3 text-right">Target</th>
+                                            <th className="px-6 py-3">
+                                                Status
+                                            </th>
+                                            <th className="px-6 py-3 text-right">
+                                                Target
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-border/70">
@@ -342,7 +367,8 @@ export default function Dashboard() {
                                                     <Badge
                                                         variant="outline"
                                                         className={
-                                                            row.status === "Next"
+                                                            row.status ===
+                                                            'Next'
                                                                 ? badgeToneClasses.warning
                                                                 : badgeToneClasses.neutral
                                                         }
@@ -367,5 +393,5 @@ export default function Dashboard() {
 }
 
 Dashboard.layout = {
-    breadcrumbs: [{ title: "Dashboard", href: dashboard() }],
+    breadcrumbs: [{ title: 'Dashboard', href: dashboard() }],
 };

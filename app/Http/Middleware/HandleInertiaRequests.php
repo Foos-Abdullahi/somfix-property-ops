@@ -40,7 +40,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
-                'permissions' => array_values(array_filter(array_keys(config('permissions')), fn ($permission) => $request->user()?->hasPermission($permission))),
+                'permissions' => array_values(array_filter(array_filter(array_keys(config('permissions')), 'is_string'), fn ($permission) => $request->user()?->hasPermission($permission) ?? false)),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

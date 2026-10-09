@@ -1,19 +1,19 @@
-import { Link, router, useForm } from "@inertiajs/react";
-import type { FormEvent } from "react";
-import { ArrowLeft, Building2, Save } from "lucide-react";
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Link, useForm } from '@inertiajs/react';
+import type { FormEvent } from 'react';
+import { ArrowLeft, Building2, Save } from 'lucide-react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { create, index, store, update } from "@/routes/properties";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { index, store, update } from '@/routes/properties';
 
 export type PropertyFormValues = {
     name: string;
@@ -23,35 +23,35 @@ export type PropertyFormValues = {
     city: string;
     address: string;
     units_count: string;
-    status: "active" | "inactive";
+    status: 'active' | 'inactive';
     notes: string;
 };
 
 type PropertyFormProps = {
-    mode: "create" | "edit";
+    mode: 'create' | 'edit';
     property?: PropertyFormValues & { id: number };
 };
 
 const fieldClassName =
-    "h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20";
+    'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
 
 export function PropertyForm({ mode, property }: PropertyFormProps) {
     const form = useForm<PropertyFormValues>({
-        name: property?.name ?? "",
-        property_type: property?.property_type ?? "Apartment",
-        owner_name: property?.owner_name ?? "",
-        district: property?.district ?? "",
-        city: property?.city ?? "Mogadishu",
-        address: property?.address ?? "",
-        units_count: property?.units_count ?? "0",
-        status: property?.status ?? "active",
-        notes: property?.notes ?? "",
+        name: property?.name ?? '',
+        property_type: property?.property_type ?? 'Apartment',
+        owner_name: property?.owner_name ?? '',
+        district: property?.district ?? '',
+        city: property?.city ?? 'Mogadishu',
+        address: property?.address ?? '',
+        units_count: property?.units_count ?? '0',
+        status: property?.status ?? 'active',
+        notes: property?.notes ?? '',
     });
 
     function submit(event: FormEvent<HTMLFormElement>): void {
         event.preventDefault();
 
-        if (mode === "create") {
+        if (mode === 'create') {
             form.post(store.url());
 
             return;
@@ -81,7 +81,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                         <Input
                             id="name"
                             value={form.data.name}
-                            onChange={(event) => form.setData("name", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('name', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="e.g. Hodan Heights"
                         />
@@ -92,21 +94,29 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                         <Select
                             value={form.data.property_type}
                             onValueChange={(value) =>
-                                form.setData("property_type", value)
+                                form.setData('property_type', value)
                             }
                         >
                             <SelectTrigger
                                 id="property_type"
                                 className={`w-full ${fieldClassName}`}
-                                aria-invalid={Boolean(form.errors.property_type)}
+                                aria-invalid={Boolean(
+                                    form.errors.property_type,
+                                )}
                             >
                                 <SelectValue placeholder="Select a property type" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Apartment">Apartment</SelectItem>
+                                <SelectItem value="Apartment">
+                                    Apartment
+                                </SelectItem>
                                 <SelectItem value="Villa">Villa</SelectItem>
-                                <SelectItem value="Commercial">Commercial</SelectItem>
-                                <SelectItem value="Mixed use">Mixed use</SelectItem>
+                                <SelectItem value="Commercial">
+                                    Commercial
+                                </SelectItem>
+                                <SelectItem value="Mixed use">
+                                    Mixed use
+                                </SelectItem>
                                 <SelectItem value="Land">Land</SelectItem>
                             </SelectContent>
                         </Select>
@@ -117,7 +127,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                         <Input
                             id="owner_name"
                             value={form.data.owner_name}
-                            onChange={(event) => form.setData("owner_name", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('owner_name', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="Optional owner or organization"
                         />
@@ -129,8 +141,8 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                             value={form.data.status}
                             onValueChange={(value) =>
                                 form.setData(
-                                    "status",
-                                    value as PropertyFormValues["status"],
+                                    'status',
+                                    value as PropertyFormValues['status'],
                                 )
                             }
                         >
@@ -143,7 +155,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="active">Active</SelectItem>
-                                <SelectItem value="inactive">Inactive</SelectItem>
+                                <SelectItem value="inactive">
+                                    Inactive
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={form.errors.status} />
@@ -153,7 +167,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                         <Input
                             id="district"
                             value={form.data.district}
-                            onChange={(event) => form.setData("district", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('district', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="e.g. Hodan"
                         />
@@ -164,7 +180,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                         <Input
                             id="city"
                             value={form.data.city}
-                            onChange={(event) => form.setData("city", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('city', event.target.value)
+                            }
                             className={fieldClassName}
                         />
                         <InputError message={form.errors.city} />
@@ -174,7 +192,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                         <Input
                             id="address"
                             value={form.data.address}
-                            onChange={(event) => form.setData("address", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('address', event.target.value)
+                            }
                             className={fieldClassName}
                             placeholder="Building, street or landmark"
                         />
@@ -198,7 +218,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                             type="number"
                             min="0"
                             value={form.data.units_count}
-                            onChange={(event) => form.setData("units_count", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('units_count', event.target.value)
+                            }
                             className={fieldClassName}
                         />
                         <InputError message={form.errors.units_count} />
@@ -208,7 +230,9 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                         <Textarea
                             id="notes"
                             value={form.data.notes}
-                            onChange={(event) => form.setData("notes", event.target.value)}
+                            onChange={(event) =>
+                                form.setData('notes', event.target.value)
+                            }
                             className="min-h-28 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                             placeholder="Access details, facilities, inspection notes, or anything the operations team should know."
                         />
@@ -226,10 +250,10 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
                 <Button disabled={form.processing} className="rounded-xl">
                     <Save />
                     {form.processing
-                        ? "Saving..."
-                        : mode === "create"
-                          ? "Create property"
-                          : "Save changes"}
+                        ? 'Saving...'
+                        : mode === 'create'
+                          ? 'Create property'
+                          : 'Save changes'}
                 </Button>
             </div>
         </form>

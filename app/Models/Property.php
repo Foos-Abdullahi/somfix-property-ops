@@ -48,6 +48,7 @@ class Property extends Model
         ];
     }
 
+    /** @return HasMany<Unit, $this> */
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);

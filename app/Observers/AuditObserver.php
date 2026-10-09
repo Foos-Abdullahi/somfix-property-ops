@@ -27,6 +27,10 @@ class AuditObserver
         $this->record($model, 'deleted', $model->getAttributes(), []);
     }
 
+    /**
+     * @param  array<string, mixed>  $before
+     * @param  array<string, mixed>  $after
+     */
     private function record(Model $model, string $action, array $before, array $after): void
     {
         $passwordChanged = array_key_exists('password', $after);
@@ -37,7 +41,7 @@ class AuditObserver
         }
         AuditLog::create([
             'actor_id' => $action === 'deleted' && $model instanceof User && $model->getKey() === auth()->id() ? null : auth()->id(),
-            'actor_name' => auth()->user()?->name ?? 'System',
+            'actor_name' => auth()->check() ? auth()->user()->name : 'System',
             'action' => $action,
             'subject_type' => class_basename($model),
             'subject_id' => $model->getKey(),

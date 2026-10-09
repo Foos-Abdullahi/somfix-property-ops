@@ -92,7 +92,8 @@ export const leaseColumns: ColumnDef<LeaseRow>[] = [
         header: 'Monthly Rent',
         cell: ({ row }) => (
             <span className="font-mono font-semibold">
-                {row.original.currency} {Number(row.original.monthly_rent).toFixed(2)}
+                {row.original.currency}{' '}
+                {Number(row.original.monthly_rent).toFixed(2)}
             </span>
         ),
     },

@@ -76,7 +76,9 @@ export default function AuditLog({
                                     ? 'danger'
                                     : log.action === 'logout'
                                       ? 'neutral'
-                                      : log.action === 'created' ? 'success' : 'info'
+                                      : log.action === 'created'
+                                        ? 'success'
+                                        : 'info'
                             }
                             className="capitalize"
                         >

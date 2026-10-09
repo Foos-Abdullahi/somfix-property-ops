@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         foreach (['User', 'Role', 'Property', 'Unit', 'Tenant', 'Lease', 'Maintenance', 'WorkOrder', 'ServiceTeam', 'Inventory', 'Finance'] as $model) {
             ('App\\Models\\'.$model)::observe(AuditObserver::class);
         }
-        foreach (array_keys(config('permissions')) as $permission) {
+        foreach (array_filter(array_keys(config('permissions')), 'is_string') as $permission) {
             Gate::define($permission, fn (User $user) => $user->hasPermission($permission));
         }
         foreach ([Login::class => 'login', Logout::class => 'logout'] as $event => $action) {

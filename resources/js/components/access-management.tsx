@@ -42,7 +42,9 @@ export function AccessPage({
             <div className="p-4 md:p-6">
                 <header className="flex items-start justify-between gap-4">
                     <div>
-                        <h1 className="page-title-enter text-lg font-semibold">{title}</h1>
+                        <h1 className="page-title-enter text-lg font-semibold">
+                            {title}
+                        </h1>
                         <p className="page-description-enter text-xs text-muted-foreground">
                             {description}
                         </p>

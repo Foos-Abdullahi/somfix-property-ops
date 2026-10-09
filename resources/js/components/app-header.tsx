@@ -159,7 +159,9 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                             className="h-9 w-9 cursor-pointer"
                             onClick={() =>
                                 updateAppearance(
-                                    resolvedAppearance === 'dark' ? 'light' : 'dark',
+                                    resolvedAppearance === 'dark'
+                                        ? 'light'
+                                        : 'dark',
                                 )
                             }
                             aria-label={`Switch to ${resolvedAppearance === 'dark' ? 'light' : 'dark'} theme`}

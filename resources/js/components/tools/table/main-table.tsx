@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
 import type {
     ColumnDef,
     ColumnFiltersState,
@@ -6,7 +6,7 @@ import type {
     SortingState,
     Table as TableType,
     VisibilityState,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 import {
     flexRender,
     getCoreRowModel,
@@ -16,9 +16,9 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table";
-import * as React from "react";
-import { useEffect } from "react";
+} from '@tanstack/react-table';
+import * as React from 'react';
+import { useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -26,11 +26,11 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import { DataTablePagination } from "./pagination";
-import { DataTableToolbar } from "./toolbar";
-import type { DataTableDateRangeFilter, DataTableServerFilter } from "./types";
+} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import { DataTablePagination } from './pagination';
+import { DataTableToolbar } from './toolbar';
+import type { DataTableDateRangeFilter, DataTableServerFilter } from './types';
 
 interface DataTableProps<TData, TValue> {
     searchControl?: { value: string; onChange: (value: string) => void };
@@ -40,15 +40,15 @@ interface DataTableProps<TData, TValue> {
     title: string;
     searchTitle: string;
     searchable?: boolean;
-    hidePagination?: boolean | true;
+    hidePagination?: boolean;
     hideFilter?: boolean;
     showToolbarOnly?: boolean;
     subTitle?: string;
     onDeleteSelected?: (selectedRows: TData[]) => void;
     // Optional view mode wiring to surface a toggle in the toolbar
-    viewMode?: "table" | "grid";
-    onViewModeChange?: (mode: "table" | "grid") => void;
-    variant?: "default" | "futuristic";
+    viewMode?: 'table' | 'grid';
+    onViewModeChange?: (mode: 'table' | 'grid') => void;
+    variant?: 'default' | 'futuristic';
     onRowClick?: (row: Row<TData>) => void;
     rowHref?: (row: Row<TData>) => string | undefined;
     /** Merged onto the inner `<table>` (e.g. `table-fixed`). */
@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
     onDeleteSelected,
     viewMode,
     onViewModeChange,
-    variant = "default",
+    variant = 'default',
     onRowClick,
     rowHref,
     tableClassName,
@@ -100,9 +100,11 @@ export function DataTable<TData, TValue>({
     onDateRangeChange,
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({});
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-    const [globalFilter, setGlobalFilter] = React.useState("");
+    const [columnVisibility, setColumnVisibility] =
+        React.useState<VisibilityState>({});
+    const [columnFilters, setColumnFilters] =
+        React.useState<ColumnFiltersState>([]);
+    const [globalFilter, setGlobalFilter] = React.useState('');
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
     // Function to reset row selection
@@ -122,7 +124,9 @@ export function DataTable<TData, TValue>({
         },
         initialState: {
             pagination: {
-                pageSize: hidePagination ? data.length : pagination?.per_page || 10,
+                pageSize: hidePagination
+                    ? data.length
+                    : pagination?.per_page || 10,
             },
         },
         enableRowSelection: true,
@@ -132,11 +136,11 @@ export function DataTable<TData, TValue>({
         onGlobalFilterChange: setGlobalFilter,
         onColumnVisibilityChange: setColumnVisibility,
         globalFilterFn: (row, _columnId, filterValue) => {
-            const search = String(filterValue ?? "")
+            const search = String(filterValue ?? '')
                 .trim()
                 .toLowerCase();
 
-            if (search === "") {
+            if (search === '') {
                 return true;
             }
 
@@ -144,7 +148,18 @@ export function DataTable<TData, TValue>({
                 (value) =>
                     value !== null &&
                     value !== undefined &&
-                    String(value).toLowerCase().includes(search),
+                    (typeof value === 'object'
+                        ? JSON.stringify(value)
+                        : typeof value === 'string'
+                          ? value
+                          : typeof value === 'number' ||
+                              typeof value === 'boolean' ||
+                              typeof value === 'bigint'
+                            ? String(value)
+                            : ''
+                    )
+                        .toLowerCase()
+                        .includes(search),
             );
         },
         getCoreRowModel: getCoreRowModel(),
@@ -198,7 +213,7 @@ export function DataTable<TData, TValue>({
         }
     };
 
-    const isFuturistic = variant === "futuristic";
+    const isFuturistic = variant === 'futuristic';
 
     return (
         <div className="flex flex-col gap-4">
@@ -224,12 +239,12 @@ export function DataTable<TData, TValue>({
             <div
                 className={
                     isFuturistic
-                        ? "relative overflow-hidden rounded-sm border border-border/10 bg-card/40 shadow-sm backdrop-blur-xl dark:border-border/20"
-                        : "overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm dark:border-border/80"
+                        ? 'relative overflow-hidden rounded-sm border border-border/10 bg-card/40 shadow-sm backdrop-blur-xl dark:border-border/20'
+                        : 'overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm dark:border-border/80'
                 }
             >
                 <Table className={cn(tableClassName)}>
-                    <TableHeader className="sticky top-0 z-10 h-fit border-b border-border/70 bg-secondary/35 dark:bg-muted backdrop-blur-sm dark:border-border/60">
+                    <TableHeader className="sticky top-0 z-10 h-fit border-b border-border/70 bg-secondary/35 backdrop-blur-sm dark:border-border/60 dark:bg-muted">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow className="" key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
@@ -238,15 +253,21 @@ export function DataTable<TData, TValue>({
                                             key={header.id}
                                             colSpan={header.colSpan}
                                             className={cn(
-                                                "py-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase",
-                                                isFuturistic ? "tracking-wide" : undefined,
-                                                (header.column.columnDef.meta as any)?.thClassName,
+                                                'py-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase',
+                                                isFuturistic
+                                                    ? 'tracking-wide'
+                                                    : undefined,
+                                                (
+                                                    header.column.columnDef
+                                                        .meta as any
+                                                )?.thClassName,
                                             )}
                                         >
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                      header.column.columnDef.header,
+                                                      header.column.columnDef
+                                                          .header,
                                                       header.getContext(),
                                                   )}
                                         </TableHead>
@@ -260,13 +281,17 @@ export function DataTable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                                    data-state={
+                                        row.getIsSelected() && 'selected'
+                                    }
                                     onClick={
                                         rowNavigable
                                             ? (e) => {
                                                   if (
-                                                      e.target instanceof HTMLInputElement &&
-                                                      e.target.type === "checkbox"
+                                                      e.target instanceof
+                                                          HTMLInputElement &&
+                                                      e.target.type ===
+                                                          'checkbox'
                                                   ) {
                                                       return;
                                                   }
@@ -278,19 +303,24 @@ export function DataTable<TData, TValue>({
                                     className={
                                         isFuturistic
                                             ? rowNavigable
-                                                ? "cursor-pointer border-b border-b-black/5 transition-colors hover:bg-primary/5 dark:border-b-white/15 dark:hover:bg-white/5"
-                                                : "border-b border-b-black/5 transition-colors dark:border-b-white/15"
+                                                ? 'cursor-pointer border-b border-b-black/5 transition-colors hover:bg-primary/5 dark:border-b-white/15 dark:hover:bg-white/5'
+                                                : 'border-b border-b-black/5 transition-colors dark:border-b-white/15'
                                             : rowNavigable
-                                              ? "cursor-pointer border-b border-border/80 hover:bg-muted/50 dark:border-border/60 dark:hover:bg-muted/30"
-                                              : "border-b border-border/80 dark:border-border/60"
+                                              ? 'cursor-pointer border-b border-border/80 hover:bg-muted/50 dark:border-border/60 dark:hover:bg-muted/30'
+                                              : 'border-b border-border/80 dark:border-border/60'
                                     }
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
                                             className={cn(
-                                                isFuturistic ? "border-border/40 p-3" : undefined,
-                                                (cell.column.columnDef.meta as any)?.tdClassName,
+                                                isFuturistic
+                                                    ? 'border-border/40 p-3'
+                                                    : undefined,
+                                                (
+                                                    cell.column.columnDef
+                                                        .meta as any
+                                                )?.tdClassName,
                                             )}
                                         >
                                             {flexRender(

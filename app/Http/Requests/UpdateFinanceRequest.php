@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Finance;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -22,7 +23,8 @@ class UpdateFinanceRequest extends StoreFinanceRequest
      */
     public function rules(): array
     {
-        $financeId = $this->route('finance')?->id ?? $this->route('finance');
+        $finance = $this->route('finance');
+        $financeId = $finance instanceof Finance ? $finance->id : (is_string($finance) ? $finance : null);
 
         return [
             'invoice_number' => ['sometimes', 'string', 'unique:finances,invoice_number,'.$financeId],

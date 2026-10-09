@@ -21,12 +21,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $due_date
  * @property string $paid_date
  * @property string $status
- * @property int|null property_id
- * @property int|null unit_id
- * @property int|null tenant_id
- * @property string|null recipient_name
- * @property string|null recipient_email
- * @property string|null notes
+ * @property int|null $property_id
+ * @property int|null $unit_id
+ * @property int|null $tenant_id
+ * @property string|null $recipient_name
+ * @property string|null $recipient_email
+ * @property string|null $notes
  */
 #[Fillable([
     'invoice_number',
@@ -71,6 +71,7 @@ class Finance extends Model
     /**
      * Get the property associated with the finance record.
      */
+    /** @return BelongsTo<Property, $this> */
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);
@@ -79,6 +80,7 @@ class Finance extends Model
     /**
      * Get the unit associated with the finance record.
      */
+    /** @return BelongsTo<Unit, $this> */
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
@@ -87,6 +89,7 @@ class Finance extends Model
     /**
      * Get the tenant associated with the finance record.
      */
+    /** @return BelongsTo<Tenant, $this> */
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
