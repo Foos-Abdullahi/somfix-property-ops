@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { edit, show } from "@/routes/finance";
 
 export type FinanceRow = { id: number; invoice_number: string; title: string; type: string; currency: string; amount: string; paid_amount: string; balance: string; status: string; due_date: string | null; property: { name: string } | null; unit: { unit_number: string } | null; tenant: { first_name: string; last_name: string } | null };
-const statusClass = { draft: badgeToneClasses.neutral, sent: badgeToneClasses.info, paid: badgeToneClasses.success, overdue: badgeToneClasses.danger, cancelled: badgeToneClasses.neutral };
+const statusClass: Record<string, string> = { draft: badgeToneClasses.neutral, sent: badgeToneClasses.info, paid: badgeToneClasses.success, overdue: badgeToneClasses.danger, cancelled: badgeToneClasses.neutral };
 export const financeColumns: ColumnDef<FinanceRow>[] = [
     { accessorKey: "invoice_number", header: "Invoice #", cell: ({ row }) => <div><p className="font-semibold">{row.original.invoice_number}</p><p className="text-xs text-muted-foreground">{row.original.title}</p></div> },
     { accessorKey: "type", header: "Type", cell: ({ row }) => row.original.type.toUpperCase() },
