@@ -1,155 +1,277 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import type { ColumnDef } from '@tanstack/react-table';
+import {
+    Calendar,
+    ClipboardList,
+    Eye,
+    Pencil,
+    Plus,
+    RotateCcw,
+    Users,
+} from 'lucide-react';
+import { StatsCard } from '@/components/tools/StatsCard';
+import { DataTable } from '@/components/tools/table/main-table';
+import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-export const stages = {
-    new: 'New',
-    contacted: 'Contacted',
-    scheduled: 'Walkthrough scheduled',
-    completed: 'Walkthrough completed',
-    converted: 'Linked to tenant',
-    closed: 'Closed',
-};
-export type Inquiry = {
-    id: number;
-    name: string;
-    email: string;
-    company: string;
-    team_size: string;
-    message: string | null;
-    status: keyof typeof stages;
-    follow_up_at: string | null;
-    walkthrough_at: string | null;
-    notes: string | null;
-    tenant_id: number | null;
-    created_at: string;
+import { stages, type Inquiry } from './types';
+export { stages, type Inquiry } from './types';
+type Filters = {
+    search?: string;
+    status?: string;
+    archived?: boolean;
+    per_page?: number;
 };
 export default function Requests({
     requests,
     filters,
+    stats,
 }: {
     requests: {
         data: Inquiry[];
-        links: { url: string | null; label: string; active: boolean }[];
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
     };
-    filters: { search?: string; status?: string };
+    filters: Filters;
+    stats: { total: number; new: number; scheduled: number; converted: number };
 }) {
-    const [search, setSearch] = useState(filters.search ?? '');
-    const [status, setStatus] = useState(filters.status ?? '');
-    return (
-        <div className="mx-auto w-full max-w-6xl space-y-6 p-6">
-            <Head title="Demo Requests" />
-            <header>
-                <h1 className="text-2xl font-bold">Demo Requests</h1>
-                <p className="text-muted-foreground">
-                    Landing-page inquiries from Get Early Access and Book a
-                    Walkthrough.
-                </p>
-            </header>
-            <form
-                className="flex flex-wrap gap-3"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    router.get(
-                        '/demo-requests',
-                        { search, status: status || undefined },
-                        { preserveState: true },
-                    );
-                }}
-            >
-                <Input
-                    className="max-w-sm"
-                    aria-label="Search requests"
-                    placeholder="Name, email or company"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                <select
-                    className="rounded border bg-background p-2"
-                    aria-label="Request status"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                >
-                    <option value="">All statuses</option>
-                    {Object.entries(stages).map(([value, label]) => (
-                        <option key={value} value={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
-                <Button type="submit">Filter</Button>
-            </form>
-            <div className="overflow-x-auto rounded border">
-                <table className="w-full text-left text-sm">
-                    <thead className="bg-muted">
-                        <tr>
-                            {[
-                                'Person / company',
-                                'Contact',
-                                'Stage',
-                                'Received',
-                                '',
-                            ].map((label, i) => (
-                                <th key={i} className="p-3">
-                                    {label}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {requests.data.map((item) => (
-                            <tr key={item.id} className="border-t">
-                                <td className="p-3">
-                                    <strong>{item.name}</strong>
-                                    <div>{item.company}</div>
-                                </td>
-                                <td className="p-3">
-                                    <a
-                                        className="underline"
-                                        href={`mailto:${item.email}`}
-                                    >
-                                        {item.email}
-                                    </a>
-                                </td>
-                                <td className="p-3">{stages[item.status]}</td>
-                                <td className="p-3">
-                                    {new Date(
-                                        item.created_at,
-                                    ).toLocaleDateString()}
-                                </td>
-                                <td className="p-3">
-                                    <Link
-                                        className="underline"
-                                        href={`/demo-requests/${item.id}`}
-                                    >
-                                        Open request
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {requests.data.length === 0 && (
-                    <p className="p-6 text-muted-foreground">
-                        No requests match these filters.
+    const { auth } = usePage<{ auth: { permissions: string[] } }>().props;
+    const canManage = auth.permissions.includes('demo-requests.manage');
+    const navigate = (changes: Record<string, unknown>) =>
+        router.get(
+            '/demo-requests',
+            { ...filters, archived: filters.archived ? 1 : 0, ...changes },
+            { preserveState: true, preserveScroll: true, replace: true },
+        );
+    const columns: ColumnDef<Inquiry>[] = [
+        {
+            accessorKey: 'id',
+            header: 'ID',
+            cell: ({ row }) => (
+                <span className="font-mono text-xs text-muted-foreground">
+                    #{row.original.id}
+                </span>
+            ),
+        },
+        {
+            accessorKey: 'name',
+            header: 'Person / company',
+            cell: ({ row }) => (
+                <div>
+                    <p className="font-semibold">{row.original.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                        {row.original.company}
                     </p>
-                )}
+                </div>
+            ),
+        },
+        {
+            accessorKey: 'email',
+            header: 'Contact',
+            cell: ({ row }) => (
+                <a className="underline" href={`mailto:${row.original.email}`}>
+                    {row.original.email}
+                </a>
+            ),
+        },
+        {
+            accessorKey: 'status',
+            header: 'Stage',
+            cell: ({ row }) => (
+                <Badge
+                    variant="outline"
+                    className={
+                        row.original.status === 'converted'
+                            ? badgeToneClasses.success
+                            : row.original.status === 'scheduled'
+                              ? badgeToneClasses.warning
+                              : ''
+                    }
+                >
+                    {stages[row.original.status]}
+                </Badge>
+            ),
+        },
+        {
+            accessorKey: 'follow_up_at',
+            header: 'Next follow-up',
+            cell: ({ row }) =>
+                row.original.follow_up_at
+                    ? new Date(row.original.follow_up_at).toLocaleString()
+                    : '—',
+        },
+        {
+            accessorKey: 'created_at',
+            header: 'Received',
+            cell: ({ row }) =>
+                new Date(row.original.created_at).toLocaleDateString(),
+        },
+        {
+            id: 'actions',
+            header: 'Actions',
+            cell: ({ row }) => (
+                <div className="flex gap-1">
+                    {filters.archived ? (
+                        canManage && (
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                    router.patch(
+                                        `/demo-requests/${row.original.id}/restore`,
+                                    )
+                                }
+                            >
+                                <RotateCcw className="size-4" />
+                                Restore
+                            </Button>
+                        )
+                    ) : (
+                        <>
+                            <Button asChild size="icon" variant="ghost">
+                                <Link
+                                    aria-label={`View request from ${row.original.name}`}
+                                    href={`/demo-requests/${row.original.id}`}
+                                >
+                                    <Eye className="size-4 text-[#FF8500]" />
+                                </Link>
+                            </Button>
+                            {canManage && (
+                                <Button asChild size="icon" variant="ghost">
+                                    <Link
+                                        aria-label={`Edit request from ${row.original.name}`}
+                                        href={`/demo-requests/${row.original.id}/edit`}
+                                    >
+                                        <Pencil className="size-4 text-[#004317] dark:text-green-300" />
+                                    </Link>
+                                </Button>
+                            )}
+                        </>
+                    )}
+                </div>
+            ),
+        },
+    ];
+    return (
+        <>
+            <Head title="Demo Requests — SOMFIX" />
+            <div className="w-full p-4 md:p-6">
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <h1 className="page-title-enter text-lg font-semibold">
+                            Demo requests management
+                        </h1>
+                        <p className="page-description-enter text-xs text-muted-foreground">
+                            Manage landing-page inquiries, walkthroughs and
+                            tenant conversion.
+                        </p>
+                    </div>
+                    {canManage && (
+                        <Button asChild size="sm">
+                            <Link href="/demo-requests/create">
+                                <Plus className="size-4" />
+                                Add request
+                            </Link>
+                        </Button>
+                    )}
+                </div>
+                <StatsCard
+                    sections={[
+                        {
+                            title: 'Total requests',
+                            value: stats.total,
+                            description: 'Current inquiries',
+                            icon: ClipboardList,
+                            color: 'primary',
+                        },
+                        {
+                            title: 'New inquiries',
+                            value: stats.new,
+                            description: 'Waiting for first contact',
+                            icon: Plus,
+                            color: 'info',
+                        },
+                        {
+                            title: 'Scheduled walkthroughs',
+                            value: stats.scheduled,
+                            description: 'Appointments to complete',
+                            icon: Calendar,
+                            color: 'warning',
+                        },
+                        {
+                            title: 'Linked tenants',
+                            value: stats.converted,
+                            description: 'Successful tenant conversions',
+                            icon: Users,
+                            color: 'success',
+                        },
+                    ]}
+                />
+                <div className="mt-6 animate-in duration-1000 ease-in-out fade-in slide-in-from-bottom-6">
+                    <DataTable
+                        title={
+                            filters.archived
+                                ? 'Deleted requests'
+                                : 'Demo Requests'
+                        }
+                        searchTitle="Filter requests by name, email or company..."
+                        columns={columns}
+                        data={requests.data}
+                        pagination={requests}
+                        searchControl={{
+                            value: filters.search ?? '',
+                            onChange: (value) =>
+                                navigate({ search: value, page: 1 }),
+                        }}
+                        onPageChange={(page) => navigate({ page })}
+                        onPageSizeChange={(per_page) =>
+                            navigate({ per_page, page: 1 })
+                        }
+                        filterControls={
+                            <div className="flex flex-wrap items-center gap-2">
+                                <select
+                                    aria-label="Request status"
+                                    className="h-8 rounded-xs border bg-background px-2 text-xs"
+                                    value={filters.status ?? ''}
+                                    onChange={(e) =>
+                                        navigate({
+                                            status: e.target.value,
+                                            page: 1,
+                                        })
+                                    }
+                                >
+                                    <option value="">All stages</option>
+                                    {Object.entries(stages).map(
+                                        ([value, label]) => (
+                                            <option key={value} value={value}>
+                                                {label}
+                                            </option>
+                                        ),
+                                    )}
+                                </select>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                        navigate({
+                                            archived: filters.archived ? 0 : 1,
+                                            page: 1,
+                                        })
+                                    }
+                                >
+                                    {filters.archived
+                                        ? 'Current requests'
+                                        : 'Deleted requests'}
+                                </Button>
+                            </div>
+                        }
+                    />
+                </div>
             </div>
-            <nav className="flex flex-wrap gap-2" aria-label="Request pages">
-                {requests.links.map((link, i) =>
-                    link.url ? (
-                        <Link
-                            key={i}
-                            href={link.url}
-                            className={`rounded border px-3 py-2 ${link.active ? 'bg-primary text-primary-foreground' : ''}`}
-                        >
-                            {link.label
-                                .replace(/&laquo;/g, '‹')
-                                .replace(/&raquo;/g, '›')}
-                        </Link>
-                    ) : null,
-                )}
-            </nav>
-        </div>
+        </>
     );
 }
+Requests.layout = {
+    breadcrumbs: [{ title: 'Demo Requests', href: '/demo-requests' }],
+};
