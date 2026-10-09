@@ -74,3 +74,34 @@ it('links a successful request to a tenant and prevents unauthorized tenant link
     expect($inquiry->fresh()->tenant_id)->toBe($tenant->id);
     expect($inquiry->fresh()->status)->toBe('converted');
 });
+
+it('supports the administrator create edit delete and restore lifecycle', function () {
+    $admin = User::factory()->create(['role_id' => Role::where('slug', 'administrator')->value('id')]);
+    $this->actingAs($admin)->get('/demo-requests/create')->assertOk();
+    $data = ['name' => 'Admin Inquiry', 'email' => 'admin-inquiry@example.com', 'company' => 'Company', 'team_size' => '6-20', 'status' => 'new'];
+    $this->post('/demo-requests/admin', $data)->assertSessionHasNoErrors()->assertRedirect();
+    $inquiry = DemoRequest::where('email', $data['email'])->firstOrFail();
+    $this->get('/demo-requests/'.$inquiry->id.'/edit')->assertOk();
+    $this->put('/demo-requests/'.$inquiry->id, [...$data, 'name' => 'Updated Inquiry'])->assertSessionHasNoErrors();
+    expect($inquiry->fresh()->name)->toBe('Updated Inquiry');
+    $this->delete('/demo-requests/'.$inquiry->id)->assertRedirect('/demo-requests');
+    $this->assertSoftDeleted($inquiry);
+    $this->get('/demo-requests')->assertInertia(fn (Assert $page) => $page->has('requests.data', 0));
+    $this->get('/demo-requests?archived=1')->assertInertia(fn (Assert $page) => $page->has('requests.data', 1));
+    $this->patch('/demo-requests/'.$inquiry->id.'/restore')->assertRedirect('/demo-requests');
+    expect(DemoRequest::find($inquiry->id))->not->toBeNull();
+});
+
+it('denies create edit delete and restore to inquiry readers', function () {
+    $role = new Role(['name' => 'CRUD reader', 'permissions' => ['demo-requests.view']]);
+    $role->slug = 'crud-reader';
+    $role->save();
+    $inquiry = DemoRequest::create(['name' => 'Visitor', 'email' => 'visitor@example.com', 'company' => 'Example', 'team_size' => '1-5']);
+    $this->actingAs(User::factory()->create(['role_id' => $role->id]));
+    $this->get('/demo-requests/create')->assertForbidden();
+    $this->get('/demo-requests/'.$inquiry->id.'/edit')->assertForbidden();
+    $this->post('/demo-requests/admin', [])->assertForbidden();
+    $this->delete('/demo-requests/'.$inquiry->id)->assertForbidden();
+    $inquiry->delete();
+    $this->patch('/demo-requests/'.$inquiry->id.'/restore')->assertForbidden();
+});
