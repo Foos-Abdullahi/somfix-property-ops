@@ -14,4 +14,7 @@
 
 Administrator accounts have inbox access. For other staff, Roles & Permissions controls View demo requests and Manage demo requests and follow-up. Linking tenants also requires Manage tenants. Only authorized staff can view or change requests.
 
-Deployment verification: 8 inquiry feature tests passed (66 assertions), TypeScript check passed, production assets built, and the live follow-up migration completed. The live authenticated inbox still needs a visual check after the administrator signs in.
+Administrator CRUD: Add request creates an inquiry received outside the landing page. The eye action opens View; the pencil action opens Edit. Delete is available in View and moves a request to Deleted requests. Open Filter → Deleted requests to restore it. The inbox uses the shared AppLayout, stats cards, table, breadcrumbs, and page entrance animations.
+
+Deployment verification: 10 inquiry feature tests passed (99 assertions), TypeScript check passed, and production assets built. The live migrations and administrator Create, View, Edit, Delete and Restore workflow were verified using a clearly labeled test record.
+
