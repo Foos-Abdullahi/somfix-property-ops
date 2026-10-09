@@ -52,12 +52,12 @@ export function PropertyForm({ mode, property }: PropertyFormProps) {
         event.preventDefault();
 
         if (mode === "create") {
-            router.post(store.url(), form.data);
+            form.post(store.url());
 
             return;
         }
 
-        router.put(update.url(property!.id), form.data);
+        form.put(update.url(property!.id));
     }
 
     return (

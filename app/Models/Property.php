@@ -6,6 +6,7 @@ use Database\Factories\PropertyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -45,5 +46,10 @@ class Property extends Model
         return [
             'units_count' => 'integer',
         ];
+    }
+
+    public function units(): HasMany
+    {
+        return $this->hasMany(Unit::class);
     }
 }

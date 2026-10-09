@@ -1,3 +1,4 @@
+import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { Head, Link } from "@inertiajs/react";
 import {
     ArrowUpRight,
@@ -11,41 +12,37 @@ import {
     Wallet,
     Wrench,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeToneClasses } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { dashboard } from "@/routes";
 import { index as propertiesIndex } from "@/routes/properties";
 import { index as workOrdersIndex } from "@/routes/work-orders";
 
-const metrics = [
+const metrics: StatSection[] = [
     {
         title: "Properties",
         value: "—",
-        detail: "Connect the property registry to begin.",
         icon: Building2,
-        tone: "bg-primary/10 text-primary",
+        color: "primary",
     },
     {
         title: "Open requests",
         value: "—",
-        detail: "Maintenance requests will appear here.",
         icon: Wrench,
-        tone: "bg-accent/15 text-amber-700 dark:text-accent",
+        color: "warning",
     },
     {
         title: "Scheduled jobs",
         value: "—",
-        detail: "Today’s field work will be tracked here.",
         icon: CalendarClock,
-        tone: "bg-chart-4/10 text-chart-4",
+        color: "info",
     },
     {
         title: "Unpaid invoices",
         value: "—",
-        detail: "Finance activity will appear when connected.",
         icon: Wallet,
-        tone: "bg-destructive/10 text-destructive",
+        color: "destructive",
     },
 ];
 
@@ -100,20 +97,14 @@ export default function Dashboard() {
         <>
             <Head title="Executive Dashboard — SOMFIX" />
 
-            <div className="mx-auto w-full max-w-[1440px] p-4 md:p-6">
+            <div className="w-full p-4 md:p-6">
                 <section className="flex flex-col gap-4 rounded-2xl bg-primary p-6 text-primary-foreground shadow-lg shadow-primary/20 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-white/80">
-                            <span className="relative flex size-2">
-                                <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent/80" />
-                                <span className="relative inline-flex size-2 rounded-full bg-accent" />
-                            </span>
-                            SOMFIX PROPERTY OPERATIONS
-                        </div>
-                        <h1 className="text-2xl font-bold tracking-tight">
+
+                        <h1 className="page-title-enter text-lg font-semibold">
                             Welcome to your operations dashboard
                         </h1>
-                        <p className="text-sm text-white/80">
+                        <p className="page-description-enter mt-1 text-xs text-WHITE">
                             One clear place for property records, maintenance delivery, and
                             financial control.
                         </p>
@@ -130,36 +121,7 @@ export default function Dashboard() {
                     </Button>
                 </section>
 
-                <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    {metrics.map((metric, index) => (
-                        <Card
-                            key={metric.title}
-                            className="border-border/70 py-0 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3"
-                            style={{ animationDelay: `${index * 75}ms` }}
-                        >
-                            <CardContent className="p-4">
-                                <div className="flex items-start justify-between gap-4">
-                                    <div>
-                                        <p className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-                                            {metric.title}
-                                        </p>
-                                        <p className="mt-3 text-3xl font-bold tracking-tight tabular-nums">
-                                            {metric.value}
-                                        </p>
-                                    </div>
-                                    <span
-                                        className={`flex size-10 items-center justify-center rounded-xl ${metric.tone}`}
-                                    >
-                                        <metric.icon className="size-5" />
-                                    </span>
-                                </div>
-                                <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                                    {metric.detail}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </section>
+                <StatsCard sections={metrics} />
 
                 <div className="mt-6 space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-5 motion-safe:duration-700">
                     <section className="grid gap-6 lg:grid-cols-3">
@@ -177,7 +139,7 @@ export default function Dashboard() {
                                     </div>
                                     <Badge
                                         variant="outline"
-                                        className="border-primary/20 bg-primary/10 text-primary"
+                                        className={badgeToneClasses.success}
                                     >
                                         Foundation ready
                                     </Badge>
@@ -381,8 +343,8 @@ export default function Dashboard() {
                                                         variant="outline"
                                                         className={
                                                             row.status === "Next"
-                                                                ? "border-accent/30 bg-accent/15 text-amber-800 dark:text-accent"
-                                                                : "border-border bg-muted text-muted-foreground"
+                                                                ? badgeToneClasses.warning
+                                                                : badgeToneClasses.neutral
                                                         }
                                                     >
                                                         {row.status}

@@ -34,6 +34,26 @@ it('does not create duplicate admin users when run again', function () {
     expect(User::query()->where('email', 'admin@example.com')->count())->toBe(1);
 });
 
+it('updates an existing admin password when seeded again', function () {
+    config([
+        'seeders.admin.name' => 'System Administrator',
+        'seeders.admin.email' => 'admin@example.com',
+        'seeders.admin.password' => 'original-admin-password',
+    ]);
+
+    (new AdminUserSeeder)->run();
+    $admin = User::query()->where('email', 'admin@example.com')->sole();
+
+    config(['seeders.admin.password' => 'updated-admin-password']);
+    (new AdminUserSeeder)->run();
+
+    $admin->refresh();
+
+    expect(User::query()->where('email', 'admin@example.com')->sole()->id)->toBe($admin->id);
+    expect(Hash::check('updated-admin-password', $admin->password))->toBeTrue();
+    expect(Hash::check('original-admin-password', $admin->password))->toBeFalse();
+});
+
 it('rejects an empty admin password without creating a user', function () {
     config([
         'seeders.admin.name' => 'System Administrator',

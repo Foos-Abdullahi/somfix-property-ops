@@ -54,8 +54,8 @@ export default function PropertiesIndex({ properties, stats }: Props) {
             <div className="p-4 md:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <h1 className="text-lg font-semibold">Properties management</h1>
-                        <p className="text-xs text-muted-foreground">
+                        <h1 className="page-title-enter text-lg font-semibold">Properties management</h1>
+                        <p className="page-description-enter text-xs text-muted-foreground">
                             Manage property details, units, ownership and portfolio status.
                         </p>
                     </div>

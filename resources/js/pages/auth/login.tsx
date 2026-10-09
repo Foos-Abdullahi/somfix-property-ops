@@ -10,7 +10,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import PasskeyVerify from '@/components/passkey-verify';
 
 type Props = {
     status?: string;
@@ -22,16 +21,14 @@ export default function Login({ status, canResetPassword }: Props) {
         <>
             <Head title="Log in" />
 
-            <PasskeyVerify />
-
             <Form
                 {...store.form()}
                 resetOnSuccess={['password']}
-                className="flex flex-col gap-6"
+                className="flex flex-col gap-7"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
+                        <div className="grid gap-5">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email address</Label>
                                 <Input
@@ -42,7 +39,8 @@ export default function Login({ status, canResetPassword }: Props) {
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="email"
-                                    placeholder="email@example.com"
+                                    placeholder="hello@example.com"
+                                    className="h-12 rounded-none bg-background/70 px-4"
                                 />
                                 <InputError message={errors.email} />
                             </div>
@@ -66,7 +64,8 @@ export default function Login({ status, canResetPassword }: Props) {
                                     required
                                     tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder="Enter your password"
+                                    className="h-12 rounded-none bg-background/70 px-4"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -77,18 +76,18 @@ export default function Login({ status, canResetPassword }: Props) {
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label htmlFor="remember">Remember device</Label>
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
+                                className="mt-1 h-12 w-full rounded-none text-base font-semibold"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
                             >
                                 {processing && <Spinner />}
-                                Log in
+                                Sign in
                             </Button>
                         </div>
 
@@ -112,6 +111,6 @@ export default function Login({ status, canResetPassword }: Props) {
 }
 
 Login.layout = {
-    title: 'Log in to your account',
-    description: 'Enter your email and password below to log in',
+    title: 'Welcome back',
+    description: 'Sign in to your SOMFIX account to continue',
 };

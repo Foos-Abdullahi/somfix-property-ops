@@ -33,6 +33,8 @@ import { DataTableToolbar } from "./toolbar";
 import type { DataTableDateRangeFilter, DataTableServerFilter } from "./types";
 
 interface DataTableProps<TData, TValue> {
+    searchControl?: { value: string; onChange: (value: string) => void };
+    filterControls?: React.ReactNode;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     title: string;
@@ -70,6 +72,8 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
+    searchControl,
+    filterControls,
     columns,
     data,
     title,
@@ -200,6 +204,8 @@ export function DataTable<TData, TValue>({
         <div className="flex flex-col gap-4">
             {(searchable || showToolbarOnly) && (
                 <DataTableToolbar
+                    searchControl={searchControl}
+                    filterControls={filterControls}
                     title={title}
                     searchPlaceholder={searchTitle}
                     table={table}

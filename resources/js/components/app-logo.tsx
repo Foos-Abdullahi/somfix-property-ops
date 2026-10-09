@@ -1,19 +1,15 @@
 import AppLogoIcon from '@/components/app-logo-icon';
+import BrandLogo from '@/components/brand-logo';
 
 export default function AppLogo() {
     return (
         <>
-            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-                <AppLogoIcon className="size-5" />
-            </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-tight font-semibold">
-                    SOMFIX
-                </span>
-                <span className="truncate text-xs text-sidebar-foreground/70">
-                    Property Operations
-                </span>
-            </div>
+            <span className="hidden size-8 shrink-0 group-data-[collapsible=icon]:block">
+                <AppLogoIcon className="size-8" />
+            </span>
+            <span className="block min-w-0 group-data-[collapsible=icon]:hidden">
+                <BrandLogo className="h-10 w-auto max-w-full" />
+            </span>
         </>
     );
 }

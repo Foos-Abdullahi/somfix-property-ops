@@ -21,11 +21,11 @@ export default function Register({ passwordRules }: Props) {
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
-                className="flex flex-col gap-6"
+                className="flex flex-col gap-7"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
+                        <div className="grid gap-5 sm:grid-cols-2">
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
                                 <Input
@@ -37,6 +37,7 @@ export default function Register({ passwordRules }: Props) {
                                     autoComplete="name"
                                     name="name"
                                     placeholder="Full name"
+                                    className="h-12 rounded-none bg-background/70 px-4"
                                 />
                                 <InputError
                                     message={errors.name}
@@ -53,12 +54,13 @@ export default function Register({ passwordRules }: Props) {
                                     tabIndex={2}
                                     autoComplete="email"
                                     name="email"
-                                    placeholder="email@example.com"
+                                    placeholder="hello@example.com"
+                                    className="h-12 rounded-none bg-background/70 px-4"
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-2 sm:col-span-2">
                                 <Label htmlFor="password">Password</Label>
                                 <PasswordInput
                                     id="password"
@@ -68,11 +70,12 @@ export default function Register({ passwordRules }: Props) {
                                     name="password"
                                     placeholder="Password"
                                     passwordrules={passwordRules}
+                                    className="h-12 rounded-none bg-background/70 px-4"
                                 />
                                 <InputError message={errors.password} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-2 sm:col-span-2">
                                 <Label htmlFor="password_confirmation">
                                     Confirm password
                                 </Label>
@@ -84,6 +87,7 @@ export default function Register({ passwordRules }: Props) {
                                     name="password_confirmation"
                                     placeholder="Confirm password"
                                     passwordrules={passwordRules}
+                                    className="h-12 rounded-none bg-background/70 px-4"
                                 />
                                 <InputError
                                     message={errors.password_confirmation}
@@ -92,7 +96,7 @@ export default function Register({ passwordRules }: Props) {
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full"
+                                className="mt-1 h-12 w-full rounded-none text-base font-semibold sm:col-span-2"
                                 tabIndex={5}
                                 data-test="register-user-button"
                             >
@@ -115,6 +119,6 @@ export default function Register({ passwordRules }: Props) {
 }
 
 Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
+    title: 'Create your account',
+    description: 'Set up your SOMFIX workspace access',
 };
