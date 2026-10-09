@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'demo-requests.view' => 'View demo requests',
+    'demo-requests.manage' => 'Manage demo requests and follow-up',
     'properties.view' => 'View properties',
     'properties.manage' => 'Manage properties',
     'units.view' => 'View units',
