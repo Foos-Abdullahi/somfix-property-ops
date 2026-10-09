@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\DemoRequest;
+use App\Models\Role;
+use App\Models\Tenant;
+use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('serves the public landing page', function () {
@@ -24,4 +28,49 @@ it('rate limits public inquiry submissions', function () {
         $this->post('/demo-requests', [])->assertSessionHasErrors();
     }
     $this->post('/demo-requests', [])->assertStatus(429);
+});
+
+it('protects the inquiry inbox from guests and unauthorized staff', function () {
+    $this->get('/demo-requests')->assertRedirect('/login');
+    $role = new Role(['name' => 'No inquiry access', 'permissions' => []]);
+    $role->slug = 'no-inquiry-access';
+    $role->save();
+    $this->actingAs(User::factory()->create(['role_id' => $role->id]))->get('/demo-requests')->assertForbidden();
+});
+
+it('lets administrators track a walkthrough and validates its outcome', function () {
+    $admin = User::factory()->create(['role_id' => Role::where('slug', 'administrator')->value('id')]);
+    $inquiry = DemoRequest::create(['name' => 'Visitor', 'email' => 'visitor@example.com', 'company' => 'Example', 'team_size' => '1-5']);
+    $this->actingAs($admin)->get('/demo-requests')->assertOk()->assertInertia(fn (Assert $page) => $page->component('demo-requests/index')->has('requests.data', 1));
+    $this->get('/demo-requests/'.$inquiry->id)->assertOk();
+    $this->put('/demo-requests/'.$inquiry->id, ['status' => 'scheduled'])->assertSessionHasErrors('walkthrough_at');
+    $this->put('/demo-requests/'.$inquiry->id, ['status' => 'converted'])->assertSessionHasErrors('tenant_id');
+    $this->put('/demo-requests/'.$inquiry->id, ['status' => 'scheduled', 'walkthrough_at' => '2026-10-15T10:00:00Z', 'notes' => 'Agreed by email.'])->assertSessionHasNoErrors()->assertRedirect();
+    expect($inquiry->fresh()->status)->toBe('scheduled');
+    $this->put('/demo-requests/'.$inquiry->id, ['status' => 'completed', 'notes' => 'Walkthrough finished.'])->assertSessionHasNoErrors();
+    expect($inquiry->fresh()->status)->toBe('completed');
+});
+
+it('keeps viewing permission separate from follow-up permission', function () {
+    $role = new Role(['name' => 'Inquiry reader', 'permissions' => ['demo-requests.view']]);
+    $role->slug = 'inquiry-reader';
+    $role->save();
+    $user = User::factory()->create(['role_id' => $role->id]);
+    $inquiry = DemoRequest::create(['name' => 'Visitor', 'email' => 'visitor@example.com', 'company' => 'Example', 'team_size' => '1-5']);
+    $this->actingAs($user)->get('/demo-requests/'.$inquiry->id)->assertOk()->assertInertia(fn (Assert $page) => $page->has('tenants', 0));
+    $this->put('/demo-requests/'.$inquiry->id, ['status' => 'closed'])->assertForbidden();
+    expect($inquiry->fresh()->status)->toBe('new');
+});
+
+it('links a successful request to a tenant and prevents unauthorized tenant linking', function () {
+    $tenant = Tenant::factory()->create();
+    $inquiry = DemoRequest::create(['name' => 'Visitor', 'email' => 'visitor@example.com', 'company' => 'Example', 'team_size' => '1-5']);
+    $role = new Role(['name' => 'Inquiry manager', 'permissions' => ['demo-requests.view', 'demo-requests.manage']]);
+    $role->slug = 'inquiry-manager';
+    $role->save();
+    $this->actingAs(User::factory()->create(['role_id' => $role->id]))->put('/demo-requests/'.$inquiry->id, ['status' => 'converted', 'tenant_id' => $tenant->id])->assertForbidden();
+    $admin = User::factory()->create(['role_id' => Role::where('slug', 'administrator')->value('id')]);
+    $this->actingAs($admin)->put('/demo-requests/'.$inquiry->id, ['status' => 'converted', 'tenant_id' => (string) $tenant->id])->assertSessionHasNoErrors()->assertRedirect();
+    expect($inquiry->fresh()->tenant_id)->toBe($tenant->id);
+    expect($inquiry->fresh()->status)->toBe('converted');
 });
