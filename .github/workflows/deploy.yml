@@ -1,0 +1,97 @@
+name: Deploy to cPanel
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: production
+      url: https://somfix.so
+    env:
+      DEPLOY_HOST: ${{ secrets.CPANEL_SSH_HOST }}
+      DEPLOY_USER: ${{ secrets.CPANEL_SSH_USER }}
+      DEPLOY_PORT: ${{ vars.CPANEL_SSH_PORT || '22' }}
+      DEPLOY_ROOT: ${{ vars.CPANEL_DEPLOY_ROOT || '/home/somfix/somfix-property-ops' }}
+      DEPLOY_PHP: ${{ vars.CPANEL_PHP_BIN || '/opt/alt/php84/usr/bin/php' }}
+      DEPLOY_WEB_ROOT: ${{ vars.CPANEL_WEB_ROOT || '/home/somfix/public_html' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, pdo_sqlite, pdo_mysql, bcmath
+          tools: composer:v2
+          coverage: none
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Test and build
+        run: |
+          composer install --no-interaction --prefer-dist
+          cp .env.example .env
+          touch database/database.sqlite
+          php artisan key:generate
+          php artisan test
+          npm ci
+          npm run types:check
+          npm run build
+
+      - name: Package production dependencies and assets
+        run: |
+          composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+          composer check-platform-reqs --no-dev
+          mkdir -p "$RUNNER_TEMP/release"
+          cp -a app bootstrap config database public resources routes vendor artisan composer.json composer.lock "$RUNNER_TEMP/release/"
+          rm -f "$RUNNER_TEMP/release/database/database.sqlite" "$RUNNER_TEMP/release/public/hot"
+          find "$RUNNER_TEMP/release/bootstrap/cache" -type f ! -name .gitignore -delete
+          tar -czf "$RUNNER_TEMP/release.tar.gz" -C "$RUNNER_TEMP/release" .
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.CPANEL_SSH_KNOWN_HOSTS }}
+        run: |
+          test -n "$DEPLOY_HOST" && test -n "$DEPLOY_USER" && test -n "$SSH_KEY" && test -n "$KNOWN_HOSTS"
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
+          [[ "$DEPLOY_USER" =~ ^[a-zA-Z0-9_-]+$ ]]
+          [[ "$DEPLOY_PORT" =~ ^[0-9]+$ ]]
+          [[ "$DEPLOY_ROOT" =~ ^/home/[a-zA-Z0-9_-]+/[a-zA-Z0-9_/-]+$ ]]
+          [[ "$DEPLOY_WEB_ROOT" =~ ^/home/[a-zA-Z0-9_-]+/[a-zA-Z0-9_/-]+$ ]]
+          [[ "$DEPLOY_PHP" =~ ^/[a-zA-Z0-9_./-]+$ ]]
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/deploy_key ~/.ssh/known_hosts
+
+      - name: Upload and activate release
+        run: |
+          SSH_ARGS=(-i ~/.ssh/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          RELEASE="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh "${SSH_ARGS[@]}" -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$DEPLOY_ROOT/incoming'"
+          scp "${SSH_ARGS[@]}" -P "$DEPLOY_PORT" "$RUNNER_TEMP/release.tar.gz" "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_ROOT/incoming/$RELEASE.tar.gz"
+          ssh "${SSH_ARGS[@]}" -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" "bash -s -- '$DEPLOY_ROOT' '$RELEASE' '$DEPLOY_PHP' '$DEPLOY_WEB_ROOT'" < scripts/deploy-cpanel.sh
+
+      - name: Clear runner SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
