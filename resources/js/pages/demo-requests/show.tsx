@@ -8,13 +8,14 @@ export default function RequestShow({ inquiry }: { inquiry: Inquiry }) {
     const { auth } = usePage<{ auth: { permissions: string[] } }>().props;
     const canManage = auth.permissions.includes('demo-requests.manage');
     return (
-        <div className="w-full animate-in duration-700 fade-in slide-in-from-bottom-6">
+        <div className="w-full animate-in duration-700 fade-in slide-in-from-bottom-6 [&>div]:max-w-none">
             <DetailPage
                 title={inquiry.name}
                 subtitle={`${inquiry.company} · ${inquiry.team_size} people`}
                 status={stages[inquiry.status]}
                 icon={ClipboardList}
                 backHref="/demo-requests"
+                deleteMessage="You can restore this request from Deleted requests."
                 editHref={
                     canManage ? `/demo-requests/${inquiry.id}/edit` : undefined
                 }
