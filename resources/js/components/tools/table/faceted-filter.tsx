@@ -151,7 +151,6 @@ export function DataTableFacetedFilter<TData, TValue>({
                                 return (
                                     <CommandItem
                                         key={option.value}
-                                        value={option.value}
                                         onSelect={() =>
                                             handleSelect(option.value)
                                         }
