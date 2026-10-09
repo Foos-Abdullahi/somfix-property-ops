@@ -6,6 +6,8 @@ root=${1:?Deployment root required}
 release_id=${2:?Release ID required}
 php_bin=${3:?PHP binary required}
 web_root=${4:?Domain document root required}
+seed_admin=${5:-false}
+[[ "$seed_admin" == true || "$seed_admin" == false ]]
 [[ "$root" =~ ^/home/[a-zA-Z0-9_-]+/[a-zA-Z0-9_/-]+$ ]]
 [[ "$web_root" =~ ^/home/[a-zA-Z0-9_-]+/[a-zA-Z0-9_/-]+$ ]]
 [[ "$release_id" =~ ^[a-f0-9]{40}-[0-9]+-[0-9]+$ ]]
@@ -38,6 +40,9 @@ chmod -R u+rwX,g+rX "$release/bootstrap/cache" "$root/shared/storage"
 cd "$release"
 "$php_bin" vendor/composer/platform_check.php
 "$php_bin" artisan migrate --force
+if [[ "$seed_admin" == true ]]; then
+  "$php_bin" artisan db:seed --class=ProductionAdminSeeder --force
+fi
 "$php_bin" artisan config:cache
 "$php_bin" artisan route:cache
 "$php_bin" artisan view:cache

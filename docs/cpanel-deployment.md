@@ -67,16 +67,20 @@ schema changes. Failed first deployments deactivate the release.
 
 After the first successful deployment, set a unique `ADMIN_EMAIL` and
 `ADMIN_PASSWORD` of at least 12 characters in the server environment, then run
-the admin seeder through SSH from `current`:
+the production admin seeder through SSH from `current`, or set these before the
+first deployment and select **seed_admin** when running the GitHub workflow:
 
 ```bash
 /opt/alt/php84/usr/bin/php artisan config:clear
-/opt/alt/php84/usr/bin/php artisan db:seed --class=AdminUserSeeder --force
+/opt/alt/php84/usr/bin/php artisan db:seed --class=ProductionAdminSeeder --force
 /opt/alt/php84/usr/bin/php artisan config:cache
 ```
 
-The admin seeder updates the account password when rerun, so it is deliberately
-excluded from routine deployment. Verify login, dashboard, and document uploads
+The production seeder preserves an existing active administrator and its
+password. It refuses to promote an existing non-administrator or reactivate an
+inactive account. The original `AdminUserSeeder` can still explicitly reset an
+administrator's password, so use it only intentionally. No password is stored
+in the repository or workflow. Verify login, dashboard, and document uploads
 after launch. `/up` only confirms application boot; it is not a complete product
 test. Retain older releases for rollback and remove them deliberately as the
 account's 1 GB storage quota fills.
