@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Edit, Eye } from 'lucide-react';
+import { Edit, Eye, Printer } from 'lucide-react';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, show } from '@/routes/finance';
@@ -88,6 +88,11 @@ export const financeColumns: ColumnDef<FinanceRow>[] = [
                 <Button asChild size="icon" variant="ghost">
                     <Link href={show(row.original.id)}>
                         <Eye className="size-4 text-[#FF8500]" />
+                    </Link>
+                </Button>
+                <Button asChild size="icon" variant="ghost">
+                    <Link href={`/finance/${row.original.id}/print`}>
+                        <Printer className="size-4 text-primary" />
                     </Link>
                 </Button>
                 <Button asChild size="icon" variant="ghost">

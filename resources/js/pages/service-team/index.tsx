@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { CheckCircle2, Plus, UserCheck, UserX } from 'lucide-react';
+import { RecordImport } from '@/components/record-import';
 import {
     serviceTeamColumns,
     type ServiceTeamRow,
@@ -53,12 +54,16 @@ export default function ServiceTeamIndex({
                             availability.
                         </p>
                     </div>
-                    <Button asChild size="sm">
-                        <Link href={create()}>
-                            <Plus className="size-4" />
-                            Add <span className="hidden sm:inline">member</span>
-                        </Link>
-                    </Button>
+                    <div className="flex flex-wrap justify-end gap-2">
+                        <RecordImport module="service-team" />
+                        <Button asChild size="sm">
+                            <Link href={create()}>
+                                <Plus className="size-4" />
+                                Add{' '}
+                                <span className="hidden sm:inline">member</span>
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
                 <StatsCard sections={sections} />
                 <div className="mt-6 animate-in duration-1000 fade-in slide-in-from-bottom-6">

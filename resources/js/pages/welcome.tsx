@@ -1,545 +1,868 @@
-﻿import { Head, Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { useState, type FormEvent } from 'react';
 import {
-    ArrowDown,
     ArrowRight,
-    ArrowUpRight,
-    Building2,
     Check,
-    Globe2,
-    Instagram,
-    Linkedin,
     Menu,
-    Moon,
-    Sun,
+    MessageCircle,
+    Phone,
     Wrench,
+    X,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { useAppearance } from '@/hooks/use-appearance';
-import {
-    Brand,
-    Eyebrow,
-    FeatureSections,
-    HeroVisual,
-    Photo,
-    Reveal,
-} from '@/components/landing/sections';
-import { DemoDialog } from '@/components/landing/demo-dialog';
-import { dashboard, login } from '@/routes';
-import '../../css/landing.css';
+import BrandLogo from '@/components/brand-logo';
+import '../../css/repair-site.css';
 
+const whatsapp =
+    'https://wa.me/252617963640?text=Hello%20SOMFIX%2C%20I%20need%20help%20with%3A%20';
+const phone = 'tel:+252617963640';
+const services = [
+    [
+        'Door repair',
+        'Dayactirka albaabada',
+        'From $25',
+        'Doors that stick, drag, won’t close or won’t lock. We fix hinges, handles, locks and frames, for wooden and metal doors.',
+    ],
+    [
+        'Window repair',
+        'Dayactirka daaqadaha',
+        'From $45',
+        'Broken handles and locks, sliding windows that jam, damaged frames and rubber seals.',
+    ],
+    [
+        'Plumbing',
+        'Biyaha guriga',
+        'From $30',
+        'Leaking taps and pipes, blocked sinks and drains, toilets, water tanks and pumps.',
+    ],
+    [
+        'Mosquito screens',
+        'Shabaga kaneecada',
+        'From $34',
+        'New screens for windows and doors, and repair of torn or loose screens. Keep mosquitoes out and air flowing.',
+    ],
+    [
+        'Broken glass',
+        'Muraayadaha jaba',
+        'From $30',
+        'Replace broken or cracked glass in windows, doors, cabinets and tables, cut to size.',
+    ],
+    [
+        'Wardrobes & cabinets',
+        'Sagatuurka',
+        'From $60',
+        'Fix doors, hinges, drawers and shelves, or fit new wardrobes and cabinets.',
+    ],
+    [
+        'Kitchen repair',
+        'Jikooyinka',
+        'From $70',
+        'Kitchen cabinets, worktops, sinks and fittings, repaired or replaced.',
+    ],
+    [
+        'Cleaning',
+        '',
+        'From $20',
+        'Deep cleaning after repairs, before you move in, or when a tenant moves out.',
+    ],
+    [
+        'Renovation',
+        'Dib-u-habayn',
+        'Quote on visit',
+        'Bigger jobs: refresh a room, apartment or office. We plan it, price it and manage it from start to finish.',
+    ],
+    [
+        'Any other household repair',
+        '',
+        'From $30',
+        'Small jobs around the home or office. If you are not sure we do it, just ask.',
+    ],
+] as const;
 const navigation = [
-    { label: 'Solutions', href: '#solutions' },
-    { label: 'About', href: '#about' },
-    { label: 'Contact', href: '#contact' },
+    ['Home', '/'],
+    ['Services', '/services'],
+    ['Property management', '/property-management'],
+    ['Maintenance', '/maintenance-plans'],
+    ['How it works', '/how-it-works'],
+    ['About', '/about'],
+    ['FAQ', '/faq'],
+    ['Contact', '/contact'],
+] as const;
+const trust = [
+    [
+        'One call, every trade',
+        'No more searching for a different fundi for each job.',
+    ],
+    [
+        'Skilled technicians',
+        'A trained SOMFIX team, checked by our lead technician.',
+    ],
+    ['Clear prices', 'You agree the price before work starts. No surprises.'],
+    ['Across Mogadishu', 'Based at KM4, working 6 days a week.'],
 ];
-
-export default function Welcome() {
-    const { auth } = usePage().props;
-    const { resolvedAppearance, updateAppearance } = useAppearance();
-    const [demoOpen, setDemoOpen] = useState(false);
-    const [legal, setLegal] = useState<'privacy' | 'terms' | null>(null);
-    const requestDemo = () => setDemoOpen(true);
-
+const steps = [
+    [
+        'Contact us',
+        'Call or WhatsApp 0617963640. Tell us the problem and where you are.',
+    ],
+    [
+        'Send a photo',
+        'A photo helps us understand the job and give you a price faster, often without a visit.',
+    ],
+    [
+        'Agree the price',
+        'We send a clear price. For jobs with materials, we ask for 50% in advance so we can buy what’s needed.',
+    ],
+    [
+        'We fix it',
+        'A SOMFIX technician comes at the agreed time and does the job properly.',
+    ],
+    [
+        'Pay and check',
+        'Pay the rest when the job is done, by mobile money or cash. Our lead technician checks the work.',
+    ],
+    [
+        'We follow up',
+        'We call you the next day to make sure everything is working.',
+    ],
+];
+const faqs = [
+    [
+        'How do I book a repair?',
+        'Call or WhatsApp 0617963640. Send a photo of the problem and we’ll give you a price and a time.',
+    ],
+    [
+        'How much will it cost?',
+        'It depends on the job and materials. You get a clear price before any work starts. See our Services page for starting prices.',
+    ],
+    [
+        'Do I have to pay in advance?',
+        'For jobs that need materials over $10, we ask for 50% in advance. You pay the rest when the job is finished.',
+    ],
+    ['How can I pay?', 'By mobile money or cash.'],
+    [
+        'Which areas do you cover?',
+        'We are based at Via Taleex, KM4 and work across Mogadishu.',
+    ],
+    [
+        'How fast can you come?',
+        'We answer every message the same day and send a price within about an hour during working hours. Visit times depend on the job and the day.',
+    ],
+    [
+        'What days do you work?',
+        'Six days a week. Contact us for current working days and hours.',
+    ],
+    [
+        'Do you work for offices and NGOs?',
+        'Yes. We offer maintenance plans with scheduled visits and monthly invoices.',
+    ],
+    [
+        'I live abroad. Can you look after my property?',
+        'Yes. Our property management service checks your property, handles repairs and keeps you updated with photos.',
+    ],
+    [
+        'What if the problem comes back?',
+        'Contact us. We call every customer the day after a job, and we will come back to check our work.',
+    ],
+];
+const metadata: Record<string, [string, string, string]> = {
+    home: [
+        'One call. We fix it.',
+        'SOMFIX | Home Repair & Maintenance in Mogadishu',
+        'One call fixes it. Doors, windows, plumbing, mosquito screens, glass, kitchens and more across Mogadishu. Call or WhatsApp 0617963640.',
+    ],
+    services: [
+        'Our services',
+        'Repair Services in Mogadishu | SOMFIX',
+        'Door, window, plumbing, mosquito screen, glass, wardrobe, kitchen, cleaning and renovation services in Mogadishu. Get a price on WhatsApp: 0617963640.',
+    ],
+    'property-management': [
+        'Your property, looked after.',
+        'Property Management in Mogadishu | SOMFIX',
+        'SOMFIX looks after your property for one monthly fee: inspections, repairs, cleaning between tenants and fast response. Call 0617963640.',
+    ],
+    'maintenance-plans': [
+        'Fix problems before they start.',
+        'Home & Office Maintenance Plans | SOMFIX Mogadishu',
+        'Regular maintenance for homes, offices and NGOs in Mogadishu. Fixed monthly fee, scheduled checks and priority repairs. Call 0617963640.',
+    ],
+    'how-it-works': [
+        'Simple from start to finish',
+        'How SOMFIX Works | Photo Quote to Finished Job',
+        'Send a photo on WhatsApp, get a clear price, and our technician fixes it. Simple repair service in Mogadishu.',
+    ],
+    about: [
+        'About SOMFIX',
+        'About SOMFIX | Home Repair Team in Mogadishu',
+        'SOMFIX is a Mogadishu home repair and maintenance company. One call, one trusted team for every repair.',
+    ],
+    faq: [
+        'Questions and answers',
+        'Frequently Asked Questions | SOMFIX',
+        'Answers about SOMFIX prices, payments, areas we cover, response time and property management.',
+    ],
+    contact: [
+        'Get in touch',
+        'Contact SOMFIX | Call or WhatsApp 0617963640',
+        'Call or WhatsApp SOMFIX on 0617963640. Via Taleex, KM4, Mogadishu. Send a photo of the problem and get a price fast.',
+    ],
+};
+function Actions({ label = 'WhatsApp us: 0617963640' }: { label?: string }) {
+    return (
+        <div className="repair-actions">
+            <a className="repair-button" href={whatsapp}>
+                <MessageCircle size={18} />
+                {label}
+            </a>
+            <a className="repair-button repair-outline" href={phone}>
+                <Phone size={17} />
+                Call now
+            </a>
+        </div>
+    );
+}
+function Cards({ items }: { items: string[][] }) {
+    return (
+        <div className="repair-grid">
+            {items.map(([title, description]) => (
+                <article className="repair-card" key={title}>
+                    <Check size={20} />
+                    <h3>{title}</h3>
+                    <p>{description}</p>
+                </article>
+            ))}
+        </div>
+    );
+}
+function ServiceCards({ home = false }: { home?: boolean }) {
+    const items = home ? services.filter((_, i) => i < 7 || i === 9) : services;
+    return (
+        <div className="repair-grid">
+            {items.map(([title, somali, price, description], i) => (
+                <article className="repair-card" key={title}>
+                    <div className="repair-card-top">
+                        <span className="repair-number">
+                            {String(i + 1).padStart(2, '0')}
+                        </span>
+                        {!home && <span className="repair-price">{price}</span>}
+                    </div>
+                    <h3>{title}</h3>
+                    {!home && somali && <small>{somali}</small>}
+                    <p>{description}</p>
+                    <a
+                        href={`${whatsapp}${encodeURIComponent(title)}`}
+                        className="repair-text-link"
+                    >
+                        Ask for a quote <ArrowRight size={16} />
+                    </a>
+                </article>
+            ))}
+        </div>
+    );
+}
+function ContactForm() {
+    const form = useForm<{
+        name: string;
+        phone: string;
+        area: string;
+        service: string;
+        message: string;
+        photo: File | null;
+        website: string;
+    }>({
+        name: '',
+        phone: '',
+        area: '',
+        service: 'Not sure',
+        message: '',
+        photo: null,
+        website: '',
+    });
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        form.post('/repair-requests', {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: () => form.reset(),
+        });
+    };
+    return (
+        <form className="repair-form" onSubmit={submit}>
+            <h2>Tell us what needs fixing</h2>
+            {form.wasSuccessful && (
+                <p className="repair-success" role="status">
+                    Thank you! We received your request and will contact you
+                    today.
+                </p>
+            )}
+            {(['name', 'phone', 'area'] as const).map((field) => (
+                <label key={field} htmlFor={`request-${field}`}>
+                    {field === 'name'
+                        ? 'Your name'
+                        : field === 'phone'
+                          ? 'Phone or WhatsApp'
+                          : 'Area in Mogadishu'}
+                    <input
+                        id={`request-${field}`}
+                        required={field !== 'area'}
+                        type={field === 'phone' ? 'tel' : 'text'}
+                        maxLength={field === 'phone' ? 40 : 120}
+                        value={form.data[field]}
+                        onChange={(e) => form.setData(field, e.target.value)}
+                        aria-invalid={!!form.errors[field]}
+                    />
+                    {form.errors[field] && (
+                        <span role="alert">{form.errors[field]}</span>
+                    )}
+                </label>
+            ))}
+            <label htmlFor="request-service">
+                Service needed
+                <select
+                    id="request-service"
+                    value={form.data.service}
+                    onChange={(e) => form.setData('service', e.target.value)}
+                >
+                    {[
+                        ...services.map((s) => s[0]),
+                        'Property management',
+                        'Not sure',
+                    ].map((s) => (
+                        <option key={s}>{s}</option>
+                    ))}
+                </select>
+                {form.errors.service && (
+                    <span role="alert">{form.errors.service}</span>
+                )}
+            </label>
+            <label htmlFor="request-message">
+                Describe the problem
+                <textarea
+                    id="request-message"
+                    rows={4}
+                    maxLength={3000}
+                    value={form.data.message}
+                    onChange={(e) => form.setData('message', e.target.value)}
+                />
+                {form.errors.message && (
+                    <span role="alert">{form.errors.message}</span>
+                )}
+            </label>
+            <label htmlFor="request-photo">
+                Photo (optional, JPG, PNG or WebP, up to 5 MB)
+                <input
+                    id="request-photo"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    key={form.wasSuccessful ? 'sent' : 'new'}
+                    onChange={(e) =>
+                        form.setData('photo', e.target.files?.[0] ?? null)
+                    }
+                />
+                {form.errors.photo && (
+                    <span role="alert">{form.errors.photo}</span>
+                )}
+            </label>
+            <div hidden>
+                <label htmlFor="request-website">
+                    Website
+                    <input
+                        id="request-website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={form.data.website}
+                        onChange={(e) =>
+                            form.setData('website', e.target.value)
+                        }
+                    />
+                </label>
+            </div>
+            <button
+                className="repair-button"
+                disabled={form.processing}
+                type="submit"
+            >
+                {form.processing ? 'Sending…' : 'Send request'}
+                <ArrowRight size={18} />
+            </button>
+            {form.progress && <p>Uploading: {form.progress.percentage}%</p>}
+        </form>
+    );
+}
+export default function Welcome({
+    publicPage = 'home',
+}: {
+    publicPage?: string;
+}) {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [heading, title, description] = metadata[publicPage] ?? metadata.home;
+    const home = publicPage === 'home';
     return (
         <>
-            <Head title="SOMFIX — One workspace for every property operation">
-                <meta
-                    name="description"
-                    content="Connect properties, tenants, maintenance teams, inventory and finances. SOMFIX is one property operations workspace for growing teams in Somalia and East Africa."
-                />
+            <Head title={title}>
+                <meta name="description" content={description} />
             </Head>
-            <div className="somfix-landing">
-                <a href="#main" className="sf-skip">
+            <div className="repair-site">
+                <a className="repair-skip" href="#main">
                     Skip to content
                 </a>
-
-                {/* ── Header ── */}
-                <header className="sf-header">
-                    <div className="sf-container sf-nav">
-                        <a href="#" aria-label="SOMFIX home">
-                            <Brand />
-                        </a>
-                        <div className="sf-nav-right">
-                            <nav
-                                className="sf-desktop-nav"
-                                aria-label="Main navigation"
-                            >
-                                {navigation.map((item) => (
-                                    <a key={item.href} href={item.href}>
-                                        {item.label}
-                                    </a>
-                                ))}
-                            </nav>
-                            <span
-                                className="sf-nav-divider"
-                                aria-hidden="true"
+                <header className="repair-header">
+                    <div className="repair-container repair-nav">
+                        <Link href="/" aria-label="SOMFIX home">
+                            <BrandLogo
+                                variant="light"
+                                aria-label="SOMFIX home repair and maintenance"
+                                className="repair-logo"
                             />
-                            <div className="sf-nav-actions">
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="sf-theme-button"
-                                    onClick={() =>
-                                        updateAppearance(
-                                            resolvedAppearance === 'dark'
-                                                ? 'light'
-                                                : 'dark',
-                                        )
-                                    }
-                                    aria-label={`Switch to ${resolvedAppearance === 'dark' ? 'light' : 'dark'} theme`}
-                                >
-                                    {resolvedAppearance === 'dark' ? (
-                                        <Sun />
-                                    ) : (
-                                        <Moon />
-                                    )}
-                                </Button>
+                        </Link>
+                        <button
+                            className="repair-menu"
+                            aria-label={
+                                menuOpen
+                                    ? 'Close navigation'
+                                    : 'Open navigation'
+                            }
+                            aria-expanded={menuOpen}
+                            aria-controls="repair-navigation"
+                            onClick={() => setMenuOpen(!menuOpen)}
+                        >
+                            {menuOpen ? <X /> : <Menu />}
+                        </button>
+                        <nav
+                            id="repair-navigation"
+                            className={menuOpen ? 'is-open' : ''}
+                            aria-label="Main navigation"
+                        >
+                            {navigation.map(([label, href]) => (
                                 <Link
-                                    href={auth.user ? dashboard() : login()}
-                                    className="sf-signin"
+                                    key={href}
+                                    href={href}
+                                    aria-current={
+                                        (home ? '/' : `/${publicPage}`) === href
+                                            ? 'page'
+                                            : undefined
+                                    }
+                                    onClick={() => setMenuOpen(false)}
                                 >
-                                    {auth.user ? 'Dashboard' : 'Sign In'}
-                                    <ArrowUpRight size={14} />
+                                    {label}
                                 </Link>
-                                <Button
-                                    onClick={requestDemo}
-                                    className="sf-button sf-nav-demo"
-                                >
-                                    Get Early Access
-                                    <ArrowUpRight size={16} />
-                                </Button>
-                                <Sheet>
-                                    <SheetTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="sf-mobile-menu"
-                                            aria-label="Open navigation"
-                                        >
-                                            <Menu />
-                                        </Button>
-                                    </SheetTrigger>
-                                    <SheetContent className="sf-mobile-sheet">
-                                        <SheetHeader>
-                                            <SheetTitle>
-                                                <Brand />
-                                            </SheetTitle>
-                                            <SheetDescription>
-                                                Your property operations,
-                                                connected.
-                                            </SheetDescription>
-                                        </SheetHeader>
-                                        <nav
-                                            aria-label="Mobile navigation"
-                                            className="sf-mobile-links"
-                                        >
-                                            {navigation.map((item) => (
-                                                <SheetClose
-                                                    asChild
-                                                    key={item.href}
-                                                >
-                                                    <a href={item.href}>
-                                                        {item.label}
-                                                        <ArrowUpRight
-                                                            size={18}
-                                                        />
-                                                    </a>
-                                                </SheetClose>
-                                            ))}
-                                            <SheetClose asChild>
-                                                <Link
-                                                    href={
-                                                        auth.user
-                                                            ? dashboard()
-                                                            : login()
-                                                    }
-                                                >
-                                                    {auth.user
-                                                        ? 'Dashboard'
-                                                        : 'Sign In'}
-                                                    <ArrowUpRight size={18} />
-                                                </Link>
-                                            </SheetClose>
-                                            <SheetClose asChild>
-                                                <Button
-                                                    onClick={requestDemo}
-                                                    className="sf-button"
-                                                >
-                                                    Get Early Access
-                                                    <ArrowRight />
-                                                </Button>
-                                            </SheetClose>
-                                        </nav>
-                                    </SheetContent>
-                                </Sheet>
-                            </div>
-                        </div>
+                            ))}
+                        </nav>
+                        <Link className="repair-header-cta" href="/login">
+                            Get Started
+                            <ArrowRight size={18} />
+                        </Link>
                     </div>
                 </header>
-
                 <main id="main">
-                    {/* ── Hero ── */}
-                    <section className="sf-hero">
-                        <div className="sf-hero-grid" aria-hidden="true" />
-                        <div className="sf-container sf-hero-inner">
-                            <div className="sf-hero-copy">
-                                <span className="sf-hero-pill">
-                                    <span className="sf-status-dot" />
-                                    One platform for property operations
+                    <section
+                        className={`repair-container repair-hero ${home ? '' : 'repair-page-hero'}`}
+                    >
+                        <div>
+                            <span className="repair-eyebrow">
+                                <Wrench size={16} /> HOME REPAIR & MAINTENANCE ·
+                                MOGADISHU
+                            </span>
+                            <h1>{heading}</h1>
+                            {home && (
+                                <h2 className="repair-somali">
+                                    Hal wicitaan ciladada ku xali
+                                </h2>
+                            )}
+                            {publicPage === 'property-management' && (
+                                <h2 className="repair-somali">
+                                    Maamulka guryaha
+                                </h2>
+                            )}
+                            <p>
+                                {home
+                                    ? 'Doors, windows, plumbing, mosquito screens, broken glass, kitchens and more. One trusted SOMFIX team for every repair in your home, office or property in Mogadishu.'
+                                    : publicPage === 'services'
+                                      ? 'One team for every repair. Tell us the problem, send a photo, and we’ll give you a clear price before we start.'
+                                      : publicPage === 'property-management'
+                                        ? 'For one monthly fee, SOMFIX takes care of repairs and upkeep at your apartment, house or building. You get one number to call and a team that keeps everything working.'
+                                        : publicPage === 'maintenance-plans'
+                                          ? 'A SOMFIX maintenance plan gives your home or office regular checks and priority repairs for a fixed monthly fee.'
+                                          : publicPage === 'how-it-works'
+                                            ? 'No guessing, no surprises. Here’s what happens when you contact SOMFIX.'
+                                            : publicPage === 'about'
+                                              ? 'We started SOMFIX because getting something fixed in Mogadishu meant calling many different people, waiting, and hoping the job was done right. We wanted one call to be enough.'
+                                              : publicPage === 'contact'
+                                                ? 'The fastest way: send a photo of the problem on WhatsApp.'
+                                                : 'Everything you need to know before you book.'}
+                            </p>
+                            {publicPage !== 'faq' && <Actions />}
+                            {home && (
+                                <small>
+                                    Send a photo of the problem on WhatsApp and
+                                    get a price fast.
+                                </small>
+                            )}
+                        </div>
+                        {home && (
+                            <div className="repair-hero-image">
+                                <img
+                                    src="/images/landing/technician.jpg"
+                                    alt="Technician working on a repair"
+                                    fetchPriority="high"
+                                />
+                                <div className="repair-image-caption">
+                                    <span>
+                                        <Check />
+                                        Clear price. Skilled team.
+                                    </span>
+                                    <strong>
+                                        Good repairs start with one call.
+                                    </strong>
+                                    <span>
+                                        Via Taleex, KM4 · Across Mogadishu
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                    </section>
+                    {home && (
+                        <>
+                            <section className="repair-trust">
+                                <div className="repair-container">
+                                    <Cards items={trust} />
+                                </div>
+                            </section>
+                            <section className="repair-container repair-section">
+                                <span className="repair-eyebrow">
+                                    OUR SERVICES
                                 </span>
-                                <h1>
-                                    Run every property operation{' '}
-                                    <span>from one place.</span>
-                                </h1>
-                                <p>
-                                    SOMFIX connects properties, tenants,
-                                    maintenance teams, quotations, inventory,
-                                    invoices, and payments into one clear
-                                    workflow.
+                                <h2>What we fix</h2>
+                                <p className="repair-intro">
+                                    From a door that won’t close to a full
+                                    renovation. Pick a service or just tell us
+                                    the problem.
                                 </p>
-                                <div className="sf-hero-buttons">
-                                    <Button
-                                        onClick={requestDemo}
-                                        className="sf-button sf-button-large"
-                                    >
-                                        Book a Walkthrough
-                                        <ArrowUpRight />
-                                    </Button>
-                                    <Button
-                                        asChild
-                                        variant="outline"
-                                        className="sf-button-outline sf-button-large"
-                                    >
-                                        <a href="#solutions">
-                                            Explore Solutions
-                                            <ArrowDown size={17} />
-                                        </a>
-                                    </Button>
-                                </div>
-                                <div className="sf-hero-notes">
-                                    <span>
-                                        <Check size={15} />
-                                        One connected workspace
+                                <ServiceCards home />
+                                <Link
+                                    className="repair-text-link repair-section-link"
+                                    href="/services"
+                                >
+                                    See all services <ArrowRight size={18} />
+                                </Link>
+                            </section>
+                            <section className="repair-container repair-highlight">
+                                <img
+                                    src="/images/landing/property.jpg"
+                                    alt="Residential property"
+                                    loading="lazy"
+                                />
+                                <div>
+                                    <span className="repair-eyebrow">
+                                        PROPERTY MANAGEMENT
                                     </span>
-                                    <span>
-                                        <Check size={15} />
-                                        Built for your whole team
-                                    </span>
-                                    <span>
-                                        <Check size={15} />
-                                        No setup complexity
-                                    </span>
-                                </div>
-                                <div className="sf-hero-footnote">
-                                    <span>
-                                        <Globe2 size={17} />
-                                    </span>
+                                    <h2>
+                                        Own a property? Let us look after it.
+                                    </h2>
                                     <p>
-                                        Local understanding. A bigger picture.
-                                        <small>
-                                            For growing property companies in
-                                            Somalia &amp; East Africa.
-                                        </small>
+                                        SOMFIX manages repairs and upkeep for
+                                        property owners for one monthly fee. We
+                                        check the property, fix problems fast
+                                        and keep tenants happy, so you don’t
+                                        have to.
+                                    </p>
+                                    <Link
+                                        className="repair-text-link"
+                                        href="/property-management"
+                                    >
+                                        Learn about property management{' '}
+                                        <ArrowRight size={18} />
+                                    </Link>
+                                </div>
+                            </section>
+                            <section className="repair-container repair-section">
+                                <span className="repair-eyebrow">
+                                    HOW IT WORKS
+                                </span>
+                                <h2>Fixed in 4 simple steps</h2>
+                                <Cards
+                                    items={[
+                                        [
+                                            '1. Send a photo',
+                                            'WhatsApp us a photo of the problem.',
+                                        ],
+                                        [
+                                            '2. Get a price',
+                                            'We send a clear price quickly.',
+                                        ],
+                                        [
+                                            '3. We fix it',
+                                            'Our technician comes and does the job.',
+                                        ],
+                                        [
+                                            '4. We check',
+                                            'We call the next day to make sure all is well.',
+                                        ],
+                                    ]}
+                                />
+                                <Link
+                                    className="repair-text-link repair-section-link"
+                                    href="/how-it-works"
+                                >
+                                    See how it works <ArrowRight size={18} />
+                                </Link>
+                            </section>
+                        </>
+                    )}
+                    {publicPage === 'services' && (
+                        <section className="repair-container repair-section repair-content">
+                            <ServiceCards />
+                            <p className="repair-note">
+                                Prices are a starting guide. The final price
+                                depends on materials and the size of the job,
+                                and you agree it before work starts. For jobs
+                                with materials, we ask for 50% in advance.
+                            </p>
+                        </section>
+                    )}
+                    {publicPage === 'property-management' && (
+                        <section className="repair-container repair-section repair-content">
+                            <h2>What’s included</h2>
+                            <Cards
+                                items={[
+                                    [
+                                        'Regular checks',
+                                        'We visit and check doors, windows, screens, plumbing and kitchens, and report back to you.',
+                                    ],
+                                    [
+                                        'Fast repairs',
+                                        'Tenants call us directly. We fix problems quickly so small issues don’t become big costs.',
+                                    ],
+                                    [
+                                        'Between tenants',
+                                        'Cleaning, repairs and a full check before the next tenant moves in.',
+                                    ],
+                                    [
+                                        'Clear reports',
+                                        'You know what was done, when, and what it cost. Photos of every job.',
+                                    ],
+                                    [
+                                        'One point of contact',
+                                        'No more chasing different technicians. One call to SOMFIX.',
+                                    ],
+                                    [
+                                        'Bigger upgrades',
+                                        'When you want to renovate, we plan and manage it for you.',
+                                    ],
+                                ]}
+                            />
+                            <h2 className="repair-subheading">Who it’s for</h2>
+                            <ul className="repair-list">
+                                <li>
+                                    Owners living abroad who need someone they
+                                    trust in Mogadishu
+                                </li>
+                                <li>
+                                    Owners of apartments and buildings with
+                                    several tenants
+                                </li>
+                                <li>
+                                    Agents who manage properties for clients
+                                </li>
+                            </ul>
+                            <p className="repair-note">
+                                Tell us where your property is and how many
+                                units it has. We’ll visit and give you a clear
+                                offer. Repairs that need materials are agreed
+                                with you first.
+                            </p>
+                        </section>
+                    )}
+                    {publicPage === 'maintenance-plans' && (
+                        <section className="repair-container repair-section repair-content">
+                            <Cards
+                                items={[
+                                    [
+                                        'Home plan',
+                                        'Regular check of doors, windows, mosquito screens and plumbing. Priority booking when something breaks. Contact us for a monthly price and visit schedule.',
+                                    ],
+                                    [
+                                        'Office & NGO plan',
+                                        'Scheduled maintenance visits, fast response, and monthly invoices for your records. Contact us for a monthly price and visit schedule.',
+                                    ],
+                                ]}
+                            />
+                            <h2 className="repair-subheading">
+                                A little upkeep goes a long way
+                            </h2>
+                            <ul className="repair-list">
+                                <li>Problems found early cost less to fix</li>
+                                <li>
+                                    Priority booking: plan customers are served
+                                    first
+                                </li>
+                                <li>One fixed monthly cost, easy to budget</li>
+                                <li>
+                                    Invoices and job records for offices and
+                                    NGOs
+                                </li>
+                            </ul>
+                        </section>
+                    )}
+                    {publicPage === 'how-it-works' && (
+                        <section className="repair-container repair-section repair-content">
+                            <Cards
+                                items={steps.map(([label, text], i) => [
+                                    `${i + 1}. ${label}`,
+                                    text,
+                                ])}
+                            />
+                        </section>
+                    )}
+                    {publicPage === 'about' && (
+                        <section className="repair-container repair-section repair-content">
+                            <div className="repair-about">
+                                <div>
+                                    <h2>Our mission</h2>
+                                    <p>
+                                        Give homes, offices and property owners
+                                        in Mogadishu one reliable team for every
+                                        repair, with clear prices and work done
+                                        right the first time.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h2>Our team</h2>
+                                    <p>
+                                        SOMFIX is led by Jama Habane, with a
+                                        team of skilled technicians and a
+                                        customer service team that answers your
+                                        calls and messages. Every job is checked
+                                        by our lead technician.
                                     </p>
                                 </div>
                             </div>
-                            <HeroVisual />
-                        </div>
-                        <div className="sf-container sf-hero-bottom">
-                            <span>LESS CHASING. MORE CLARITY.</span>
-                            <a href="#solutions">
-                                Explore our solutions
-                                <ArrowDown size={15} />
-                            </a>
-                        </div>
-                    </section>
-
-                    {/* ── Trust bar ── */}
-                    <div className="sf-trust-bar">
-                        <div className="sf-container sf-trust-inner">
-                            <span className="sf-trust-label">TRUSTED FOR</span>
-                            {[
-                                'Property Management',
-                                'Maintenance & Service',
-                                'Finance & Invoicing',
-                                'Inventory Control',
-                                'Tenant Relations',
-                            ].map((item) => (
-                                <span key={item} className="sf-trust-item">
-                                    <span className="sf-trust-dot" />
-                                    {item}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <FeatureSections onDemo={requestDemo} />
-
-                    {/* ── About ── */}
-                    <section
-                        className="sf-about-section sf-container"
-                        id="about"
-                    >
-                        <Reveal className="sf-about-inner">
-                            <div>
-                                <Eyebrow>BUILT AROUND REAL OPERATIONS</Eyebrow>
-                                <h2>
-                                    For the people
-                                    <br />
-                                    behind every property.
-                                </h2>
-                                <button
-                                    onClick={requestDemo}
-                                    className="sf-about-cta-btn"
-                                >
-                                    See It in Action
-                                    <ArrowUpRight size={16} />
-                                </button>
-                            </div>
-                            <div>
-                                <p>
-                                    Great property operations happen when people
-                                    have what they need to do good work. The
-                                    right record. A clear assignment. A payment
-                                    that's easy to trace.
-                                </p>
-                                <p>
-                                    SOMFIX brings those everyday details
-                                    together for property companies and
-                                    maintenance teams in Somalia and East
-                                    Africa—so growing your portfolio doesn't
-                                    mean growing the confusion.
-                                </p>
-                                <span className="sf-about-location">
-                                    <Globe2 size={18} />
-                                    Designed with Somalia &amp; East Africa in
-                                    mind
-                                </span>
-                            </div>
-                        </Reveal>
-                    </section>
-
-                    {/* ── CTA ── */}
-                    <section
-                        className="sf-cta-section sf-container"
-                        id="contact"
-                    >
-                        <Reveal className="sf-cta">
-                            <Photo
-                                name="service"
-                                alt="Field technician inspecting air-conditioning equipment"
+                            <h2 className="repair-subheading">Why SOMFIX</h2>
+                            <Cards
+                                items={[
+                                    [
+                                        'One call',
+                                        'Every trade in one team: doors, windows, plumbing, glass, kitchens and more.',
+                                    ],
+                                    [
+                                        'Clear prices',
+                                        'Agreed before work starts. No hidden costs.',
+                                    ],
+                                    [
+                                        'Done right',
+                                        'Quality checked by our lead technician, and a follow-up call the next day.',
+                                    ],
+                                    [
+                                        'Local',
+                                        'Based at Via Taleex, KM4. We know Mogadishu.',
+                                    ],
+                                ]}
                             />
-                            <div className="sf-cta-copy">
-                                <Eyebrow light>A CLEARER WAY TO WORK</Eyebrow>
-                                <h2>
-                                    Bring property and maintenance operations
-                                    together.
-                                </h2>
-                                <p>
-                                    Replace spreadsheets, disconnected calls,
-                                    and manual follow-ups with one connected
-                                    SOMFIX workspace.
+                        </section>
+                    )}
+                    {publicPage === 'faq' && (
+                        <section className="repair-container repair-section repair-content repair-faq">
+                            {faqs.map(([q, a]) => (
+                                <details key={q}>
+                                    <summary>{q}</summary>
+                                    <p>{a}</p>
+                                </details>
+                            ))}
+                        </section>
+                    )}
+                    {publicPage === 'contact' && (
+                        <section className="repair-container repair-section repair-content repair-contact">
+                            <div>
+                                <h2>One number. Every repair.</h2>
+                                <dl>
+                                    <dt>Phone & WhatsApp</dt>
+                                    <dd>
+                                        <a href={phone}>0617963640</a>
+                                    </dd>
+                                    <dt>Address</dt>
+                                    <dd>Via Taleex, KM4, Mogadishu</dd>
+                                    <dt>Working days</dt>
+                                    <dd>
+                                        Six days a week. Call for current hours.
+                                    </dd>
+                                </dl>
+                                <Actions />
+                                <a
+                                    className="repair-text-link repair-section-link"
+                                    href="https://www.google.com/maps/search/?api=1&query=Via%20Taleex%20KM4%20Mogadishu"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    Find our area on Google Maps{' '}
+                                    <ArrowRight size={18} />
+                                </a>
+                                <p className="repair-note">
+                                    For the fastest response, contact us
+                                    directly on WhatsApp.
                                 </p>
-                                <div className="sf-cta-buttons">
-                                    <Button
-                                        className="sf-button sf-button-orange sf-button-large"
-                                        onClick={requestDemo}
-                                    >
-                                        See It in Action
-                                        <ArrowUpRight />
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        className="sf-button-glass sf-button-large"
-                                        onClick={requestDemo}
-                                    >
-                                        Contact Us
-                                        <ArrowRight size={16} />
-                                    </Button>
-                                </div>
                             </div>
-                            <div className="sf-cta-stamp">
-                                <span>
-                                    <Building2 />
-                                    <Wrench />
-                                </span>
-                                ONE WORKSPACE.
-                                <br />
-                                EVERY OPERATION.
-                            </div>
-                        </Reveal>
+                            <ContactForm />
+                        </section>
+                    )}
+                    <section className="repair-cta">
+                        <div className="repair-container">
+                            <span className="repair-eyebrow">
+                                LET’S FIX IT TOGETHER
+                            </span>
+                            <h2>
+                                {publicPage === 'property-management'
+                                    ? 'Talk to us about your property'
+                                    : publicPage === 'maintenance-plans'
+                                      ? 'Ask for a maintenance plan'
+                                      : publicPage === 'services'
+                                        ? 'Not sure what you need?'
+                                        : 'Something broken at home?'}
+                            </h2>
+                            <p>
+                                Send us a photo now. We’ll tell you the price
+                                and when we can come.
+                            </p>
+                            <Actions label="WhatsApp 0617963640" />
+                        </div>
                     </section>
                 </main>
-
-                {/* ── Footer ── */}
-                <footer className="sf-footer">
-                    <div className="sf-container">
-                        <div className="sf-footer-top">
-                            <div className="sf-footer-brand">
-                                <a href="#" aria-label="SOMFIX home">
-                                    <Brand />
-                                </a>
+                <footer className="repair-footer">
+                    <div className="repair-container">
+                        <div className="repair-footer-top">
+                            <div>
+                                <BrandLogo
+                                    variant="light"
+                                    aria-label="SOMFIX"
+                                    className="repair-logo"
+                                />
                                 <p>
-                                    Connected property operations.
+                                    Home repair & maintenance in Mogadishu.
                                     <br />
-                                    Better days for the people behind them.
+                                    Hal wicitaan ciladada ku xali.
                                 </p>
-                                <div
-                                    className="sf-socials"
-                                    aria-label="Social profiles coming soon"
-                                >
-                                    {[
-                                        { icon: Linkedin, label: 'LinkedIn' },
-                                        { icon: Instagram, label: 'Instagram' },
-                                    ].map((social) => (
-                                        <button
-                                            key={social.label}
-                                            disabled
-                                            aria-label={`${social.label} — coming soon`}
-                                            title={`${social.label} — coming soon`}
-                                        >
-                                            <social.icon size={17} />
-                                        </button>
-                                    ))}
-                                    <small>Social profiles coming soon</small>
-                                </div>
+                                <p>
+                                    Via Taleex, KM4, Mogadishu ·{' '}
+                                    <a href={phone}>0617963640</a>
+                                </p>
                             </div>
-                            <div>
-                                <h3>Solutions</h3>
-                                <a href="#solutions">Property management</a>
-                                <a href="#solutions">
-                                    Maintenance &amp; service
-                                </a>
-                                <a href="#solutions">Finance &amp; inventory</a>
-                            </div>
-                            <div>
-                                <h3>Company</h3>
-                                <a href="#about">About SOMFIX</a>
-                                <a href="#about">Who it's for</a>
-                                <a href="#contact">Contact</a>
-                                <button onClick={requestDemo}>
-                                    Book a Walkthrough
-                                </button>
-                                <button onClick={requestDemo}>
-                                    Contact us
-                                </button>
-                            </div>
-                            <div>
-                                <h3>Legal</h3>
-                                <button onClick={() => setLegal('privacy')}>
-                                    Privacy overview
-                                </button>
-                                <button onClick={() => setLegal('terms')}>
-                                    Service information
-                                </button>
-                            </div>
+                            <nav aria-label="Footer navigation">
+                                {navigation.slice(1).map(([label, href]) => (
+                                    <Link key={href} href={href}>
+                                        {label}
+                                    </Link>
+                                ))}
+                            </nav>
                         </div>
-                        <div className="sf-footer-bottom">
-                            <span>
-                                © {new Date().getFullYear()} SOMFIX Property
-                                Operations.
-                            </span>
-                            <span>
-                                <span className="sf-status-dot" />
-                                Built to bring it all together.
-                            </span>
-                            <a href="#">
-                                Back to top
-                                <ArrowUpRight size={14} />
-                            </a>
+                        <div className="repair-footer-bottom">
+                            <span>© 2026 SOMFIX. All rights reserved.</span>
+                            <Link href="/login">Staff sign in</Link>
                         </div>
                     </div>
                 </footer>
+                <a className="repair-floating" href={whatsapp}>
+                    <MessageCircle size={22} />
+                    <span>Chat with us</span>
+                </a>
             </div>
-
-            <DemoDialog open={demoOpen} onOpenChange={setDemoOpen} />
-
-            <Dialog
-                open={legal !== null}
-                onOpenChange={(open) => {
-                    if (!open) setLegal(null);
-                }}
-            >
-                <DialogContent className="max-h-[85dvh] overflow-y-auto rounded-2xl">
-                    <DialogHeader>
-                        <DialogTitle>
-                            {legal === 'privacy'
-                                ? 'Privacy overview'
-                                : 'Service information'}
-                        </DialogTitle>
-                        <DialogDescription>
-                            {legal === 'privacy'
-                                ? 'Information about this website and its inquiry form.'
-                                : 'About this product preview.'}
-                        </DialogDescription>
-                    </DialogHeader>
-                    {legal === 'privacy' ? (
-                        <div className="space-y-4 text-sm leading-7">
-                            <p>
-                                The inquiry form stores the name, email address,
-                                company, team size and optional message you
-                                submit. These details help SOMFIX understand and
-                                respond to your request.
-                            </p>
-                            <p>
-                                The site uses cookies for sessions and security.
-                                Your theme preference is saved in your browser.
-                                The dashboard examples are fictional and do not
-                                show customer or tenant data.
-                            </p>
-                            <p>
-                                For a question about information submitted
-                                through this site, use Contact Us and describe
-                                your request without including sensitive
-                                records.
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="space-y-4 text-sm leading-7">
-                            <p>
-                                This website introduces SOMFIX Property
-                                Operations. Dashboard figures, property names,
-                                schedules and payments are illustrative
-                                examples, not customer results or service
-                                guarantees.
-                            </p>
-                            <p>
-                                Submitting an inquiry does not create a
-                                subscription or payment obligation. Discuss
-                                availability, pricing, service terms and
-                                data-handling requirements with SOMFIX before
-                                onboarding.
-                            </p>
-                        </div>
-                    )}
-                    <Button
-                        onClick={() => {
-                            setLegal(null);
-                            requestDemo();
-                        }}
-                    >
-                        Contact Us
-                        <ArrowRight />
-                    </Button>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

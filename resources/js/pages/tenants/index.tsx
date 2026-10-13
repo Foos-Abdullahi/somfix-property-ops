@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { Home, Plus, UserCheck, UserPlus, Users } from 'lucide-react';
 import { tenantColumns, type TenantRow } from '@/components/tenants/columns';
+import { RecordImport } from '@/components/record-import';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
@@ -62,12 +63,16 @@ export default function TenantsIndex({
                             and service context.
                         </p>
                     </div>
-                    <Button asChild size="sm">
-                        <Link href={create()}>
-                            <Plus className="size-4" />
-                            Add <span className="hidden sm:inline">tenant</span>
-                        </Link>
-                    </Button>
+                    <div className="flex flex-wrap justify-end gap-2">
+                        <RecordImport module="tenants" />
+                        <Button asChild size="sm">
+                            <Link href={create()}>
+                                <Plus className="size-4" />
+                                Add{' '}
+                                <span className="hidden sm:inline">tenant</span>
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
                 <StatsCard sections={sections} />
                 <div className="mt-6 animate-in duration-1000 fade-in slide-in-from-bottom-6">
