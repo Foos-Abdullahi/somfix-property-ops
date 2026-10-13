@@ -25,7 +25,11 @@ class EnforceAccess
         $name = $request->route()?->getName() ?? '';
         [$module, $action] = array_pad(explode('.', $name, 2), 2, '');
         if (array_key_exists($module.'.view', config('permissions'))) {
-            $permission = $module.(in_array($action, ['index', 'show']) ? '.view' : '.manage');
+            $isView = in_array($action, ['index', 'show', 'print'])
+                || str_ends_with($action, '.index')
+                || str_ends_with($action, '.show')
+                || str_ends_with($action, '.print');
+            $permission = $module.($isView ? '.view' : '.manage');
             abort_unless($user->hasPermission($permission), 403);
         }
 

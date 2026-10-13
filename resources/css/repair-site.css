@@ -1,0 +1,637 @@
+.repair-site {
+    background: #f7f8f4;
+    color: #17251e;
+    font-family: 'Instrument Sans', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+.repair-site * {
+    box-sizing: border-box;
+}
+.repair-container {
+    width: min(1240px, calc(100% - 64px));
+    margin: auto;
+}
+.repair-site a {
+    text-decoration: none;
+}
+.repair-site a:focus-visible,
+.repair-site button:focus-visible,
+.repair-site summary:focus-visible {
+    outline: 3px solid #ff8500;
+    outline-offset: 5px;
+}
+.repair-skip {
+    position: fixed;
+    top: -100px;
+    padding: 12px;
+    background: #004317;
+    color: white;
+    z-index: 100;
+}
+.repair-skip:focus {
+    top: 10px;
+}
+.repair-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 30;
+    border-bottom: 1px solid #e0e6df;
+}
+.repair-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: 86px;
+}
+.repair-logo {
+    width: 150px;
+    height: 42px;
+}
+.repair-nav nav {
+    display: flex;
+    gap: 26px;
+    margin-left: auto;
+    align-items: center;
+}
+.repair-nav nav a {
+    font-size: 12px;
+    padding-block: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #536158;
+}
+.repair-nav nav a:hover,
+.repair-nav nav a[aria-current] {
+    color: #004317;
+}
+.repair-header-cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #004317;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.repair-menu {
+    display: none;
+}
+.repair-hero {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 64px;
+    align-items: center;
+    padding-block: 76px;
+}
+.repair-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #40714d;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
+}
+.repair-hero h1 {
+    font-size: clamp(44px, 5.4vw, 76px);
+    font-weight: 600;
+    line-height: 1.07;
+    letter-spacing: -3px;
+    margin: 26px 0 18px;
+    max-width: 680px;
+}
+.repair-somali {
+    font-size: 22px;
+    color: #b85f08;
+    font-weight: 500;
+    margin-bottom: 22px;
+}
+.repair-hero p {
+    font-size: 17px;
+    color: #5d695f;
+    max-width: 580px;
+    margin: 0 0 28px;
+}
+.repair-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+.repair-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #004317;
+    color: #fff;
+    border: 1px solid #004317;
+    border-radius: 9px;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.repair-button:hover,
+.repair-header-cta:hover {
+    background: #12632d;
+}
+.repair-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+.repair-outline {
+    background: transparent;
+    color: #004317;
+    border-color: #cbd5cc;
+}
+.repair-outline:hover {
+    background: #e6eee5;
+}
+.repair-hero small {
+    display: block;
+    color: #687367;
+    font-size: 12px;
+    margin-top: 16px;
+}
+.repair-hero-image {
+    position: relative;
+    height: 510px;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #dce5d8;
+}
+.repair-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.repair-image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 58px 30px 28px;
+    background: linear-gradient(transparent, rgba(0, 35, 16, 0.95));
+    color: white;
+}
+.repair-image-caption strong {
+    display: block;
+    font-size: 25px;
+    line-height: 1.25;
+    margin: 13px 0;
+}
+.repair-image-caption span {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    font-size: 12px;
+}
+.repair-trust {
+    background: #eef2e9;
+    border-block: 1px solid #dee5d7;
+    padding-block: 30px;
+}
+.repair-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.repair-card {
+    padding: 26px;
+    border: 1px solid #dde5d9;
+    border-radius: 12px;
+    background: #fff;
+}
+.repair-card h3 {
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 18px 0 12px;
+}
+.repair-card p {
+    font-size: 14px;
+    color: #647061;
+    margin: 0;
+}
+.repair-card small {
+    color: #877159;
+    display: block;
+    margin-bottom: 12px;
+}
+.repair-card > svg {
+    color: #004317;
+}
+.repair-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.repair-number {
+    color: #9ca997;
+    font-size: 13px;
+}
+.repair-price {
+    font-size: 11px;
+    color: #985309;
+    background: #fff0dc;
+    border-radius: 5px;
+    padding: 4px 7px;
+}
+.repair-trust .repair-card {
+    background: transparent;
+    border: 0;
+    padding: 8px 14px;
+}
+.repair-trust .repair-card h3 {
+    font-size: 16px;
+    margin: 8px 0;
+}
+.repair-section {
+    padding-block: 76px;
+}
+.repair-site h2 {
+    font-size: clamp(29px, 3vw, 43px);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -1px;
+    margin: 16px 0 20px;
+}
+.repair-site h2.repair-somali {
+    font-size: 22px;
+    letter-spacing: 0;
+    font-weight: 500;
+}
+.repair-intro {
+    max-width: 630px;
+    margin-bottom: 32px;
+    color: #647061;
+}
+.repair-text-link {
+    color: #004317;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 22px;
+}
+.repair-section-link {
+    margin-top: 30px;
+}
+.repair-highlight {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    background: #e9eee3;
+    border-radius: 20px;
+    padding: 36px;
+    align-items: center;
+}
+.repair-highlight img {
+    height: 330px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+.repair-highlight p {
+    color: #5f6a58;
+}
+.repair-page-hero {
+    display: block;
+    padding-bottom: 36px;
+    border-bottom: 1px solid #dce4d5;
+}
+.repair-page-hero h1 {
+    max-width: 900px;
+}
+.repair-page-hero p {
+    max-width: 760px;
+}
+.repair-content {
+    padding-top: 40px;
+}
+.repair-content .repair-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+.repair-note {
+    font-size: 13px;
+    color: #65715e;
+    background: #edf1e7;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 28px;
+    max-width: 850px;
+}
+.repair-site h2.repair-subheading {
+    margin-top: 48px;
+}
+.repair-list {
+    padding-left: 24px;
+    color: #5b6956;
+}
+.repair-list li {
+    margin: 12px 0;
+}
+.repair-about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+.repair-about p {
+    color: #5f6a58;
+}
+.repair-faq {
+    max-width: 850px;
+}
+.repair-faq details {
+    border-bottom: 1px solid #d9e2d3;
+    padding: 22px 0;
+}
+.repair-faq summary {
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+}
+.repair-faq p {
+    color: #5f6a58;
+    margin-top: 14px;
+    max-width: 720px;
+}
+.repair-contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+}
+.repair-contact dt {
+    font-size: 12px;
+    color: #6a7762;
+    margin-top: 25px;
+}
+.repair-contact dd {
+    font-size: 18px;
+    margin: 5px 0;
+    color: #004317;
+}
+.repair-form {
+    padding: 32px;
+    border-radius: 16px;
+    background: white;
+    border: 1px solid #dce4d6;
+}
+.repair-form h2 {
+    font-size: 26px;
+}
+.repair-form label {
+    display: block;
+    margin: 18px 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+.repair-form input,
+.repair-form select,
+.repair-form textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid #cdd8c6;
+    border-radius: 7px;
+    background: #fafbf7;
+    padding: 12px;
+    color: #17251e;
+    margin-top: 7px;
+    font: inherit;
+}
+.repair-form input:focus,
+.repair-form select:focus,
+.repair-form textarea:focus {
+    outline: 2px solid #478557;
+    outline-offset: 2px;
+}
+.repair-form label span {
+    color: #b53227;
+    font-size: 12px;
+}
+.repair-success {
+    padding: 16px;
+    background: #e6f1e5;
+    color: #004317;
+}
+.repair-cta {
+    background: #004317;
+    color: #fff;
+    padding-block: 70px;
+}
+.repair-cta .repair-eyebrow {
+    color: #b7d6a8;
+}
+.repair-cta p {
+    color: #c2d4ba;
+}
+.repair-cta .repair-button {
+    background: #ff8500;
+    border-color: #ff8500;
+    color: #17251e;
+}
+.repair-cta .repair-outline {
+    background: transparent;
+    border-color: #68815c;
+    color: white;
+}
+.repair-footer {
+    background: #fff;
+    padding-block: 50px 90px;
+}
+.repair-footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+.repair-footer p {
+    color: #6c7864;
+    font-size: 13px;
+}
+.repair-footer nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 32px;
+    font-size: 13px;
+    color: #4c6341;
+}
+.repair-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #7c8675;
+    border-top: 1px solid #e1e7dc;
+    padding-top: 24px;
+    margin-top: 32px;
+}
+.repair-floating {
+    position: fixed;
+    bottom: 22px;
+    right: 24px;
+    background: #004317;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 20px;
+    box-shadow: 0 5px 25px #001b1730;
+    z-index: 40;
+    font-size: 13px;
+    font-weight: 600;
+}
+@media (min-width: 1101px) and (max-width: 1280px) {
+    .repair-nav {
+        gap: 14px;
+    }
+    .repair-nav nav {
+        gap: 20px;
+    }
+    .repair-logo {
+        width: 130px;
+    }
+    .repair-container {
+        width: calc(100% - 48px);
+    }
+}
+@media (max-width: 1100px) {
+    .repair-menu {
+        display: block;
+        margin-left: auto;
+        background: none;
+        border: 0;
+        padding: 10px;
+        color: #004317;
+    }
+    .repair-nav nav {
+        display: none;
+        position: absolute;
+        top: 86px;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 24px 32px;
+        border-bottom: 1px solid #dce4d5;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .repair-nav nav.is-open {
+        display: flex;
+    }
+    .repair-nav nav a {
+        font-size: 16px;
+    }
+    .repair-hero {
+        gap: 32px;
+    }
+    .repair-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .repair-content .repair-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 650px) {
+    .repair-container {
+        width: calc(100% - 36px);
+    }
+    .repair-nav {
+        min-height: 76px;
+        gap: 10px;
+    }
+    .repair-logo {
+        width: 125px;
+        height: 36px;
+    }
+    .repair-header-cta {
+        font-size: 11px;
+        padding: 9px;
+        gap: 5px;
+    }
+    .repair-header-cta svg {
+        width: 15px;
+    }
+    .repair-nav nav {
+        top: 76px;
+    }
+    .repair-hero {
+        grid-template-columns: 1fr;
+        padding-block: 42px;
+        gap: 32px;
+    }
+    .repair-hero h1 {
+        letter-spacing: -2px;
+        font-size: 49px;
+    }
+    .repair-hero p {
+        font-size: 16px;
+    }
+    .repair-hero-image {
+        height: 360px;
+    }
+    .repair-grid,
+    .repair-content .repair-grid {
+        grid-template-columns: 1fr;
+    }
+    .repair-trust .repair-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+    .repair-trust .repair-card {
+        padding: 5px;
+    }
+    .repair-trust .repair-card p {
+        font-size: 12px;
+    }
+    .repair-section {
+        padding-block: 46px;
+    }
+    .repair-highlight,
+    .repair-contact,
+    .repair-about {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    .repair-highlight {
+        padding: 20px;
+    }
+    .repair-highlight img {
+        height: 240px;
+    }
+    .repair-card {
+        padding: 23px;
+    }
+    .repair-contact .repair-form {
+        padding: 22px;
+    }
+    .repair-footer-top {
+        flex-direction: column;
+    }
+    .repair-footer nav {
+        margin-top: 15px;
+    }
+    .repair-floating {
+        right: 14px;
+        bottom: 14px;
+    }
+    .repair-actions {
+        gap: 10px;
+    }
+    .repair-button {
+        padding: 13px 15px;
+        font-size: 13px;
+    }
+    .repair-page-hero {
+        padding-bottom: 32px;
+    }
+}

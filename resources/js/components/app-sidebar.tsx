@@ -8,6 +8,7 @@ import {
     HardHat,
     LayoutDashboard,
     Package,
+    Receipt,
     Settings,
     ShieldCheck,
     Users,
@@ -72,6 +73,11 @@ const propertyNavItems: NavItem[] = [
 
 const operationsNavItems: NavItem[] = [
     {
+        title: 'Website Requests',
+        href: '/repair-requests',
+        icon: ClipboardList,
+    },
+    {
         title: 'Maintenance',
         href: maintenanceIndex(),
         icon: Wrench,
@@ -88,17 +94,30 @@ const operationsNavItems: NavItem[] = [
     },
 ];
 
+const financeNavItems: NavItem[] = [
+    {
+        title: 'Overview',
+        href: financeIndex(),
+        icon: Wallet,
+    },
+    {
+        title: 'Invoices',
+        href: '/finance/invoices',
+        icon: Receipt,
+    },
+    {
+        title: 'Quotations',
+        href: '/finance/quotations',
+        icon: FileText,
+    },
+];
+
 const businessNavItems: NavItem[] = [
     { title: 'Demo Requests', href: '/demo-requests', icon: ClipboardList },
     {
         title: 'Inventory',
         href: inventoryIndex(),
         icon: Package,
-    },
-    {
-        title: 'Finance',
-        href: financeIndex(),
-        icon: Wallet,
     },
     {
         title: 'Reports',
@@ -138,15 +157,17 @@ export function AppSidebar() {
                 typeof item.href === 'string' ? item.href : item.href.url;
             const path = href.split('?')[0];
             const settings: Record<string, string> = {
+                '/repair-requests': 'maintenance.view',
                 '/settings/users': 'users.manage',
                 '/settings/roles': 'roles.manage',
                 '/settings/audit-log': 'audit-log.view',
             };
+            const topLevel = path.split('/')[1] || '';
             const permission =
                 settings[path] ??
                 (path.startsWith('/settings') || path === '/dashboard'
                     ? null
-                    : path.slice(1) + '.view');
+                    : topLevel + '.view');
             return !permission || auth.permissions.includes(permission);
         });
     return (
@@ -173,6 +194,7 @@ export function AppSidebar() {
                     label="Operations"
                     items={visible(operationsNavItems)}
                 />
+                <NavMain label="Finance" items={visible(financeNavItems)} />
                 <NavMain label="Business" items={visible(businessNavItems)} />
                 <NavMain
                     label="System Settings"

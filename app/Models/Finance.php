@@ -52,6 +52,8 @@ class Finance extends Model
     /** @use HasFactory<FinanceFactory> */
     use HasFactory;
 
+    protected $appends = ['line_items'];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -66,6 +68,48 @@ class Finance extends Model
             'due_date' => 'date',
             'paid_date' => 'date',
         ];
+    }
+
+    /**
+     * Parse line items from description.
+     *
+     * @return array<int, array<string, string>>
+     */
+    public function getLineItemsAttribute(): array
+    {
+        $lines = explode("\n", (string) $this->description);
+        $items = [];
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+            if (str_starts_with($trimmed, '•')) {
+                if (preg_match('/•\s*(.+?)\s*\(qty:\s*([\d.]+)\s*×\s*[A-Z]+\s*([\d.]+)\)/', $trimmed, $matches)) {
+                    $items[] = [
+                        'description' => trim($matches[1]),
+                        'quantity' => $matches[2],
+                        'unit_price' => $matches[3],
+                        'amount' => number_format((float) $matches[2] * (float) $matches[3], 2, '.', ''),
+                    ];
+                    continue;
+                }
+                $items[] = [
+                    'description' => trim(ltrim($trimmed, '• ')),
+                    'quantity' => '1',
+                    'unit_price' => (string) ($this->amount ?? '0.00'),
+                    'amount' => (string) ($this->amount ?? '0.00'),
+                ];
+            }
+        }
+
+        if (empty($items)) {
+            $items[] = [
+                'description' => $this->description ?: ($this->title ?: 'Item'),
+                'quantity' => '1',
+                'unit_price' => (string) ($this->amount ?? '0.00'),
+                'amount' => (string) ($this->amount ?? '0.00'),
+            ];
+        }
+
+        return $items;
     }
 
     /**
