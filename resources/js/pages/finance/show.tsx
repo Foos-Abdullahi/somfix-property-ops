@@ -1,6 +1,8 @@
-import { Receipt } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { Receipt, Printer } from 'lucide-react';
 import DetailPage, { date, label, money } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/finance';
+import { Button } from '@/components/ui/button';
 
 type RecordDetail = {
     id: number;
