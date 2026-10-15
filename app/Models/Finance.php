@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -43,6 +44,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'property_id',
     'unit_id',
     'tenant_id',
+    'job_id',
+    'source_quote_id',
     'recipient_name',
     'recipient_email',
     'notes',
@@ -137,5 +140,23 @@ class Finance extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    /** @return BelongsTo<Job, $this> */
+    public function job(): BelongsTo
+    {
+        return $this->belongsTo(Job::class);
+    }
+
+    /** @return BelongsTo<Finance, $this> */
+    public function sourceQuote(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'source_quote_id');
+    }
+
+    /** @return HasMany<Payment, $this> */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }

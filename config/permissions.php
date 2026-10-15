@@ -21,6 +21,8 @@ return [
     'inventory.manage' => 'Manage inventory',
     'finance.view' => 'View finance',
     'finance.manage' => 'Manage finance',
+    'sales.view' => 'View sales and jobs',
+    'sales.manage' => 'Manage sales and jobs',
     'reports.view' => 'View reports',
     'users.manage' => 'Manage users and assign roles',
     'roles.manage' => 'Manage roles and permissions',

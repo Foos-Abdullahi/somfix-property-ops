@@ -359,6 +359,31 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                         )}
                     </div>
 
+                    {(isInvoice || isQuote) && (
+                        <div className="mt-4 border-t border-border pt-3">
+                            <h2 className="mb-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                Payment Details
+                            </h2>
+                            <div className="space-y-1.5 text-xs">
+                                <div className="flex justify-between gap-3">
+                                    <span className="text-muted-foreground">Merchant Number</span>
+                                    <span className="font-semibold font-mono">65 21 09</span>
+                                </div>
+                                <div className="flex justify-between gap-3">
+                                    <span className="text-muted-foreground">Payment Code</span>
+                                    <span className="font-semibold font-mono whitespace-nowrap">{'*789*652109*$#'}</span>
+                                </div>
+                                <p className="text-muted-foreground">
+                                    Replace $ with the amount you wish to pay.
+                                    {isQuote && ' Pay only after the quotation is accepted and payment is agreed.'}
+                                </p>
+                                <p className="text-muted-foreground">
+                                    Use {finance.invoice_number} as your payment reference when available.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Notes / Property Info */}
                     {finance.notes && (
                         <div className="mt-4 border-t border-border pt-3">

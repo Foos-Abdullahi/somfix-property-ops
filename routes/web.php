@@ -10,6 +10,7 @@ use App\Http\Controllers\RecordImportController;
 use App\Http\Controllers\RepairRequestController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ServiceTeamController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WorkOrderController;
@@ -46,6 +47,34 @@ Route::middleware('auth')->group(function () {
     Route::resource('work-orders', WorkOrderController::class);
     Route::resource('service-team', ServiceTeamController::class);
     Route::resource('inventory', InventoryController::class);
+    Route::prefix('sales')->name('sales.')->group(function () {
+        Route::get('/', [SalesController::class, 'index'])->name('index');
+        Route::get('customers', [SalesController::class, 'customers'])->name('customers.index');
+        Route::get('customers/create', [SalesController::class, 'customerCreate'])->name('customers.create');
+        Route::post('customers', [SalesController::class, 'customerStore'])->name('customers.store');
+        Route::get('customers/{customer}', [SalesController::class, 'customerShow'])->name('customers.show');
+        Route::get('customers/{customer}/edit', [SalesController::class, 'customerEdit'])->name('customers.edit');
+        Route::put('customers/{customer}', [SalesController::class, 'customerUpdate'])->name('customers.update');
+
+        Route::get('leads', [SalesController::class, 'leads'])->name('leads.index');
+        Route::get('leads/create', [SalesController::class, 'leadCreate'])->name('leads.create');
+        Route::post('leads', [SalesController::class, 'leadStore'])->name('leads.store');
+        Route::get('leads/{lead}', [SalesController::class, 'leadShow'])->name('leads.show');
+        Route::get('leads/{lead}/edit', [SalesController::class, 'leadEdit'])->name('leads.edit');
+        Route::put('leads/{lead}', [SalesController::class, 'leadUpdate'])->name('leads.update');
+        Route::post('leads/{lead}/create-job', [SalesController::class, 'createJobFromLead'])->name('leads.create-job');
+
+        Route::get('jobs', [SalesController::class, 'jobs'])->name('jobs.index');
+        Route::get('jobs/create', [SalesController::class, 'jobCreate'])->name('jobs.create');
+        Route::post('jobs', [SalesController::class, 'jobStore'])->name('jobs.store');
+        Route::get('jobs/{job}', [SalesController::class, 'jobShow'])->name('jobs.show');
+        Route::get('jobs/{job}/edit', [SalesController::class, 'jobEdit'])->name('jobs.edit');
+        Route::put('jobs/{job}', [SalesController::class, 'jobUpdate'])->name('jobs.update');
+        Route::post('jobs/{job}/materials', [SalesController::class, 'addMaterial'])->name('jobs.materials.store');
+        Route::post('jobs/{job}/labor', [SalesController::class, 'addLabor'])->name('jobs.labors.store');
+        Route::post('invoices/{finance}/payments', [SalesController::class, 'recordPayment'])->name('invoices.payments.store');
+        Route::get('payments/{payment}/receipt', [SalesController::class, 'receipt'])->name('payments.receipt');
+    });
     // Finance module: Invoices, Quotations, Print & Overview
     Route::prefix('finance')->name('finance.')->group(function () {
         // Invoices CRUD

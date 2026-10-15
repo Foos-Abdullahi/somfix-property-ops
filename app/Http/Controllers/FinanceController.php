@@ -258,18 +258,35 @@ class FinanceController extends Controller
     {
         $invoiceNumber = 'INV-'.date('Ym').'-'.rand(1000, 9999);
 
-        $finance->update([
-            'type' => 'invoice',
+        $finance->update(['status' => 'accepted']);
+
+        $invoice = Finance::create([
             'invoice_number' => $invoiceNumber,
+            'title' => $finance->title,
+            'description' => $finance->description,
+            'type' => 'invoice',
+            'currency' => $finance->currency,
+            'amount' => $finance->amount,
+            'paid_amount' => 0,
+            'balance' => $finance->amount,
+            'due_date' => $finance->due_date,
             'status' => 'sent',
+            'property_id' => $finance->property_id,
+            'unit_id' => $finance->unit_id,
+            'tenant_id' => $finance->tenant_id,
+            'job_id' => $finance->job_id,
+            'source_quote_id' => $finance->id,
+            'recipient_name' => $finance->recipient_name,
+            'recipient_email' => $finance->recipient_email,
+            'notes' => $finance->notes,
         ]);
 
         Inertia::flash('toast', [
             'type' => 'success',
-            'message' => "Quotation converted to Invoice {$invoiceNumber} successfully.",
+            'message' => "Invoice {$invoiceNumber} created while the quotation was preserved.",
         ]);
 
-        return to_route('finance.invoices.show', $finance);
+        return to_route('finance.invoices.show', $invoice);
     }
 
     /**

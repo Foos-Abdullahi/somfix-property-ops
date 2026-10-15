@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
-        foreach (['User', 'Role', 'Property', 'Unit', 'Tenant', 'Lease', 'Maintenance', 'WorkOrder', 'ServiceTeam', 'Inventory', 'Finance'] as $model) {
+        foreach (['User', 'Role', 'Property', 'Unit', 'Tenant', 'Lease', 'Maintenance', 'WorkOrder', 'ServiceTeam', 'Inventory', 'Finance', 'Customer', 'Lead', 'Job', 'Payment', 'JobMaterial', 'JobLabor'] as $model) {
             ('App\\Models\\'.$model)::observe(AuditObserver::class);
         }
         foreach (array_filter(array_keys(config('permissions')), 'is_string') as $permission) {

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 #[Fillable([
     'maintenance_id',
+    'job_id',
     'service_team_id',
     'title',
     'description',
@@ -63,6 +64,12 @@ class WorkOrder extends Model
     public function maintenance(): BelongsTo
     {
         return $this->belongsTo(Maintenance::class);
+    }
+
+    /** @return BelongsTo<Job, $this> */
+    public function job(): BelongsTo
+    {
+        return $this->belongsTo(Job::class);
     }
 
     /**

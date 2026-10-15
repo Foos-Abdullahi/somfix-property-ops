@@ -9,6 +9,7 @@ import {
     LayoutDashboard,
     Package,
     Receipt,
+    BriefcaseBusiness,
     Settings,
     ShieldCheck,
     Users,
@@ -112,6 +113,13 @@ const financeNavItems: NavItem[] = [
     },
 ];
 
+const salesNavItems: NavItem[] = [
+    { title: 'Sales & Jobs', href: '/sales', icon: BriefcaseBusiness },
+    { title: 'Leads', href: '/sales/leads', icon: ClipboardList },
+    { title: 'Customers', href: '/sales/customers', icon: Users },
+    { title: 'Jobs', href: '/sales/jobs', icon: HardHat },
+];
+
 const businessNavItems: NavItem[] = [
     { title: 'Demo Requests', href: '/demo-requests', icon: ClipboardList },
     {
@@ -194,6 +202,7 @@ export function AppSidebar() {
                     label="Operations"
                     items={visible(operationsNavItems)}
                 />
+                <NavMain label="Sales & Jobs" items={visible(salesNavItems)} />
                 <NavMain label="Finance" items={visible(financeNavItems)} />
                 <NavMain label="Business" items={visible(businessNavItems)} />
                 <NavMain
