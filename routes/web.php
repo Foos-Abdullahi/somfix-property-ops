@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::get('customers/{customer}', [SalesController::class, 'customerShow'])->name('customers.show');
         Route::get('customers/{customer}/edit', [SalesController::class, 'customerEdit'])->name('customers.edit');
         Route::put('customers/{customer}', [SalesController::class, 'customerUpdate'])->name('customers.update');
+        Route::delete('customers/{customer}', [SalesController::class, 'customerDestroy'])->name('customers.destroy');
 
         Route::get('leads', [SalesController::class, 'leads'])->name('leads.index');
         Route::get('leads/create', [SalesController::class, 'leadCreate'])->name('leads.create');
@@ -62,6 +63,7 @@ Route::middleware('auth')->group(function () {
         Route::get('leads/{lead}', [SalesController::class, 'leadShow'])->name('leads.show');
         Route::get('leads/{lead}/edit', [SalesController::class, 'leadEdit'])->name('leads.edit');
         Route::put('leads/{lead}', [SalesController::class, 'leadUpdate'])->name('leads.update');
+        Route::delete('leads/{lead}', [SalesController::class, 'leadDestroy'])->name('leads.destroy');
         Route::post('leads/{lead}/create-job', [SalesController::class, 'createJobFromLead'])->name('leads.create-job');
 
         Route::get('jobs', [SalesController::class, 'jobs'])->name('jobs.index');
@@ -70,8 +72,11 @@ Route::middleware('auth')->group(function () {
         Route::get('jobs/{job}', [SalesController::class, 'jobShow'])->name('jobs.show');
         Route::get('jobs/{job}/edit', [SalesController::class, 'jobEdit'])->name('jobs.edit');
         Route::put('jobs/{job}', [SalesController::class, 'jobUpdate'])->name('jobs.update');
+        Route::delete('jobs/{job}', [SalesController::class, 'jobDestroy'])->name('jobs.destroy');
+        Route::post('jobs/{job}/work-orders', [SalesController::class, 'createWorkOrder'])->name('jobs.work-orders.store');
         Route::post('jobs/{job}/materials', [SalesController::class, 'addMaterial'])->name('jobs.materials.store');
         Route::post('jobs/{job}/labor', [SalesController::class, 'addLabor'])->name('jobs.labors.store');
+        Route::get('invoices/{finance}/payments/create', [SalesController::class, 'paymentCreate'])->name('invoices.payments.create');
         Route::post('invoices/{finance}/payments', [SalesController::class, 'recordPayment'])->name('invoices.payments.store');
         Route::get('payments/{payment}/receipt', [SalesController::class, 'receipt'])->name('payments.receipt');
     });

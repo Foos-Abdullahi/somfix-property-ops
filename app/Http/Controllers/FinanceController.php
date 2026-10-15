@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFinanceRequest;
 use App\Http\Requests\UpdateFinanceRequest;
 use App\Models\Finance;
+use App\Models\Job;
 use App\Models\Property;
 use App\Models\Tenant;
 use App\Models\Unit;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -185,9 +187,12 @@ class FinanceController extends Controller
     /**
      * Show the Quotation creation form.
      */
-    public function createQuote(): Response
+    public function createQuote(Request $request): Response
     {
-        return Inertia::render('finance/quotations/create', $this->formCatalog());
+        return Inertia::render('finance/quotations/create', [
+            ...$this->formCatalog(),
+            'selectedJobId' => $request->integer('job_id') ?: null,
+        ]);
     }
 
     /**
@@ -413,6 +418,7 @@ class FinanceController extends Controller
             'properties' => Property::query()->orderBy('name')->get(['id', 'name']),
             'units' => Unit::query()->orderBy('unit_number')->get(['id', 'unit_number']),
             'tenants' => Tenant::query()->orderBy('first_name')->get(['id', 'first_name', 'last_name']),
+            'jobs' => Job::query()->orderByDesc('created_at')->get(['id', 'job_number', 'title']),
         ];
     }
 }

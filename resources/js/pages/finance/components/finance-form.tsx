@@ -30,6 +30,7 @@ export type FinanceFormValues = {
     property_id: string;
     unit_id: string;
     tenant_id: string;
+    job_id: string;
     recipient_name: string;
     recipient_email: string;
     notes: string;
@@ -37,6 +38,7 @@ export type FinanceFormValues = {
 type PropertyOption = { id: number; name: string };
 type UnitOption = { id: number; unit_number: string };
 type TenantOption = { id: number; first_name: string; last_name: string };
+type JobOption = { id: number; job_number: string; title: string };
 const inputClass =
     'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
 
@@ -46,12 +48,14 @@ export function FinanceForm({
     properties,
     units,
     tenants,
+    jobs = [],
 }: {
     mode: 'create' | 'edit';
     finance?: FinanceFormValues & { id: number };
     properties: PropertyOption[];
     units: UnitOption[];
     tenants: TenantOption[];
+    jobs?: JobOption[];
 }) {
     const form = useForm<FinanceFormValues>({
         invoice_number: finance?.invoice_number ?? '',
@@ -68,6 +72,7 @@ export function FinanceForm({
         property_id: finance?.property_id ? String(finance.property_id) : '',
         unit_id: finance?.unit_id ? String(finance.unit_id) : '',
         tenant_id: finance?.tenant_id ? String(finance.tenant_id) : '',
+        job_id: finance?.job_id ? String(finance.job_id) : '',
         recipient_name: finance?.recipient_name ?? '',
         recipient_email: finance?.recipient_email ?? '',
         notes: finance?.notes ?? '',
@@ -78,6 +83,7 @@ export function FinanceForm({
         if (!data.property_id) delete data.property_id;
         if (!data.unit_id) delete data.unit_id;
         if (!data.tenant_id) delete data.tenant_id;
+        if (!data.job_id) delete data.job_id;
         if (!data.recipient_name) delete data.recipient_name;
         if (!data.recipient_email) delete data.recipient_email;
         if (!data.due_date) delete data.due_date;
@@ -292,6 +298,25 @@ export function FinanceForm({
                             </SelectContent>
                         </Select>
                         <InputError message={form.errors.tenant_id} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Related job</Label>
+                        <Select
+                            value={form.data.job_id}
+                            onValueChange={(value) => form.setData('job_id', value)}
+                        >
+                            <SelectTrigger className={`w-full ${inputClass}`}>
+                                <SelectValue placeholder="Select job" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {jobs.map((job) => (
+                                    <SelectItem key={job.id} value={String(job.id)}>
+                                        {job.job_number} · {job.title}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={form.errors.job_id} />
                     </div>
                     <Field
                         label="Recipient name"

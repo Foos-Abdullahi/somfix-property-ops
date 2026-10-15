@@ -45,6 +45,7 @@ type QuoteFormValues = {
     recipient_name: string;
     recipient_email: string;
     notes: string;
+    job_id: string;
     _line_items: string;
     _recipient_address: string;
     _company_name: string;
@@ -75,10 +76,12 @@ export default function CreateQuotePage({
     properties,
     units,
     tenants,
+    selectedJobId,
 }: {
     properties: PropertyOption[];
     units: UnitOption[];
     tenants: TenantOption[];
+    selectedJobId?: number | null;
 }) {
     const form = useForm<QuoteFormValues>({
         invoice_number: generateQuoteNumber(),
@@ -98,6 +101,7 @@ export default function CreateQuotePage({
         recipient_name: '',
         recipient_email: '',
         notes: '',
+        job_id: selectedJobId ? String(selectedJobId) : '',
         _line_items: JSON.stringify([
             { description: '', quantity: '1', unit_price: '0.00', amount: '0.00' },
         ]),
@@ -198,6 +202,11 @@ export default function CreateQuotePage({
         <>
             <Head title="Create Quotation — SOMFIX" />
             <div className="w-full p-4 md:p-6">
+                {selectedJobId && (
+                    <div className="mb-4 rounded border border-primary/30 bg-primary/5 p-3 text-sm">
+                        This quotation will be linked to Job #{selectedJobId}.
+                    </div>
+                )}
                 <div className="mb-6 flex items-center gap-2">
                     <Button asChild variant="ghost" size="sm">
                         <Link href="/finance/quotations">

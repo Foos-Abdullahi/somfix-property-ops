@@ -13,6 +13,7 @@ use App\Models\Payment;
 use App\Models\Property;
 use App\Models\ServiceTeam;
 use App\Models\Unit;
+use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,6 +69,12 @@ class SalesController extends Controller
         return to_route('sales.customers.show', $customer)->with('toast', ['type' => 'success', 'message' => 'Customer updated successfully.']);
     }
 
+    public function customerDestroy(Customer $customer): RedirectResponse
+    {
+        $customer->delete();
+        return to_route('sales.customers.index')->with('toast', ['type' => 'success', 'message' => 'Customer deleted successfully.']);
+    }
+
     public function leads(): Response
     {
         return Inertia::render('sales/leads/index', ['leads' => Lead::query()->with('customer:id,name')->latest()->get()]);
@@ -88,6 +95,12 @@ class SalesController extends Controller
     {
         $lead->update($this->leadData($request));
         return to_route('sales.leads.show', $lead)->with('toast', ['type' => 'success', 'message' => 'Lead updated successfully.']);
+    }
+
+    public function leadDestroy(Lead $lead): RedirectResponse
+    {
+        $lead->delete();
+        return to_route('sales.leads.index')->with('toast', ['type' => 'success', 'message' => 'Lead deleted successfully.']);
     }
 
     public function createJobFromLead(Lead $lead): RedirectResponse
@@ -132,6 +145,12 @@ class SalesController extends Controller
         return to_route('sales.jobs.show', $job)->with('toast', ['type' => 'success', 'message' => 'Job updated successfully.']);
     }
 
+    public function jobDestroy(Job $job): RedirectResponse
+    {
+        $job->delete();
+        return to_route('sales.jobs.index')->with('toast', ['type' => 'success', 'message' => 'Job deleted successfully.']);
+    }
+
     public function addMaterial(Request $request, Job $job): RedirectResponse
     {
         $data = $request->validate(['inventory_id' => ['required', 'exists:inventories,id'], 'quantity' => ['required', 'numeric', 'gt:0'], 'selling_price' => ['nullable', 'numeric', 'min:0'], 'notes' => ['nullable', 'string']]);
@@ -143,6 +162,23 @@ class SalesController extends Controller
             $inventory->update(['current_stock' => $stock, 'total_value' => $stock * (float) $inventory->unit_cost, 'status' => $stock <= 0 ? 'out_of_stock' : ($stock <= (float) $inventory->reorder_level ? 'low_stock' : 'in_stock')]);
         });
         return back()->with('toast', ['type' => 'success', 'message' => 'Material recorded and stock updated.']);
+    }
+
+    public function createWorkOrder(Job $job): RedirectResponse
+    {
+        $workOrder = WorkOrder::create([
+            'job_id' => $job->id,
+            'title' => $job->title,
+            'description' => $job->scope ?: $job->title,
+            'status' => 'pending',
+            'assigned_date' => $job->scheduled_date,
+        ]);
+
+        if ($job->status === 'approved') {
+            $job->update(['status' => 'scheduled']);
+        }
+
+        return to_route('work-orders.show', $workOrder)->with('toast', ['type' => 'success', 'message' => 'Work order created and linked to this job.']);
     }
 
     public function addLabor(Request $request, Job $job): RedirectResponse
@@ -163,6 +199,12 @@ class SalesController extends Controller
             $finance->update(['paid_amount' => $paid, 'balance' => $balance, 'paid_date' => $balance == 0.0 ? $data['paid_at'] : null, 'status' => $balance == 0.0 ? 'paid' : 'partially_paid']);
         });
         return back()->with('toast', ['type' => 'success', 'message' => 'Payment recorded successfully.']);
+    }
+
+    public function paymentCreate(Finance $finance): Response
+    {
+        abort_unless($finance->type === 'invoice', 404);
+        return Inertia::render('sales/payments/create', ['invoice' => $finance->load('job.customer')]);
     }
 
     public function receipt(Payment $payment): Response

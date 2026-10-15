@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Job extends Model
 {
+    protected $table = 'service_jobs';
     protected $fillable = ['job_number', 'customer_id', 'lead_id', 'property_id', 'unit_id', 'title', 'scope', 'status', 'approved_value', 'approved_date', 'scheduled_date', 'completed_date', 'completion_notes'];
     protected function casts(): array { return ['approved_value' => 'decimal:2', 'approved_date' => 'date', 'scheduled_date' => 'date', 'completed_date' => 'date']; }
     /** @return BelongsTo<Customer, $this> */ public function customer(): BelongsTo { return $this->belongsTo(Customer::class); }

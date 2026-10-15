@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('customers')) {
         Schema::create('customers', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
@@ -20,7 +21,9 @@ return new class extends Migration
             $table->timestamps();
             $table->index(['status', 'name']);
         });
+        }
 
+        if (! Schema::hasTable('leads')) {
         Schema::create('leads', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
@@ -37,8 +40,9 @@ return new class extends Migration
             $table->timestamps();
             $table->index(['status', 'created_at']);
         });
+        }
 
-        Schema::create('jobs', function (Blueprint $table): void {
+        Schema::create('service_jobs', function (Blueprint $table): void {
             $table->id();
             $table->string('job_number')->unique();
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
@@ -59,7 +63,7 @@ return new class extends Migration
 
         Schema::create('job_materials', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('job_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('job_id')->constrained('service_jobs')->cascadeOnDelete();
             $table->foreignId('inventory_id')->constrained()->restrictOnDelete();
             $table->decimal('quantity', 10, 2);
             $table->decimal('unit_cost', 12, 2);
@@ -71,7 +75,7 @@ return new class extends Migration
 
         Schema::create('job_labors', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('job_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('job_id')->constrained('service_jobs')->cascadeOnDelete();
             $table->foreignId('service_team_id')->nullable()->constrained()->nullOnDelete();
             $table->decimal('hours', 8, 2);
             $table->decimal('cost_rate', 12, 2)->default(0);
@@ -82,16 +86,17 @@ return new class extends Migration
         });
 
         Schema::table('finances', function (Blueprint $table): void {
-            $table->foreignId('job_id')->nullable()->after('tenant_id')->constrained()->nullOnDelete();
+            $table->foreignId('job_id')->nullable()->after('tenant_id')->constrained('service_jobs')->nullOnDelete();
             $table->foreignId('source_quote_id')->nullable()->after('job_id')->constrained('finances')->nullOnDelete();
         });
 
         Schema::table('work_orders', function (Blueprint $table): void {
-            $table->foreignId('job_id')->nullable()->after('maintenance_id')->constrained()->nullOnDelete();
+            $table->foreignId('maintenance_id')->nullable()->change();
+            $table->foreignId('job_id')->nullable()->after('maintenance_id')->constrained('service_jobs')->nullOnDelete();
         });
 
         Schema::table('maintenances', function (Blueprint $table): void {
-            $table->foreignId('job_id')->nullable()->after('tenant_id')->constrained()->nullOnDelete();
+            $table->foreignId('job_id')->nullable()->after('tenant_id')->constrained('service_jobs')->nullOnDelete();
         });
 
         Schema::create('payments', function (Blueprint $table): void {
@@ -120,8 +125,7 @@ return new class extends Migration
         });
         Schema::dropIfExists('job_labors');
         Schema::dropIfExists('job_materials');
-        Schema::dropIfExists('jobs');
-        Schema::dropIfExists('leads');
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('service_jobs');
+        // customers and leads may predate this migration, so their records are preserved.
     }
 };

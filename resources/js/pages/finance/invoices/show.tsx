@@ -7,6 +7,7 @@ import {
     DollarSign,
     Pencil,
     Printer,
+    CircleDollarSign,
     Receipt,
     Trash2,
     User,
@@ -131,6 +132,14 @@ export default function ShowInvoicePage({ finance }: { finance: InvoiceDetail })
                                 Back
                             </Link>
                         </Button>
+                        {balanceNum > 0 && (
+                            <Button asChild variant="outline" size="sm">
+                                <Link href={`/sales/invoices/${finance.id}/payments/create`}>
+                                    <CircleDollarSign />
+                                    Record Payment
+                                </Link>
+                            </Button>
+                        )}
                         <Button asChild variant="outline" size="sm">
                             <Link href={`/finance/${finance.id}/print`}>
                                 <Printer />

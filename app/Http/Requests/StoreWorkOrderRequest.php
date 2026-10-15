@@ -24,7 +24,8 @@ class StoreWorkOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'maintenance_id' => ['required', 'exists:maintenances,id'],
+            'maintenance_id' => ['nullable', 'exists:maintenances,id'],
+            'job_id' => ['nullable', 'exists:jobs,id'],
             'service_team_id' => ['nullable', 'exists:service_teams,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -46,8 +47,8 @@ class StoreWorkOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'maintenance_id.required' => 'Please select a maintenance request.',
             'maintenance_id.exists' => 'The selected maintenance request does not exist.',
+            'job_id.exists' => 'The selected job does not exist.',
             'service_team_id.exists' => 'The selected service team member does not exist.',
             'title.required' => 'Please enter a work order title.',
             'title.max' => 'The title may not be greater than 255 characters.',
