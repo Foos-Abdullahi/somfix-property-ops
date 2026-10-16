@@ -29,6 +29,20 @@ class SalesController extends Controller
         $jobs = Job::query()->latest()->get();
         $invoices = Finance::query()->where('type', 'invoice')->get();
         $payments = Payment::query()->whereBetween('paid_at', [now()->startOfMonth(), now()->endOfMonth()])->get();
+        $convertedLeads = $leads->where('status', 'converted')->count();
+        $completedJobs = $jobs->whereIn('status', ['completed', 'closed'])->count();
+        $totalInvoiced = (float) $invoices->sum('amount');
+        $totalPaid = (float) $invoices->sum('paid_amount');
+
+        $monthlyTrend = collect(range(5, 0))->map(function (int $monthsAgo) use ($leads, $jobs): array {
+            $month = now()->subMonths($monthsAgo);
+
+            return [
+                'month' => $month->format('M'),
+                'leads' => $leads->filter(fn (Lead $lead): bool => $lead->created_at?->isSameMonth($month) ?? false)->count(),
+                'jobs' => $jobs->filter(fn (Job $job): bool => $job->created_at?->isSameMonth($month) ?? false)->count(),
+            ];
+        })->values();
 
         return Inertia::render('sales/index', [
             'stats' => [
@@ -37,7 +51,12 @@ class SalesController extends Controller
                 'jobsInProgress' => $jobs->whereIn('status', ['approved', 'scheduled', 'in_progress', 'awaiting_verification'])->count(),
                 'outstandingBalance' => (float) $invoices->sum('balance'),
                 'collectedThisMonth' => (float) $payments->sum('amount'),
+                'totalCustomers' => Customer::query()->where('status', 'active')->count(),
+                'leadConversionRate' => $leads->isNotEmpty() ? (int) round(($convertedLeads / $leads->count()) * 100) : 0,
+                'jobCompletionRate' => $jobs->isNotEmpty() ? (int) round(($completedJobs / $jobs->count()) * 100) : 0,
+                'collectionRate' => $totalInvoiced > 0 ? (int) min(100, round(($totalPaid / $totalInvoiced) * 100)) : 0,
             ],
+            'monthlyTrend' => $monthlyTrend,
             'recentJobs' => Job::query()->with('customer:id,name')->latest()->take(6)->get(),
             'recentLeads' => Lead::query()->with('customer:id,name')->latest()->take(6)->get(),
         ]);
