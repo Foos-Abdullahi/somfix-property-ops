@@ -58,6 +58,13 @@ const subscribe = (callback: () => void) => {
     return () => listeners.delete(callback);
 };
 
+const subscribeToSystemTheme = (callback: () => void) => {
+    const query = mediaQuery();
+    query?.addEventListener('change', callback);
+
+    return () => query?.removeEventListener('change', callback);
+};
+
 const notify = (): void => listeners.forEach((listener) => listener());
 
 const mediaQuery = (): MediaQueryList | null => {
@@ -93,10 +100,17 @@ export function useAppearance(): UseAppearanceReturn {
         () => currentAppearance,
         () => 'system',
     );
+    const systemPrefersDark = useSyncExternalStore(
+        subscribeToSystemTheme,
+        prefersDark,
+        () => false,
+    );
 
-    const resolvedAppearance: ResolvedAppearance = isDarkMode(appearance)
-        ? 'dark'
-        : 'light';
+    const resolvedAppearance: ResolvedAppearance =
+        appearance === 'dark' ||
+        (appearance === 'system' && systemPrefersDark)
+            ? 'dark'
+            : 'light';
 
     const updateAppearance = (mode: Appearance): void => {
         currentAppearance = mode;

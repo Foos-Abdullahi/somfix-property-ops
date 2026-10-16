@@ -24,8 +24,8 @@ class StoreWorkOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'maintenance_id' => ['nullable', 'exists:maintenances,id'],
-            'job_id' => ['nullable', 'exists:jobs,id'],
+            'maintenance_id' => ['nullable', 'required_without:job_id', 'exists:maintenances,id'],
+            'job_id' => ['nullable', 'required_without:maintenance_id', 'exists:service_jobs,id'],
             'service_team_id' => ['nullable', 'exists:service_teams,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],

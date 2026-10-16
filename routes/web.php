@@ -23,6 +23,7 @@ foreach (['services', 'property-management', 'maintenance-plans', 'how-it-works'
 Route::post('/repair-requests', [RepairRequestController::class, 'store'])->middleware('throttle:5,1')->name('repair-requests.store');
 Route::get('/repair-requests', [RepairRequestController::class, 'index'])->middleware('auth')->name('repair-requests.index');
 Route::get('/repair-requests/{repairRequest}/photo', [RepairRequestController::class, 'photo'])->middleware('auth')->name('repair-requests.photo');
+Route::post('/repair-requests/{repairRequest}/convert', [RepairRequestController::class, 'convert'])->middleware('auth')->name('repair-requests.convert');
 Route::post('/demo-requests', [DemoRequestController::class, 'store'])->middleware('throttle:5,1')->name('demo-inquiries.store');
 
 Route::middleware('auth')->group(function () {

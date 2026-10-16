@@ -38,7 +38,7 @@ class StoreFinanceRequest extends FormRequest
             'property_id' => ['nullable', 'exists:properties,id'],
             'unit_id' => ['nullable', 'exists:units,id'],
             'tenant_id' => ['nullable', 'exists:tenants,id'],
-            'job_id' => ['nullable', 'exists:jobs,id'],
+            'job_id' => ['nullable', 'exists:service_jobs,id'],
             'source_quote_id' => ['nullable', 'exists:finances,id'],
             'recipient_name' => ['nullable', 'string', 'max:255'],
             'recipient_email' => ['nullable', 'email', 'max:255'],

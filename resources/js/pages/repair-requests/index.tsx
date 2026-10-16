@@ -1,4 +1,7 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import { ArrowRight, CheckCircle2, Globe2 } from 'lucide-react';
+import { Badge, badgeToneClasses } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 type Repair = {
     id: number;
@@ -9,6 +12,8 @@ type Repair = {
     message: string | null;
     created_at: string;
     photo_url: string | null;
+    status: string;
+    lead_url: string | null;
 };
 export default function RepairInbox({
     requests,
@@ -22,15 +27,14 @@ export default function RepairInbox({
     return (
         <>
             <Head title="Website repair requests" />
-            <div className="space-y-6 p-6">
-                <div>
-                    <h1 className="text-xl font-semibold">
-                        Website repair requests
-                    </h1>
+            <div className="w-full space-y-6 p-4 md:p-6">
+                <div className="flex items-start gap-3">
+                    <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><Globe2 className="size-5" /></span>
+                    <div><h1 className="text-xl font-semibold">Website repair requests</h1>
                     <p className="text-sm text-muted-foreground">
-                        Customer inquiries from the public contact form. Call or
-                        WhatsApp the customer to arrange the job.
+                        Review public enquiries, contact the customer, then convert the request into the Sales and Jobs workflow.
                     </p>
+                    </div>
                 </div>
                 {requests.data.length === 0 && <p>No repair requests yet.</p>}
                 <div className="grid gap-4">
@@ -39,10 +43,10 @@ export default function RepairInbox({
                             key={request.id}
                             className="space-y-3 rounded-xl border bg-card p-5"
                         >
-                            <div className="flex flex-wrap justify-between gap-2">
-                                <h2 className="font-semibold">
+                            <div className="flex flex-wrap items-start justify-between gap-2">
+                                <div><h2 className="font-semibold">
                                     {request.name} · {request.service}
-                                </h2>
+                                </h2><Badge variant="outline" className={`mt-2 capitalize ${request.status === 'converted' ? badgeToneClasses.success : badgeToneClasses.warning}`}>{request.status}</Badge></div>
                                 <time
                                     className="text-xs text-muted-foreground"
                                     dateTime={request.created_at}
@@ -73,6 +77,9 @@ export default function RepairInbox({
                                     View customer photo
                                 </a>
                             )}
+                            <div className="flex justify-end border-t pt-3">
+                                {request.lead_url ? <Button asChild size="sm" variant="outline"><Link href={request.lead_url}><CheckCircle2 />Open lead</Link></Button> : <Button size="sm" onClick={() => router.post(`/repair-requests/${request.id}/convert`)}>Create customer and lead<ArrowRight /></Button>}
+                            </div>
                         </article>
                     ))}
                 </div>
