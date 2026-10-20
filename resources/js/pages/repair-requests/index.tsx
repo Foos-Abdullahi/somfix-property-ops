@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowRight, CheckCircle2, Globe2 } from 'lucide-react';
+import { Can } from '@/components/can';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -78,7 +79,19 @@ export default function RepairInbox({
                                 </a>
                             )}
                             <div className="flex justify-end border-t pt-3">
-                                {request.lead_url ? <Button asChild size="sm" variant="outline"><Link href={request.lead_url}><CheckCircle2 />Open lead</Link></Button> : <Button size="sm" onClick={() => router.post(`/repair-requests/${request.id}/convert`)}>Create customer and lead<ArrowRight /></Button>}
+                                {request.lead_url ? (
+                                    <Button asChild size="sm" variant="outline">
+                                        <Link href={request.lead_url}>
+                                            <CheckCircle2 />Open lead
+                                        </Link>
+                                    </Button>
+                                ) : (
+                                    <Can anyOf={['maintenance.manage', 'sales.manage']}>
+                                        <Button size="sm" onClick={() => router.post(`/repair-requests/${request.id}/convert`)}>
+                                            Create customer and lead<ArrowRight />
+                                        </Button>
+                                    </Can>
+                                )}
                             </div>
                         </article>
                     ))}

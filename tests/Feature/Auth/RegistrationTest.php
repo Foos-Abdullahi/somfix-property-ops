@@ -32,5 +32,6 @@ test('new users can register', function () {
     expect($user->role->slug)->toBe('standard-user')
         ->and($user->role->permissions)->toBe([]);
 
-    $this->get(route('dashboard'))->assertOk();
+    $this->get(route('dashboard'))->assertRedirect(route('login'));
+    $this->assertGuest();
 });

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Can } from '@/components/can';
 import {
     Card,
     CardContent,
@@ -114,16 +115,18 @@ export default function Dashboard() {
                             delivery, and financial control.
                         </p>
                     </div>
-                    <Button
-                        asChild
-                        size="sm"
-                        className="shrink-0 bg-white font-bold text-primary shadow-sm hover:bg-white/90"
-                    >
-                        <Link href={workOrdersIndex()} prefetch>
-                            <Plus className="size-4" />
-                            Create work order
-                        </Link>
-                    </Button>
+                    <Can permission="work-orders.manage">
+                        <Button
+                            asChild
+                            size="sm"
+                            className="shrink-0 bg-white font-bold text-primary shadow-sm hover:bg-white/90"
+                        >
+                            <Link href={workOrdersIndex()} prefetch>
+                                <Plus className="size-4" />
+                                Create work order
+                            </Link>
+                        </Button>
+                    </Can>
                 </section>
 
                 <StatsCard sections={metrics} />
