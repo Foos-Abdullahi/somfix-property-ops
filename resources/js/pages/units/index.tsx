@@ -4,6 +4,7 @@ import { unitColumns, type UnitRow } from '@/components/units/columns';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
+import { usePermissions } from '@/hooks/use-permissions';
 import { create, index } from '@/routes/units';
 
 export default function UnitsIndex({
@@ -18,6 +19,7 @@ export default function UnitsIndex({
         maintenanceUnits: number;
     };
 }) {
+    const { canManage } = usePermissions();
     const sections: StatSection[] = [
         {
             title: 'Total units',
@@ -62,12 +64,14 @@ export default function UnitsIndex({
                             operational status.
                         </p>
                     </div>
-                    <Button asChild size="sm">
-                        <Link href={create()}>
-                            <Plus className="size-4" />
-                            Add <span className="hidden sm:inline">unit</span>
-                        </Link>
-                    </Button>
+                    {canManage('units') && (
+                        <Button asChild size="sm">
+                            <Link href={create()}>
+                                <Plus className="size-4" />
+                                Add <span className="hidden sm:inline">unit</span>
+                            </Link>
+                        </Button>
+                    )}
                 </div>
                 <StatsCard sections={sections} />
                 <div className="mt-6 animate-in duration-1000 fade-in slide-in-from-bottom-6">

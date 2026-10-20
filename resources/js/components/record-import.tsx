@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import { Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { usePermissions } from '@/hooks/use-permissions';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -25,12 +26,17 @@ export function RecordImport({
 }: {
     module: 'tenants' | 'service-team';
 }) {
+    const { canManage } = usePermissions();
     const [open, setOpen] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [busy, setBusy] = useState(false);
     const busyRef = useRef(false);
     const [error, setError] = useState('');
     const [result, setResult] = useState<ImportResult | null>(null);
+
+    if (!canManage(module)) {
+        return null;
+    }
 
     async function upload(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();

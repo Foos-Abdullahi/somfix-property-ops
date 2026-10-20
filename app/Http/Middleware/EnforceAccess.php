@@ -15,12 +15,16 @@ class EnforceAccess
         if (! $user) {
             return $next($request);
         }
-        if (! $user->is_active) {
+        if (! $user->is_active || $user->role?->slug === 'standard-user') {
+            $message = ! $user->is_active
+                ? 'This account is inactive. Contact your administrator.'
+                : 'Standard accounts are not permitted to access the system. Contact your administrator.';
+
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect('/login')->withErrors(['email' => 'This account is inactive. Contact your administrator.']);
+            return redirect('/login')->withErrors(['email' => $message]);
         }
         $name = $request->route()?->getName() ?? '';
         [$module, $action] = array_pad(explode('.', $name, 2), 2, '');

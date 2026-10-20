@@ -1,5 +1,6 @@
 import { Building2 } from 'lucide-react';
 import DetailPage, { label } from '@/components/detail-page';
+import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/properties';
 
 type Property = {
@@ -18,6 +19,7 @@ type Property = {
 };
 
 export default function PropertyShow({ property }: { property: Property }) {
+    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={property.name}
@@ -46,8 +48,8 @@ export default function PropertyShow({ property }: { property: Property }) {
             status={property.status}
             icon={Building2}
             backHref={index.url()}
-            editHref={edit.url(property.id)}
-            deleteHref={destroy.url(property.id)}
+            editHref={canManage('properties') ? edit.url(property.id) : undefined}
+            deleteHref={canManage('properties') ? destroy.url(property.id) : undefined}
         />
     );
 }
