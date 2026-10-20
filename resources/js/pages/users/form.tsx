@@ -12,7 +12,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-type Role = { id: number; name: string; slug: string; permissions: string[] };
+type Role = {
+    id: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    permissions: string[];
+};
 type ManagedUser = {
     id: number;
     name: string;
@@ -39,7 +45,7 @@ export default function UserEditor({
         password_confirmation: '',
         role_id: String(
             user?.role_id ??
-                roles.find((role) => role.slug === 'viewer')?.id ??
+                roles.find((role) => role.slug === 'standard-user')?.id ??
                 roles[0]?.id ??
                 '',
         ),
@@ -55,6 +61,9 @@ export default function UserEditor({
         if (user) form.put(`/settings/users/${user.id}`, options);
         else form.post('/settings/users', options);
     }
+    const selectedRole = roles.find(
+        (role) => String(role.id) === form.data.role_id,
+    );
     return (
         <div className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-6">
             <Head title={user ? 'Edit user' : 'Create user'} />
@@ -115,6 +124,14 @@ export default function UserEditor({
                             ))}
                         </SelectContent>
                     </Select>
+                    {selectedRole && (
+                        <p className="text-xs text-muted-foreground">
+                            {selectedRole.description ??
+                                (selectedRole.permissions.length === 0
+                                    ? 'No operational permissions.'
+                                    : `${selectedRole.permissions.length} explicit permissions.`)}
+                        </p>
+                    )}
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="user-password">

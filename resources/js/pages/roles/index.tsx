@@ -92,7 +92,7 @@ export default function Roles({
                                     <Eye className="size-4 text-[#FF8500]" />
                                 </Link>
                             </Button>
-                            {role.slug !== 'administrator' && (
+                            {!role.is_system && (
                                 <Button asChild size="icon" variant="ghost">
                                     <Link
                                         href={`/settings/roles/${role.id}/edit`}

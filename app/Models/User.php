@@ -36,7 +36,7 @@ class User extends Authenticatable implements PasskeyUser
     protected static function booted(): void
     {
         static::creating(function (User $user) {
-            $user->role_id ??= Role::where('slug', 'viewer')->value('id');
+            $user->role_id ??= Role::where('slug', 'standard-user')->value('id');
         });
         static::deleting(function (User $user) {
             if ($user->role?->slug === 'administrator' && $user->is_active) {

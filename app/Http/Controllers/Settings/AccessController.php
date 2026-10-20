@@ -48,7 +48,7 @@ class AccessController extends Controller
 
     public function editRole(Request $request, Role $role): Response
     {
-        abort_if($role->slug === 'administrator' || $request->user()->role_id === $role->id, 403);
+        abort_if($role->is_system || $request->user()->role_id === $role->id, 403);
         foreach ($role->permissions as $permission) {
             abort_unless($request->user()->hasPermission($permission), 403);
         }
@@ -185,7 +185,7 @@ class AccessController extends Controller
     /** @return array<string, mixed> */
     private function roleData(Request $request, ?Role $role = null): array
     {
-        abort_if($role?->slug === 'administrator', 403);
+        abort_if($role?->is_system, 403);
         if ($role && $request->user()->role_id === $role->id) {
             throw ValidationException::withMessages(['name' => 'You cannot edit your own role. Ask another administrator.']);
         }

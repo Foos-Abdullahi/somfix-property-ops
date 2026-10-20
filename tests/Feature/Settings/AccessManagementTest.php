@@ -14,7 +14,9 @@ function accessAdmin(): User
 it('serves dedicated user and role forms with protected edit routes', function () {
     $admin = accessAdmin();
     $staff = User::factory()->create();
-    $role = Role::where('slug', 'viewer')->sole();
+    $role = new Role(['name' => 'Editable role', 'permissions' => ['properties.view']]);
+    $role->slug = 'editable-role';
+    $role->save();
     $this->actingAs($admin)->get('/settings/users/create')->assertOk()->assertInertia(fn (Assert $page) => $page->component('users/form')->where('user', null));
     $this->get('/settings/users/'.$staff->id.'/edit')->assertOk()->assertInertia(fn (Assert $page) => $page->component('users/form')->where('user.id', $staff->id));
     $this->get('/settings/roles/create')->assertOk()->assertInertia(fn (Assert $page) => $page->component('roles/form')->where('role', null));
@@ -52,6 +54,10 @@ it('creates and updates users with hashed passwords and redacted audit records',
     $data = ['name' => 'New Staff', 'email' => 'staff@example.com', 'password' => 'secure-test-password', 'password_confirmation' => 'secure-test-password', 'role_id' => $viewer->id, 'is_active' => true];
     $this->actingAs($admin)->post('/settings/users', $data)->assertSessionHasNoErrors()->assertRedirect('/settings/users');
     $staff = User::where('email', $data['email'])->sole();
+    expect($staff->role_id)->toBe($viewer->id)
+        ->and($staff->hasPermission('properties.view'))->toBeTrue()
+        ->and($staff->hasPermission('properties.manage'))->toBeFalse()
+        ->and($staff->hasPermission('users.manage'))->toBeFalse();
     expect(Hash::check($data['password'], $staff->password))->toBeTrue();
     expect($staff->email_verified_at)->not->toBeNull();
     $originalPassword = $staff->password;
@@ -64,6 +70,20 @@ it('creates and updates users with hashed passwords and redacted audit records',
     expect($log->actor_id)->toBe($admin->id);
     $audit = AuditLog::all()->toJson();
     expect($audit)->not->toContain($data['password'])->not->toContain($originalPassword)->not->toContain('remember_token');
+});
+
+it('defaults accounts without an explicit role to standard user with no operational access', function () {
+    $user = User::factory()->create(['role_id' => null]);
+
+    expect($user->role->slug)->toBe('standard-user')
+        ->and($user->role->permissions)->toBe([])
+        ->and($user->hasPermission('properties.view'))->toBeFalse()
+        ->and($user->hasPermission('properties.manage'))->toBeFalse()
+        ->and($user->hasPermission('users.manage'))->toBeFalse();
+
+    $this->actingAs($user)->get('/properties')->assertForbidden();
+    $this->get('/properties/create')->assertForbidden();
+    $this->get('/settings/users')->assertForbidden();
 });
 
 it('prevents self lockout and administrator deletion', function () {
@@ -117,9 +137,23 @@ it('prevents delegated managers from escalating privileges', function () {
 
 it('renders management pages and accepts an audit end date without a start date', function () {
     $this->actingAs(accessAdmin());
-    $this->get('/settings/users')->assertOk()->assertInertia(fn (Assert $page) => $page->component('users/index')->has('roles', 3));
+    $this->get('/settings/users')->assertOk()->assertInertia(fn (Assert $page) => $page->component('users/index')->has('roles', 4));
     $this->get('/settings/roles')->assertOk()->assertInertia(fn (Assert $page) => $page->component('roles/index')->has('permissions'));
     $this->get('/settings/audit-log?to='.now()->format('Y-m-d'))->assertOk()->assertSessionHasNoErrors();
+});
+
+it('keeps built-in roles immutable', function () {
+    $admin = accessAdmin();
+    $viewer = Role::where('slug', 'viewer')->sole();
+
+    $this->actingAs($admin)->get('/settings/roles/'.$viewer->id.'/edit')->assertForbidden();
+    $this->put('/settings/roles/'.$viewer->id, [
+        'name' => 'Viewer',
+        'description' => 'Escalated',
+        'permissions' => array_keys(config('permissions')),
+    ])->assertForbidden();
+
+    expect($viewer->fresh()->permissions)->not->toContain('users.manage', 'roles.manage');
 });
 
 it('includes view access with manage permission and deletes unused custom roles', function () {

@@ -21,11 +21,12 @@ return new class extends Migration
         $permissions = array_filter(array_keys(config('permissions')), 'is_string');
         $operational = array_values(array_filter($permissions, fn ($key) => ! in_array($key, ['users.manage', 'roles.manage', 'audit-log.view'])));
         foreach ([
-            ['Administrator', 'administrator', $permissions],
-            ['Operator', 'operator', $operational],
-            ['Viewer', 'viewer', array_values(array_filter($operational, fn ($key) => str_ends_with($key, '.view')))],
-        ] as [$name, $slug, $grants]) {
-            DB::table('roles')->insert(['name' => $name, 'slug' => $slug, 'permissions' => json_encode($grants), 'is_system' => true, 'created_at' => now(), 'updated_at' => now()]);
+            ['Administrator', 'administrator', 'Full access to all operational and system settings.', $permissions],
+            ['Operator', 'operator', 'Can view and manage all operational modules, but not users, roles, or audit logs.', $operational],
+            ['Viewer', 'viewer', 'Read-only access to all operational modules.', array_values(array_filter($operational, fn ($key) => str_ends_with($key, '.view')))],
+            ['Standard User', 'standard-user', 'No operational access until an administrator assigns a more suitable role.', []],
+        ] as [$name, $slug, $description, $grants]) {
+            DB::table('roles')->insert(['name' => $name, 'slug' => $slug, 'description' => $description, 'permissions' => json_encode($grants), 'is_system' => true, 'created_at' => now(), 'updated_at' => now()]);
         }
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('role_id')->nullable()->constrained()->restrictOnDelete();

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Fortify\Features;
 
@@ -26,6 +27,10 @@ test('new users can register', function () {
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
     Notification::assertNothingSent();
+
+    $user = User::where('email', 'test@example.com')->sole();
+    expect($user->role->slug)->toBe('standard-user')
+        ->and($user->role->permissions)->toBe([]);
 
     $this->get(route('dashboard'))->assertOk();
 });
