@@ -57,10 +57,10 @@ jobs:
           cp .env.example .env
           touch database/database.sqlite
           php artisan key:generate
-          php artisan test
           npm ci
           npm run types:check
           npm run build
+          php artisan test
 
       - name: Package production dependencies and assets
         run: |
