@@ -58,8 +58,8 @@ jobs:
           touch database/database.sqlite
           php artisan key:generate
           npm ci
-          npm run types:check
           npm run build
+          npm run types:check
           php artisan test
 
       - name: Package production dependencies and assets
