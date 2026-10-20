@@ -8,6 +8,7 @@ import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { usePermissions } from '@/hooks/use-permissions';
 
 type Customer = { id: number; name: string; type: string; phone: string; email: string | null; status: string; jobs_count: number; leads_count: number };
 export default function Customers({ customers }: { customers: Customer[] }) {

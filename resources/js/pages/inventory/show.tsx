@@ -1,5 +1,6 @@
 import { Package } from 'lucide-react';
 import DetailPage, { label, money } from '@/components/detail-page';
+import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/inventory';
 
 type RecordDetail = {
@@ -24,6 +25,7 @@ export default function InventoryShow({
 }: {
     inventory: RecordDetail;
 }) {
+    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={inventory.name}
@@ -75,8 +77,9 @@ export default function InventoryShow({
             status={inventory.status}
             icon={Package}
             backHref={index.url()}
-            editHref={edit.url(inventory.id)}
-            deleteHref={destroy.url(inventory.id)}
+            managePermission="inventory.manage"
+            editHref={canManage('inventory') ? edit.url(inventory.id) : undefined}
+            deleteHref={canManage('inventory') ? destroy.url(inventory.id) : undefined}
         />
     );
 }

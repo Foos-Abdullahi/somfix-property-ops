@@ -13,6 +13,7 @@ import {
     Wallet,
 } from 'lucide-react';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
+import { Can } from '@/components/can';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -155,20 +156,22 @@ export default function FinanceIndex({
                             High-level operational summary of billed revenue, collections, outstanding receivables, and proposals.
                         </p>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                        <Button asChild size="sm" variant="outline">
-                            <Link href="/finance/quotations/create">
-                                <Plus className="size-4 text-amber-600" />
-                                New Quotation
-                            </Link>
-                        </Button>
-                        <Button asChild size="sm">
-                            <Link href="/finance/invoices/create">
-                                <Plus className="size-4" />
-                                New Invoice
-                            </Link>
-                        </Button>
-                    </div>
+                    <Can permission="finance.manage">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Button asChild size="sm" variant="outline">
+                                <Link href="/finance/quotations/create">
+                                    <Plus className="size-4 text-amber-600" />
+                                    New Quotation
+                                </Link>
+                            </Button>
+                            <Button asChild size="sm">
+                                <Link href="/finance/invoices/create">
+                                    <Plus className="size-4" />
+                                    New Invoice
+                                </Link>
+                            </Button>
+                        </div>
+                    </Can>
                 </div>
 
                 {/* Metrics Cards */}
@@ -176,47 +179,51 @@ export default function FinanceIndex({
 
                 {/* Quick Actions Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    <Link
-                        href="/finance/invoices/create"
-                        className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-primary/50 hover:shadow-sm transition-all"
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
-                                <Receipt className="size-5" />
+                    <Can permission="finance.manage">
+                        <Link
+                            href="/finance/invoices/create"
+                            className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-primary/50 hover:shadow-sm transition-all"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                                    <Receipt className="size-5" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">
+                                        Create Invoice
+                                    </h3>
+                                    <p className="text-xs text-muted-foreground">Bill tenant or client</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">
-                                    Create Invoice
-                                </h3>
-                                <p className="text-xs text-muted-foreground">Bill tenant or client</p>
+                            <div className="mt-3 flex items-center gap-1 text-xs font-medium text-primary">
+                                <span>Get started</span>
+                                <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
                             </div>
-                        </div>
-                        <div className="mt-3 flex items-center gap-1 text-xs font-medium text-primary">
-                            <span>Get started</span>
-                            <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
-                        </div>
-                    </Link>
+                        </Link>
+                    </Can>
 
-                    <Link
-                        href="/finance/quotations/create"
-                        className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-amber-500/50 hover:shadow-sm transition-all"
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
-                                <FileText className="size-5" />
+                    <Can permission="finance.manage">
+                        <Link
+                            href="/finance/quotations/create"
+                            className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-amber-500/50 hover:shadow-sm transition-all"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="size-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
+                                    <FileText className="size-5" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                        Create Quotation
+                                    </h3>
+                                    <p className="text-xs text-muted-foreground">Estimate & proposals</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-semibold text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                                    Create Quotation
-                                </h3>
-                                <p className="text-xs text-muted-foreground">Estimate & proposals</p>
+                            <div className="mt-3 flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+                                <span>Prepare quote</span>
+                                <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
                             </div>
-                        </div>
-                        <div className="mt-3 flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
-                            <span>Prepare quote</span>
-                            <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
-                        </div>
-                    </Link>
+                        </Link>
+                    </Can>
 
                     <Link
                         href="/finance/invoices"

@@ -14,6 +14,7 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { Can } from '@/components/can';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -139,37 +140,41 @@ export default function ShowQuotePage({ finance }: { finance: QuotationDetail })
                                 Back
                             </Link>
                         </Button>
-                        <Button
-                            variant="default"
-                            size="sm"
-                            disabled={isConverting}
-                            onClick={handleConvert}
-                            className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                            <ArrowRightLeft />
-                            {isConverting ? 'Converting...' : 'Convert to Invoice'}
-                        </Button>
+                        <Can permission="finance.manage">
+                            <Button
+                                variant="default"
+                                size="sm"
+                                disabled={isConverting}
+                                onClick={handleConvert}
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                            >
+                                <ArrowRightLeft />
+                                {isConverting ? 'Converting...' : 'Convert to Invoice'}
+                            </Button>
+                        </Can>
                         <Button asChild variant="outline" size="sm">
                             <Link href={`/finance/${finance.id}/print`}>
                                 <Printer />
                                 Print / PDF
                             </Link>
                         </Button>
-                        <Button asChild size="sm">
-                            <Link href={`/finance/quotations/${finance.id}/edit`}>
-                                <Pencil />
-                                Edit
-                            </Link>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setDeleteOpen(true)}
-                            className="text-destructive hover:text-destructive"
-                        >
-                            <Trash2 />
-                            Delete
-                        </Button>
+                        <Can permission="finance.manage">
+                            <Button asChild size="sm">
+                                <Link href={`/finance/quotations/${finance.id}/edit`}>
+                                    <Pencil />
+                                    Edit
+                                </Link>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setDeleteOpen(true)}
+                                className="text-destructive hover:text-destructive"
+                            >
+                                <Trash2 />
+                                Delete
+                            </Button>
+                        </Can>
                     </div>
                 </header>
 

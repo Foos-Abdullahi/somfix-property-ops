@@ -7,6 +7,7 @@ import {
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
+import { usePermissions } from '@/hooks/use-permissions';
 import { create, index } from '@/routes/maintenance';
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
 };
 
 export default function MaintenanceIndex({ maintenances, stats }: Props) {
+    const { canManage } = usePermissions();
     const sections: StatSection[] = [
         {
             title: 'Total requests',
@@ -67,13 +69,15 @@ export default function MaintenanceIndex({ maintenances, stats }: Props) {
                         </p>
                     </div>
 
-                    <Button asChild size="sm">
-                        <Link href={create()}>
-                            <Plus className="size-4" />
-                            Add{' '}
-                            <span className="hidden sm:inline">request</span>
-                        </Link>
-                    </Button>
+                    {canManage('maintenance') && (
+                        <Button asChild size="sm">
+                            <Link href={create()}>
+                                <Plus className="size-4" />
+                                Add{' '}
+                                <span className="hidden sm:inline">request</span>
+                            </Link>
+                        </Button>
+                    )}
                 </div>
 
                 <StatsCard sections={sections} />

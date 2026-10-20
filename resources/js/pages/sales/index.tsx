@@ -13,7 +13,9 @@ import {
     Users,
     Wallet,
 } from 'lucide-react';
+import { usePermissions } from '@/hooks/use-permissions';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
+import { Can } from '@/components/can';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -202,41 +204,45 @@ export default function SalesIndex({
                             work, and collect revenue.
                         </p>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                        <Button asChild size="sm" variant="outline">
-                            <Link href="/sales/leads/create">
-                                <Plus className="size-4 text-sky-600" />
-                                New Lead
-                            </Link>
-                        </Button>
-                        <Button asChild size="sm">
-                            <Link href="/sales/jobs/create">
-                                <Plus className="size-4" />
-                                New Job
-                            </Link>
-                        </Button>
-                    </div>
+                    <Can permission="sales.manage">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Button asChild size="sm" variant="outline">
+                                <Link href="/sales/leads/create">
+                                    <Plus className="size-4 text-sky-600" />
+                                    New Lead
+                                </Link>
+                            </Button>
+                            <Button asChild size="sm">
+                                <Link href="/sales/jobs/create">
+                                    <Plus className="size-4" />
+                                    New Job
+                                </Link>
+                            </Button>
+                        </div>
+                    </Can>
                 </div>
 
                 <StatsCard sections={metrics} />
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    <QuickAction
-                        href="/sales/leads/create"
-                        icon={UserRoundPlus}
-                        title="Capture Lead"
-                        description="Register a new request"
-                        action="Start opportunity"
-                        tone="info"
-                    />
-                    <QuickAction
-                        href="/sales/jobs/create"
-                        icon={BriefcaseBusiness}
-                        title="Create Job"
-                        description="Schedule approved work"
-                        action="Open work file"
-                        tone="primary"
-                    />
+                    <Can permission="sales.manage">
+                        <QuickAction
+                            href="/sales/leads/create"
+                            icon={UserRoundPlus}
+                            title="Capture Lead"
+                            description="Register a new request"
+                            action="Start opportunity"
+                            tone="info"
+                        />
+                        <QuickAction
+                            href="/sales/jobs/create"
+                            icon={BriefcaseBusiness}
+                            title="Create Job"
+                            description="Schedule approved work"
+                            action="Open work file"
+                            tone="primary"
+                        />
+                    </Can>
                     <QuickAction
                         href="/sales/customers"
                         icon={Users}

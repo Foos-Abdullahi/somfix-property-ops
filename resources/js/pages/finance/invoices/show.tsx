@@ -15,6 +15,7 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { Can } from '@/components/can';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -132,35 +133,39 @@ export default function ShowInvoicePage({ finance }: { finance: InvoiceDetail })
                                 Back
                             </Link>
                         </Button>
-                        {balanceNum > 0 && (
-                            <Button asChild variant="outline" size="sm">
-                                <Link href={`/sales/invoices/${finance.id}/payments/create`}>
-                                    <CircleDollarSign />
-                                    Record Payment
-                                </Link>
-                            </Button>
-                        )}
+                        <Can permission="finance.manage">
+                            {balanceNum > 0 && (
+                                <Button asChild variant="outline" size="sm">
+                                    <Link href={`/sales/invoices/${finance.id}/payments/create`}>
+                                        <CircleDollarSign />
+                                        Record Payment
+                                    </Link>
+                                </Button>
+                            )}
+                        </Can>
                         <Button asChild variant="outline" size="sm">
                             <Link href={`/finance/${finance.id}/print`}>
                                 <Printer />
                                 Print / PDF
                             </Link>
                         </Button>
-                        <Button asChild size="sm">
-                            <Link href={`/finance/invoices/${finance.id}/edit`}>
-                                <Pencil />
-                                Edit
-                            </Link>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setDeleteOpen(true)}
-                            className="text-destructive hover:text-destructive"
-                        >
-                            <Trash2 />
-                            Delete
-                        </Button>
+                        <Can permission="finance.manage">
+                            <Button asChild size="sm">
+                                <Link href={`/finance/invoices/${finance.id}/edit`}>
+                                    <Pencil />
+                                    Edit
+                                </Link>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setDeleteOpen(true)}
+                                className="text-destructive hover:text-destructive"
+                            >
+                                <Trash2 />
+                                Delete
+                            </Button>
+                        </Can>
                     </div>
                 </header>
 

@@ -1,5 +1,6 @@
 import { ClipboardList } from 'lucide-react';
 import DetailPage, { date, label } from '@/components/detail-page';
+import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/work-orders';
 
 type RecordDetail = {
@@ -22,6 +23,7 @@ export default function WorkOrderShow({
 }: {
     workOrder: RecordDetail;
 }) {
+    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={workOrder.title}
@@ -40,8 +42,8 @@ export default function WorkOrderShow({
                             label: 'Actual hours',
                             value:
                                 workOrder.actual_hours == null
-                                    ? 'Not recorded'
-                                    : `${workOrder.actual_hours} h`,
+                                ? 'Not recorded'
+                                : `${workOrder.actual_hours} h`,
                         },
                     ],
                 },
@@ -103,8 +105,8 @@ export default function WorkOrderShow({
             status={workOrder.status}
             icon={ClipboardList}
             backHref={index.url()}
-            editHref={edit.url(workOrder.id)}
-            deleteHref={destroy.url(workOrder.id)}
+            editHref={canManage('work-orders') ? edit.url(workOrder.id) : undefined}
+            deleteHref={canManage('work-orders') ? destroy.url(workOrder.id) : undefined}
         />
     );
 }

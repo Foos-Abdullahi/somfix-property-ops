@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Pencil, Trash2, type LucideIcon } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
+import { Can } from '@/components/can';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -99,6 +100,7 @@ export default function DetailPage({
     editHref,
     deleteHref,
     deleteMessage = 'This action cannot be undone.',
+    managePermission,
     summary,
     sections,
     aside = [],
@@ -112,6 +114,7 @@ export default function DetailPage({
     editHref?: string;
     deleteHref?: string;
     deleteMessage?: string;
+    managePermission?: string;
     summary: DetailSection[];
     sections: DetailSection[];
     aside?: DetailSection[];
@@ -183,24 +186,28 @@ export default function DetailPage({
                             </Link>
                         </Button>
                         {editHref && (
-                            <Button asChild size="sm">
-                                <Link href={editHref}>
-                                    <Pencil />
-                                    Edit
-                                </Link>
-                            </Button>
+                            <Can permission={managePermission}>
+                                <Button asChild size="sm">
+                                    <Link href={editHref}>
+                                        <Pencil />
+                                        Edit
+                                    </Link>
+                                </Button>
+                            </Can>
                         )}
                         {deleteHref && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                aria-expanded={confirming}
-                                onClick={() => setConfirming(!confirming)}
-                                className="text-destructive hover:text-destructive"
-                            >
-                                <Trash2 />
-                                Delete
-                            </Button>
+                            <Can permission={managePermission}>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    aria-expanded={confirming}
+                                    onClick={() => setConfirming(!confirming)}
+                                    className="text-destructive hover:text-destructive"
+                                >
+                                    <Trash2 />
+                                    Delete
+                                </Button>
+                            </Can>
                         )}
                     </div>
                 </header>

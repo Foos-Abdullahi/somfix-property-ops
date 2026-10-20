@@ -1,5 +1,6 @@
 import { FileText } from 'lucide-react';
 import DetailPage, { date, money } from '@/components/detail-page';
+import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/leases';
 
 type Lease = {
@@ -35,6 +36,7 @@ type Lease = {
 };
 
 export default function LeaseShow({ lease }: { lease: Lease }) {
+    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={`Lease #${lease.id}`}
@@ -90,8 +92,8 @@ export default function LeaseShow({ lease }: { lease: Lease }) {
             status={lease.status}
             icon={FileText}
             backHref={index.url()}
-            editHref={edit.url(lease.id)}
-            deleteHref={destroy.url(lease.id)}
+            editHref={canManage('leases') ? edit.url(lease.id) : undefined}
+            deleteHref={canManage('leases') ? destroy.url(lease.id) : undefined}
         />
     );
 }

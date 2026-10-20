@@ -3,6 +3,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye } from 'lucide-react';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Can } from '@/components/can';
 import { edit, show } from '@/routes/inventory';
 
 export type InventoryRow = {
@@ -87,11 +88,13 @@ export const inventoryColumns: ColumnDef<InventoryRow>[] = [
                         <Eye className="size-4 text-[#FF8500]" />
                     </Link>
                 </Button>
-                <Button asChild size="icon" variant="ghost">
-                    <Link href={edit(row.original.id)}>
-                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
-                    </Link>
-                </Button>
+                <Can permission="inventory.manage">
+                    <Button asChild size="icon" variant="ghost">
+                        <Link href={edit(row.original.id)}>
+                            <Edit className="size-4 text-[#004317] dark:text-green-300" />
+                        </Link>
+                    </Button>
+                </Can>
             </div>
         ),
     },

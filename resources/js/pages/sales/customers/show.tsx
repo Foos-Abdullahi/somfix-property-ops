@@ -3,6 +3,7 @@ import { ArrowLeft, BriefcaseBusiness, Edit, Mail, Phone, Target, Trash2, UserRo
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { usePermissions } from '@/hooks/use-permissions';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';

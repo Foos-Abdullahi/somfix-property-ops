@@ -15,6 +15,7 @@ import {
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { Can } from '@/components/can';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
@@ -195,30 +196,32 @@ export default function QuotationsIndex({
                                 <Printer className="size-4 text-primary" />
                             </Link>
                         </Button>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            title="Convert to Invoice"
-                            disabled={isConverting === row.original.id}
-                            onClick={() => handleConvert(row.original)}
-                            className="text-blue-600 hover:text-blue-700 dark:text-blue-400"
-                        >
-                            <ArrowRightLeft className="size-4" />
-                        </Button>
-                        <Button asChild size="icon" variant="ghost" title="Edit Quotation">
-                            <Link href={`/finance/quotations/${row.original.id}/edit`}>
-                                <Edit className="size-4 text-[#004317] dark:text-green-300" />
-                            </Link>
-                        </Button>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            title="Delete Quotation"
-                            onClick={() => handleDelete(row.original)}
-                            className="text-destructive hover:text-destructive"
-                        >
-                            <Trash2 className="size-4" />
-                        </Button>
+                        <Can permission="finance.manage">
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                title="Convert to Invoice"
+                                disabled={isConverting === row.original.id}
+                                onClick={() => handleConvert(row.original)}
+                                className="text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                            >
+                                <ArrowRightLeft className="size-4" />
+                            </Button>
+                            <Button asChild size="icon" variant="ghost" title="Edit Quotation">
+                                <Link href={`/finance/quotations/${row.original.id}/edit`}>
+                                    <Edit className="size-4 text-[#004317] dark:text-green-300" />
+                                </Link>
+                            </Button>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                title="Delete Quotation"
+                                onClick={() => handleDelete(row.original)}
+                                className="text-destructive hover:text-destructive"
+                            >
+                                <Trash2 className="size-4" />
+                            </Button>
+                        </Can>
                     </div>
                 ),
             },
@@ -271,12 +274,14 @@ export default function QuotationsIndex({
                             Create, send, and convert price estimates and proposals for property services.
                         </p>
                     </div>
-                    <Button asChild size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
-                        <Link href="/finance/quotations/create">
-                            <Plus className="size-4" />
-                            Create Quotation
-                        </Link>
-                    </Button>
+                    <Can permission="finance.manage">
+                        <Button asChild size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+                            <Link href="/finance/quotations/create">
+                                <Plus className="size-4" />
+                                Create Quotation
+                            </Link>
+                        </Button>
+                    </Can>
                 </div>
 
                 <StatsCard sections={sections} />

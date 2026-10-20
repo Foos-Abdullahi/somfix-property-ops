@@ -63,6 +63,21 @@ test('users can logout', function () {
     $this->assertGuest();
 });
 
+test('standard users cannot log in', function () {
+    $user = User::factory()->create(['role_id' => \App\Models\Role::where('slug', 'standard-user')->value('id')]);
+    $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+    $this->assertGuest();
+});
+
+test('standard users logged in via bypass are kicked out by middleware', function () {
+    $user = User::factory()->create(['role_id' => \App\Models\Role::where('slug', 'standard-user')->value('id')]);
+    $this->actingAs($user)->get('/dashboard')->assertRedirect('/login');
+    $this->assertGuest();
+});
+
 test('users are rate limited', function () {
     $user = User::factory()->create();
 

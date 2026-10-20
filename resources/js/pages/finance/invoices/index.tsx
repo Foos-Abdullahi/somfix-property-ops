@@ -14,6 +14,7 @@ import {
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { Can } from '@/components/can';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
@@ -211,20 +212,22 @@ export default function InvoicesIndex({
                                 <Printer className="size-4 text-primary" />
                             </Link>
                         </Button>
-                        <Button asChild size="icon" variant="ghost" title="Edit Invoice">
-                            <Link href={`/finance/invoices/${row.original.id}/edit`}>
-                                <Edit className="size-4 text-[#004317] dark:text-green-300" />
-                            </Link>
-                        </Button>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            title="Delete Invoice"
-                            onClick={() => handleDelete(row.original)}
-                            className="text-destructive hover:text-destructive"
-                        >
-                            <Trash2 className="size-4" />
-                        </Button>
+                        <Can permission="finance.manage">
+                            <Button asChild size="icon" variant="ghost" title="Edit Invoice">
+                                <Link href={`/finance/invoices/${row.original.id}/edit`}>
+                                    <Edit className="size-4 text-[#004317] dark:text-green-300" />
+                                </Link>
+                            </Button>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                title="Delete Invoice"
+                                onClick={() => handleDelete(row.original)}
+                                className="text-destructive hover:text-destructive"
+                            >
+                                <Trash2 className="size-4" />
+                            </Button>
+                        </Can>
                     </div>
                 ),
             },
@@ -283,12 +286,14 @@ export default function InvoicesIndex({
                             Manage tenant billing, rent charges, payment tracking, and balance collection.
                         </p>
                     </div>
-                    <Button asChild size="sm">
-                        <Link href="/finance/invoices/create">
-                            <Plus className="size-4" />
-                            Create Invoice
-                        </Link>
-                    </Button>
+                    <Can permission="finance.manage">
+                        <Button asChild size="sm">
+                            <Link href="/finance/invoices/create">
+                                <Plus className="size-4" />
+                                Create Invoice
+                            </Link>
+                        </Button>
+                    </Can>
                 </div>
 
                 <StatsCard sections={sections} />

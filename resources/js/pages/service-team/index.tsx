@@ -8,6 +8,7 @@ import {
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
+import { usePermissions } from '@/hooks/use-permissions';
 import { create, index } from '@/routes/service-team';
 
 export default function ServiceTeamIndex({
@@ -17,6 +18,7 @@ export default function ServiceTeamIndex({
     serviceTeams: ServiceTeamRow[];
     stats: { totalMembers: number; activeMembers: number; onLeave: number };
 }) {
+    const { canManage } = usePermissions();
     const sections: StatSection[] = [
         {
             title: 'Total members',
