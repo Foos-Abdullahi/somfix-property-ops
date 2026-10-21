@@ -6,7 +6,8 @@ const DOCUMENT_TYPES = [
     {
         key: 'invoice',
         label: 'Invoice',
-        description: 'Bill a tenant or client for rent, services, or maintenance.',
+        description:
+            'Bill a tenant or client for rent, services, or maintenance.',
         icon: Receipt,
         href: '/finance/create/invoice',
         color: 'text-primary',
@@ -29,27 +30,33 @@ export default function FinanceCreate() {
             <Head title="Create Finance Record — SOMFIX" />
             <div className="w-full p-4 md:p-6">
                 <div className="mb-8">
-                    <h1 className="text-lg font-semibold">Create Finance Document</h1>
+                    <h1 className="text-lg font-semibold">
+                        Create Finance Document
+                    </h1>
                     <p className="mt-1 text-xs text-muted-foreground">
                         Choose the type of document you want to generate.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-2xl">
+                <div className="grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
                     {DOCUMENT_TYPES.map((type) => {
                         const Icon = type.icon;
                         return (
                             <Link
                                 key={type.key}
                                 href={type.href}
-                                className="group flex flex-col gap-4 rounded-xl border-2 border-border/70 bg-card p-6 shadow-sm transition-all hover:border-primary/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                                className="group flex flex-col gap-4 rounded-xl border-2 border-border/70 bg-card p-6 shadow-sm transition-all hover:border-primary/40 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:outline-none"
                             >
-                                <div className={`flex size-12 items-center justify-center rounded-lg border ${type.bg}`}>
+                                <div
+                                    className={`flex size-12 items-center justify-center rounded-lg border ${type.bg}`}
+                                >
                                     <Icon className={`size-6 ${type.color}`} />
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-sm">{type.label}</p>
-                                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                                    <p className="text-sm font-semibold">
+                                        {type.label}
+                                    </p>
+                                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                                         {type.description}
                                     </p>
                                 </div>

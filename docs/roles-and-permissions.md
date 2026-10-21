@@ -4,12 +4,12 @@ Every user has one role. A role contains explicit permissions such as `propertie
 
 ## Built-in roles
 
-| Role          | Access                                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------------------ |
-| Standard User | Default for new accounts. Can sign in and use personal settings, but has no operational module access. |
-| Viewer        | Read-only access to every operational module.                                                          |
-| Operator      | View and manage every operational module. Cannot manage users, roles, or audit logs.                   |
-| Administrator | Full operational and system access.                                                                    |
+| Role          | Access                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| Standard User | Safe default for new accounts. Cannot sign in until an administrator assigns an authorized role. |
+| Viewer        | Read-only access to every operational module.                                                    |
+| Operator      | View and manage every operational module. Cannot manage users, roles, or audit logs.             |
+| Administrator | Full operational and system access.                                                              |
 
 Built-in roles are fixed so their meaning cannot change accidentally. Create a custom role when a person needs a narrower combination of permissions.
 
@@ -19,8 +19,11 @@ Built-in roles are fixed so their meaning cannot change accidentally. Create a c
 - `module.manage` allows create, edit, delete, import, and other changes. A saved custom role automatically receives the matching `module.view` permission when `module.manage` is selected.
 - `users.manage`, `roles.manage`, and `audit-log.view` control system administration separately.
 - An inactive account has no access, regardless of its role.
+- A Standard User account cannot sign in. Assign Viewer, Operator, or a suitable custom role before granting system access.
 - The Administrator role is the only role with an automatic all-access override.
 
 ## Creating a normal user
 
-In **Settings → User Management → Add user**, leave **Standard User** selected for a safe account with no operational access. Select Viewer, Operator, or a custom role only when that access is required. The server checks permissions on every protected request; hiding a menu item is only a user-interface convenience.
+Public self-registration is disabled. In **Settings → User Management → Add user**, leave **Standard User** selected to create a blocked account that cannot sign in. Assign Viewer for read-only access, Operator for operational CRUD access, or a custom role for a narrower permission set. The server checks permissions on every protected request; hidden menus and action buttons are an additional user-interface safeguard.
+
+Viewer users can open permitted lists and detail pages, but create, edit, delete, import, conversion, and other mutation controls are hidden. If a Viewer manually requests a protected mutation URL, the server still returns the branded Access Denied page.

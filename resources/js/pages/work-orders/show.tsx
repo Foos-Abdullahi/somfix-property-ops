@@ -40,8 +40,8 @@ export default function WorkOrderShow({
                             label: 'Actual hours',
                             value:
                                 workOrder.actual_hours == null
-                                ? 'Not recorded'
-                                : `${workOrder.actual_hours} h`,
+                                    ? 'Not recorded'
+                                    : `${workOrder.actual_hours} h`,
                         },
                     ],
                 },

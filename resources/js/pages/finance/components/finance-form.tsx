@@ -303,14 +303,19 @@ export function FinanceForm({
                         <Label>Related job</Label>
                         <Select
                             value={form.data.job_id}
-                            onValueChange={(value) => form.setData('job_id', value)}
+                            onValueChange={(value) =>
+                                form.setData('job_id', value)
+                            }
                         >
                             <SelectTrigger className={`w-full ${inputClass}`}>
                                 <SelectValue placeholder="Select job" />
                             </SelectTrigger>
                             <SelectContent>
                                 {jobs.map((job) => (
-                                    <SelectItem key={job.id} value={String(job.id)}>
+                                    <SelectItem
+                                        key={job.id}
+                                        value={String(job.id)}
+                                    >
                                         {job.job_number} · {job.title}
                                     </SelectItem>
                                 ))}

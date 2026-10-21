@@ -21,7 +21,8 @@ test('tenant import skips existing and in-file duplicates and invalid rows', fun
 });
 
 test('service team accepts Excel and normalizes email and status', function () {
-    $path = tempnam(sys_get_temp_dir(), 'import');
+    $path = tempnam(storage_path('framework/testing'), 'import');
+    unlink($path);
     $writer = new Writer;
     $writer->openToFile($path);
     $writer->addRow(Row::fromValues(['Name', 'Specialization', 'Phone', 'Email', 'Status']));

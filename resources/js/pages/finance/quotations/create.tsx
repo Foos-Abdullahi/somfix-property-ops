@@ -1,5 +1,13 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Building2, FileText, Plus, Save, Trash2, User } from 'lucide-react';
+import {
+    ArrowLeft,
+    Building2,
+    FileText,
+    Plus,
+    Save,
+    Trash2,
+    User,
+} from 'lucide-react';
 import type { FormEvent } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -68,7 +76,10 @@ function generateQuoteNumber() {
 }
 
 function computeAmount(items: LineItem[]): string {
-    const total = items.reduce((sum, item) => sum + parseFloat(item.amount || '0'), 0);
+    const total = items.reduce(
+        (sum, item) => sum + parseFloat(item.amount || '0'),
+        0,
+    );
     return total.toFixed(2);
 }
 
@@ -103,7 +114,12 @@ export default function CreateQuotePage({
         notes: '',
         job_id: selectedJobId ? String(selectedJobId) : '',
         _line_items: JSON.stringify([
-            { description: '', quantity: '1', unit_price: '0.00', amount: '0.00' },
+            {
+                description: '',
+                quantity: '1',
+                unit_price: '0.00',
+                amount: '0.00',
+            },
         ]),
         _recipient_address: '',
         _company_name: 'SOMFIX Property Management',
@@ -126,7 +142,12 @@ export default function CreateQuotePage({
     const addLineItem = () => {
         setLineItems([
             ...lineItems,
-            { description: '', quantity: '1', unit_price: '0.00', amount: '0.00' },
+            {
+                description: '',
+                quantity: '1',
+                unit_price: '0.00',
+                amount: '0.00',
+            },
         ]);
     };
 
@@ -134,13 +155,22 @@ export default function CreateQuotePage({
         setLineItems(lineItems.filter((_, i) => i !== index));
     };
 
-    const updateLineItem = (index: number, field: keyof LineItem, value: string) => {
+    const updateLineItem = (
+        index: number,
+        field: keyof LineItem,
+        value: string,
+    ) => {
         const updated = lineItems.map((item, i) => {
             if (i !== index) return item;
             const next = { ...item, [field]: value };
             if (field === 'quantity' || field === 'unit_price') {
-                const qty = parseFloat(field === 'quantity' ? value : item.quantity) || 0;
-                const price = parseFloat(field === 'unit_price' ? value : item.unit_price) || 0;
+                const qty =
+                    parseFloat(field === 'quantity' ? value : item.quantity) ||
+                    0;
+                const price =
+                    parseFloat(
+                        field === 'unit_price' ? value : item.unit_price,
+                    ) || 0;
                 next.amount = (qty * price).toFixed(2);
             }
             return next;
@@ -224,18 +254,19 @@ export default function CreateQuotePage({
                 <form onSubmit={submit} className="space-y-6">
                     {/* Company & Recipient */}
                     <section className="overflow-hidden rounded-2xl border border-amber-200/70 bg-card shadow-sm dark:border-amber-800/50">
-                        <div className="border-b border-amber-200/70 bg-amber-50/50 px-5 py-4 dark:bg-amber-900/10 dark:border-amber-800/50">
+                        <div className="border-b border-amber-200/70 bg-amber-50/50 px-5 py-4 dark:border-amber-800/50 dark:bg-amber-900/10">
                             <h2 className="font-semibold text-amber-950 dark:text-amber-200">
                                 Document Header
                             </h2>
                             <p className="mt-1 text-xs text-muted-foreground">
-                                Company details and recipient proposal information.
+                                Company details and recipient proposal
+                                information.
                             </p>
                         </div>
                         <div className="grid gap-5 p-5 md:grid-cols-2">
                             {/* Company */}
                             <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                                     <Building2 className="size-3.5" />
                                     From (Your Company)
                                 </div>
@@ -244,7 +275,10 @@ export default function CreateQuotePage({
                                     <Input
                                         value={form.data._company_name}
                                         onChange={(e) =>
-                                            form.setData('_company_name', e.target.value)
+                                            form.setData(
+                                                '_company_name',
+                                                e.target.value,
+                                            )
                                         }
                                         className={inputClass}
                                         placeholder="SOMFIX Property Management"
@@ -255,7 +289,10 @@ export default function CreateQuotePage({
                                     <Textarea
                                         value={form.data._company_address}
                                         onChange={(e) =>
-                                            form.setData('_company_address', e.target.value)
+                                            form.setData(
+                                                '_company_address',
+                                                e.target.value,
+                                            )
                                         }
                                         className="min-h-[72px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                         placeholder="123 Main Street, City, Country"
@@ -267,7 +304,10 @@ export default function CreateQuotePage({
                                         <Input
                                             value={form.data._company_phone}
                                             onChange={(e) =>
-                                                form.setData('_company_phone', e.target.value)
+                                                form.setData(
+                                                    '_company_phone',
+                                                    e.target.value,
+                                                )
                                             }
                                             className={inputClass}
                                         />
@@ -278,7 +318,10 @@ export default function CreateQuotePage({
                                             type="email"
                                             value={form.data._company_email}
                                             onChange={(e) =>
-                                                form.setData('_company_email', e.target.value)
+                                                form.setData(
+                                                    '_company_email',
+                                                    e.target.value,
+                                                )
                                             }
                                             className={inputClass}
                                         />
@@ -288,7 +331,7 @@ export default function CreateQuotePage({
 
                             {/* Recipient */}
                             <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                                     <User className="size-3.5" />
                                     Prepared For
                                 </div>
@@ -309,30 +352,42 @@ export default function CreateQuotePage({
                                             }
                                         }}
                                     >
-                                        <SelectTrigger className={`w-full ${inputClass}`}>
+                                        <SelectTrigger
+                                            className={`w-full ${inputClass}`}
+                                        >
                                             <SelectValue placeholder="Choose a tenant or enter name below" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {tenants.map((t) => (
-                                                <SelectItem key={t.id} value={String(t.id)}>
+                                                <SelectItem
+                                                    key={t.id}
+                                                    value={String(t.id)}
+                                                >
                                                     {t.first_name} {t.last_name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <InputError message={form.errors.tenant_id} />
+                                    <InputError
+                                        message={form.errors.tenant_id}
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Recipient Name</Label>
                                     <Input
                                         value={form.data.recipient_name}
                                         onChange={(e) =>
-                                            form.setData('recipient_name', e.target.value)
+                                            form.setData(
+                                                'recipient_name',
+                                                e.target.value,
+                                            )
                                         }
                                         className={inputClass}
                                         placeholder="Full name or company"
                                     />
-                                    <InputError message={form.errors.recipient_name} />
+                                    <InputError
+                                        message={form.errors.recipient_name}
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Recipient Email</Label>
@@ -340,19 +395,27 @@ export default function CreateQuotePage({
                                         type="email"
                                         value={form.data.recipient_email}
                                         onChange={(e) =>
-                                            form.setData('recipient_email', e.target.value)
+                                            form.setData(
+                                                'recipient_email',
+                                                e.target.value,
+                                            )
                                         }
                                         className={inputClass}
                                         placeholder="client@email.com"
                                     />
-                                    <InputError message={form.errors.recipient_email} />
+                                    <InputError
+                                        message={form.errors.recipient_email}
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Recipient Address</Label>
                                     <Textarea
                                         value={form.data._recipient_address}
                                         onChange={(e) =>
-                                            form.setData('_recipient_address', e.target.value)
+                                            form.setData(
+                                                '_recipient_address',
+                                                e.target.value,
+                                            )
                                         }
                                         className="min-h-[72px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                         placeholder="Client or property address"
@@ -373,17 +436,24 @@ export default function CreateQuotePage({
                                 <Input
                                     value={form.data.invoice_number}
                                     onChange={(e) =>
-                                        form.setData('invoice_number', e.target.value)
+                                        form.setData(
+                                            'invoice_number',
+                                            e.target.value,
+                                        )
                                     }
                                     className={inputClass}
                                 />
-                                <InputError message={form.errors.invoice_number} />
+                                <InputError
+                                    message={form.errors.invoice_number}
+                                />
                             </div>
                             <div className="space-y-2">
                                 <Label>Quotation Title</Label>
                                 <Input
                                     value={form.data.title}
-                                    onChange={(e) => form.setData('title', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('title', e.target.value)
+                                    }
                                     className={inputClass}
                                     placeholder="e.g. Maintenance & Repaint Proposal"
                                 />
@@ -393,14 +463,22 @@ export default function CreateQuotePage({
                                 <Label>Currency</Label>
                                 <Select
                                     value={form.data.currency}
-                                    onValueChange={(v) => form.setData('currency', v as any)}
+                                    onValueChange={(v) =>
+                                        form.setData('currency', v as any)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="USD">USD ($)</SelectItem>
-                                        <SelectItem value="SOS">SOS (Sh.)</SelectItem>
+                                        <SelectItem value="USD">
+                                            USD ($)
+                                        </SelectItem>
+                                        <SelectItem value="SOS">
+                                            SOS (Sh.)
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -410,7 +488,10 @@ export default function CreateQuotePage({
                                     type="date"
                                     value={form.data._valid_until}
                                     onChange={(e) =>
-                                        form.setData('_valid_until', e.target.value)
+                                        form.setData(
+                                            '_valid_until',
+                                            e.target.value,
+                                        )
                                     }
                                     className={inputClass}
                                 />
@@ -419,17 +500,24 @@ export default function CreateQuotePage({
                                 <Label>Status</Label>
                                 <Select
                                     value={form.data.status}
-                                    onValueChange={(v) => form.setData('status', v as any)}
+                                    onValueChange={(v) =>
+                                        form.setData('status', v as any)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {['draft', 'sent', 'cancelled'].map((s) => (
-                                            <SelectItem key={s} value={s}>
-                                                {s.charAt(0).toUpperCase() + s.slice(1)}
-                                            </SelectItem>
-                                        ))}
+                                        {['draft', 'sent', 'cancelled'].map(
+                                            (s) => (
+                                                <SelectItem key={s} value={s}>
+                                                    {s.charAt(0).toUpperCase() +
+                                                        s.slice(1)}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -437,14 +525,21 @@ export default function CreateQuotePage({
                                 <Label>Property</Label>
                                 <Select
                                     value={form.data.property_id}
-                                    onValueChange={(v) => form.setData('property_id', v)}
+                                    onValueChange={(v) =>
+                                        form.setData('property_id', v)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue placeholder="Select property..." />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {properties.map((p) => (
-                                            <SelectItem key={p.id} value={String(p.id)}>
+                                            <SelectItem
+                                                key={p.id}
+                                                value={String(p.id)}
+                                            >
                                                 {p.name}
                                             </SelectItem>
                                         ))}
@@ -455,14 +550,21 @@ export default function CreateQuotePage({
                                 <Label>Unit</Label>
                                 <Select
                                     value={form.data.unit_id}
-                                    onValueChange={(v) => form.setData('unit_id', v)}
+                                    onValueChange={(v) =>
+                                        form.setData('unit_id', v)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue placeholder="Select unit..." />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {units.map((u) => (
-                                            <SelectItem key={u.id} value={String(u.id)}>
+                                            <SelectItem
+                                                key={u.id}
+                                                value={String(u.id)}
+                                            >
                                                 {u.unit_number}
                                             </SelectItem>
                                         ))}
@@ -474,33 +576,53 @@ export default function CreateQuotePage({
 
                     {/* Line Items */}
                     <section className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
-                        <div className="border-b border-border/70 bg-secondary/35 px-5 py-4 flex items-center justify-between">
+                        <div className="flex items-center justify-between border-b border-border/70 bg-secondary/35 px-5 py-4">
                             <div>
-                                <h2 className="font-semibold">Services & Estimate Items</h2>
+                                <h2 className="font-semibold">
+                                    Services & Estimate Items
+                                </h2>
                                 <p className="mt-1 text-xs text-muted-foreground">
                                     Add items or scope of work you are quoting.
                                 </p>
                             </div>
-                            <Button type="button" variant="outline" size="sm" onClick={addLineItem}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={addLineItem}
+                            >
                                 <Plus className="size-4" />
                                 Add Item
                             </Button>
                         </div>
-                        <div className="p-5 space-y-3">
-                            <div className="hidden md:grid md:grid-cols-12 gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground pb-2 border-b border-border/50">
+                        <div className="space-y-3 p-5">
+                            <div className="hidden gap-3 border-b border-border/50 pb-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase md:grid md:grid-cols-12">
                                 <span className="col-span-6">Description</span>
-                                <span className="col-span-2 text-right">Qty</span>
-                                <span className="col-span-2 text-right">Unit Price</span>
-                                <span className="col-span-1 text-right">Amount</span>
+                                <span className="col-span-2 text-right">
+                                    Qty
+                                </span>
+                                <span className="col-span-2 text-right">
+                                    Unit Price
+                                </span>
+                                <span className="col-span-1 text-right">
+                                    Amount
+                                </span>
                                 <span className="col-span-1" />
                             </div>
                             {lineItems.map((item, i) => (
-                                <div key={i} className="grid md:grid-cols-12 gap-3 items-center">
+                                <div
+                                    key={i}
+                                    className="grid items-center gap-3 md:grid-cols-12"
+                                >
                                     <div className="md:col-span-6">
                                         <Input
                                             value={item.description}
                                             onChange={(e) =>
-                                                updateLineItem(i, 'description', e.target.value)
+                                                updateLineItem(
+                                                    i,
+                                                    'description',
+                                                    e.target.value,
+                                                )
                                             }
                                             className={inputClass}
                                             placeholder="Service / material description"
@@ -513,7 +635,11 @@ export default function CreateQuotePage({
                                             step="1"
                                             value={item.quantity}
                                             onChange={(e) =>
-                                                updateLineItem(i, 'quantity', e.target.value)
+                                                updateLineItem(
+                                                    i,
+                                                    'quantity',
+                                                    e.target.value,
+                                                )
                                             }
                                             className={`${inputClass} text-right`}
                                         />
@@ -525,18 +651,24 @@ export default function CreateQuotePage({
                                             step="0.01"
                                             value={item.unit_price}
                                             onChange={(e) =>
-                                                updateLineItem(i, 'unit_price', e.target.value)
+                                                updateLineItem(
+                                                    i,
+                                                    'unit_price',
+                                                    e.target.value,
+                                                )
                                             }
                                             className={`${inputClass} text-right`}
                                         />
                                     </div>
-                                    <div className="md:col-span-1 flex items-center justify-end">
+                                    <div className="flex items-center justify-end md:col-span-1">
                                         <span className="text-sm font-semibold tabular-nums">
                                             {form.data.currency}{' '}
-                                            {parseFloat(item.amount || '0').toFixed(2)}
+                                            {parseFloat(
+                                                item.amount || '0',
+                                            ).toFixed(2)}
                                         </span>
                                     </div>
-                                    <div className="md:col-span-1 flex justify-end">
+                                    <div className="flex justify-end md:col-span-1">
                                         <Button
                                             type="button"
                                             variant="ghost"
@@ -551,14 +683,16 @@ export default function CreateQuotePage({
                                 </div>
                             ))}
 
-                            <div className="border-t border-border/50 pt-4 mt-4">
+                            <div className="mt-4 border-t border-border/50 pt-4">
                                 <div className="flex justify-end">
                                     <div className="w-full max-w-xs">
-                                        <div className="flex justify-between text-base font-bold border-t border-border/50 pt-2">
+                                        <div className="flex justify-between border-t border-border/50 pt-2 text-base font-bold">
                                             <span>Total Estimate</span>
-                                            <span className="tabular-nums text-amber-600 dark:text-amber-400">
+                                            <span className="text-amber-600 tabular-nums dark:text-amber-400">
                                                 {form.data.currency}{' '}
-                                                {parseFloat(form.data.amount || '0').toFixed(2)}
+                                                {parseFloat(
+                                                    form.data.amount || '0',
+                                                ).toFixed(2)}
                                             </span>
                                         </div>
                                     </div>
@@ -578,7 +712,10 @@ export default function CreateQuotePage({
                                 <Textarea
                                     value={form.data._terms_conditions}
                                     onChange={(e) =>
-                                        form.setData('_terms_conditions', e.target.value)
+                                        form.setData(
+                                            '_terms_conditions',
+                                            e.target.value,
+                                        )
                                     }
                                     className="min-h-[80px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                     placeholder="Valid for 30 days. 50% deposit required upon confirmation..."
@@ -588,7 +725,9 @@ export default function CreateQuotePage({
                                 <Label>Notes to Client</Label>
                                 <Textarea
                                     value={form.data.notes}
-                                    onChange={(e) => form.setData('notes', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('notes', e.target.value)
+                                    }
                                     className="min-h-[80px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                     placeholder="Additional notes or specifications..."
                                 />
@@ -607,7 +746,7 @@ export default function CreateQuotePage({
                         <Button
                             type="submit"
                             disabled={form.processing}
-                            className="bg-amber-600 hover:bg-amber-700 text-white"
+                            className="bg-amber-600 text-white hover:bg-amber-700"
                         >
                             <Save className="size-4" />
                             Save Quotation

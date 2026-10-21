@@ -107,8 +107,7 @@ export function useAppearance(): UseAppearanceReturn {
     );
 
     const resolvedAppearance: ResolvedAppearance =
-        appearance === 'dark' ||
-        (appearance === 'system' && systemPrefersDark)
+        appearance === 'dark' || (appearance === 'system' && systemPrefersDark)
             ? 'dark'
             : 'light';
 

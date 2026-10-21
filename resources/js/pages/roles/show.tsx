@@ -26,7 +26,9 @@ export default function RoleShow({
             icon={ShieldCheck}
             backHref="/settings/roles"
             managePermission="roles.manage"
-            editHref={!role.is_system ? `/settings/roles/${role.id}/edit` : undefined}
+            editHref={
+                !role.is_system ? `/settings/roles/${role.id}/edit` : undefined
+            }
             deleteHref={
                 !role.is_system && role.users_count === 0
                     ? `/settings/roles/${role.id}`

@@ -72,7 +72,9 @@ export default function PropertiesIndex({ properties, stats }: Props) {
                             <Link href={create()}>
                                 <Plus className="size-4" />
                                 Add{' '}
-                                <span className="hidden sm:inline">property</span>
+                                <span className="hidden sm:inline">
+                                    property
+                                </span>
                             </Link>
                         </Button>
                     </Can>

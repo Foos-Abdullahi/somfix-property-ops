@@ -71,7 +71,9 @@ export default function WorkOrdersIndex({
                             <Link href={create()}>
                                 <Plus className="size-4" />
                                 Add{' '}
-                                <span className="hidden sm:inline">work order</span>
+                                <span className="hidden sm:inline">
+                                    work order
+                                </span>
                             </Link>
                         </Button>
                     </Can>

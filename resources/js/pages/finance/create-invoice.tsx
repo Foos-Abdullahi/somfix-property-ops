@@ -1,5 +1,13 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Save, Plus, Trash2, Building2, User, FileText } from 'lucide-react';
+import {
+    ArrowLeft,
+    Save,
+    Plus,
+    Trash2,
+    Building2,
+    User,
+    FileText,
+} from 'lucide-react';
 import { useEffect } from 'react';
 import type { FormEvent } from 'react';
 import InputError from '@/components/input-error';
@@ -103,7 +111,12 @@ export default function CreateInvoicePage({
         recipient_email: '',
         notes: '',
         _line_items: JSON.stringify([
-            { description: '', quantity: '1', unit_price: '0.00', amount: '0.00' },
+            {
+                description: '',
+                quantity: '1',
+                unit_price: '0.00',
+                amount: '0.00',
+            },
         ]),
         _recipient_address: '',
         _company_name: 'SOMFIX Property Management',
@@ -120,24 +133,46 @@ export default function CreateInvoicePage({
         const total = computeAmount(items);
         form.setData('_line_items', JSON.stringify(items));
         form.setData('amount', total);
-        form.setData('balance', (parseFloat(total) - parseFloat(form.data.paid_amount || '0')).toFixed(2));
+        form.setData(
+            'balance',
+            (
+                parseFloat(total) - parseFloat(form.data.paid_amount || '0')
+            ).toFixed(2),
+        );
     };
 
     const addLineItem = () => {
-        setLineItems([...lineItems, { description: '', quantity: '1', unit_price: '0.00', amount: '0.00' }]);
+        setLineItems([
+            ...lineItems,
+            {
+                description: '',
+                quantity: '1',
+                unit_price: '0.00',
+                amount: '0.00',
+            },
+        ]);
     };
 
     const removeLineItem = (index: number) => {
         setLineItems(lineItems.filter((_, i) => i !== index));
     };
 
-    const updateLineItem = (index: number, field: keyof LineItem, value: string) => {
+    const updateLineItem = (
+        index: number,
+        field: keyof LineItem,
+        value: string,
+    ) => {
         const updated = lineItems.map((item, i) => {
             if (i !== index) return item;
             const next = { ...item, [field]: value };
             if (field === 'quantity' || field === 'unit_price') {
-                const qty = parseFloat(field === 'quantity' ? value : item.quantity) || 0;
-                const price = parseFloat(field === 'unit_price' ? value : item.unit_price) || 0;
+                const qty =
+                    parseFloat(field === 'quantity' ? value : item.quantity) ||
+                    0;
+                const price =
+                    parseFloat(
+                        field === 'unit_price' ? value : item.unit_price,
+                    ) || 0;
                 next.amount = (qty * price).toFixed(2);
             }
             return next;
@@ -159,7 +194,10 @@ export default function CreateInvoicePage({
         // Build description from line items + notes
         const itemsText = lineItems
             .filter((i) => i.description)
-            .map((i) => `• ${i.description} (qty: ${i.quantity} × ${form.data.currency} ${i.unit_price})`)
+            .map(
+                (i) =>
+                    `• ${i.description} (qty: ${i.quantity} × ${form.data.currency} ${i.unit_price})`,
+            )
             .join('\n');
         const descriptionText = form.data.title || 'Invoice';
 
@@ -222,7 +260,7 @@ export default function CreateInvoicePage({
                         <div className="grid gap-5 p-5 md:grid-cols-2">
                             {/* Company side */}
                             <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                                     <Building2 className="size-3.5" />
                                     From (Your Company)
                                 </div>
@@ -230,7 +268,12 @@ export default function CreateInvoicePage({
                                     <Label>Company Name</Label>
                                     <Input
                                         value={form.data._company_name}
-                                        onChange={(e) => form.setData('_company_name', e.target.value)}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                '_company_name',
+                                                e.target.value,
+                                            )
+                                        }
                                         className={inputClass}
                                         placeholder="SOMFIX Property Management"
                                     />
@@ -239,7 +282,12 @@ export default function CreateInvoicePage({
                                     <Label>Company Address</Label>
                                     <Textarea
                                         value={form.data._company_address}
-                                        onChange={(e) => form.setData('_company_address', e.target.value)}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                '_company_address',
+                                                e.target.value,
+                                            )
+                                        }
                                         className="min-h-[72px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                         placeholder="123 Main Street, City, Country"
                                     />
@@ -249,7 +297,12 @@ export default function CreateInvoicePage({
                                         <Label>Phone</Label>
                                         <Input
                                             value={form.data._company_phone}
-                                            onChange={(e) => form.setData('_company_phone', e.target.value)}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    '_company_phone',
+                                                    e.target.value,
+                                                )
+                                            }
                                             className={inputClass}
                                             placeholder="+252 61 000 0000"
                                         />
@@ -259,7 +312,12 @@ export default function CreateInvoicePage({
                                         <Input
                                             type="email"
                                             value={form.data._company_email}
-                                            onChange={(e) => form.setData('_company_email', e.target.value)}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    '_company_email',
+                                                    e.target.value,
+                                                )
+                                            }
                                             className={inputClass}
                                             placeholder="info@somfix.com"
                                         />
@@ -269,7 +327,7 @@ export default function CreateInvoicePage({
 
                             {/* Recipient side */}
                             <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                                     <User className="size-3.5" />
                                     Bill To (Recipient)
                                 </div>
@@ -279,51 +337,82 @@ export default function CreateInvoicePage({
                                         value={form.data.tenant_id}
                                         onValueChange={(value) => {
                                             form.setData('tenant_id', value);
-                                            const tenant = tenants.find((t) => String(t.id) === value);
+                                            const tenant = tenants.find(
+                                                (t) => String(t.id) === value,
+                                            );
                                             if (tenant) {
-                                                form.setData('recipient_name', `${tenant.first_name} ${tenant.last_name}`);
+                                                form.setData(
+                                                    'recipient_name',
+                                                    `${tenant.first_name} ${tenant.last_name}`,
+                                                );
                                             }
                                         }}
                                     >
-                                        <SelectTrigger className={`w-full ${inputClass}`}>
+                                        <SelectTrigger
+                                            className={`w-full ${inputClass}`}
+                                        >
                                             <SelectValue placeholder="Select tenant" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {tenants.map((t) => (
-                                                <SelectItem key={t.id} value={String(t.id)}>
+                                                <SelectItem
+                                                    key={t.id}
+                                                    value={String(t.id)}
+                                                >
                                                     {t.first_name} {t.last_name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <InputError message={form.errors.tenant_id} />
+                                    <InputError
+                                        message={form.errors.tenant_id}
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Recipient Name</Label>
                                     <Input
                                         value={form.data.recipient_name}
-                                        onChange={(e) => form.setData('recipient_name', e.target.value)}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'recipient_name',
+                                                e.target.value,
+                                            )
+                                        }
                                         className={inputClass}
                                         placeholder="Full name"
                                     />
-                                    <InputError message={form.errors.recipient_name} />
+                                    <InputError
+                                        message={form.errors.recipient_name}
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Recipient Email</Label>
                                     <Input
                                         type="email"
                                         value={form.data.recipient_email}
-                                        onChange={(e) => form.setData('recipient_email', e.target.value)}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'recipient_email',
+                                                e.target.value,
+                                            )
+                                        }
                                         className={inputClass}
                                         placeholder="tenant@email.com"
                                     />
-                                    <InputError message={form.errors.recipient_email} />
+                                    <InputError
+                                        message={form.errors.recipient_email}
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Recipient Address</Label>
                                     <Textarea
                                         value={form.data._recipient_address}
-                                        onChange={(e) => form.setData('_recipient_address', e.target.value)}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                '_recipient_address',
+                                                e.target.value,
+                                            )
+                                        }
                                         className="min-h-[72px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                         placeholder="Unit address or mailing address"
                                     />
@@ -342,16 +431,25 @@ export default function CreateInvoicePage({
                                 <Label>Invoice Number</Label>
                                 <Input
                                     value={form.data.invoice_number}
-                                    onChange={(e) => form.setData('invoice_number', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'invoice_number',
+                                            e.target.value,
+                                        )
+                                    }
                                     className={inputClass}
                                 />
-                                <InputError message={form.errors.invoice_number} />
+                                <InputError
+                                    message={form.errors.invoice_number}
+                                />
                             </div>
                             <div className="space-y-2">
                                 <Label>Invoice Title</Label>
                                 <Input
                                     value={form.data.title}
-                                    onChange={(e) => form.setData('title', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('title', e.target.value)
+                                    }
                                     className={inputClass}
                                     placeholder="e.g. Monthly Rent — October 2026"
                                 />
@@ -361,9 +459,13 @@ export default function CreateInvoicePage({
                                 <Label>Currency</Label>
                                 <Select
                                     value={form.data.currency}
-                                    onValueChange={(v) => form.setData('currency', v as any)}
+                                    onValueChange={(v) =>
+                                        form.setData('currency', v as any)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -377,7 +479,9 @@ export default function CreateInvoicePage({
                                 <Label>Issue Date</Label>
                                 <Input
                                     type="date"
-                                    defaultValue={new Date().toISOString().split('T')[0]}
+                                    defaultValue={
+                                        new Date().toISOString().split('T')[0]
+                                    }
                                     className={inputClass}
                                     readOnly
                                 />
@@ -387,7 +491,9 @@ export default function CreateInvoicePage({
                                 <Input
                                     type="date"
                                     value={form.data.due_date}
-                                    onChange={(e) => form.setData('due_date', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('due_date', e.target.value)
+                                    }
                                     className={inputClass}
                                 />
                                 <InputError message={form.errors.due_date} />
@@ -396,15 +502,26 @@ export default function CreateInvoicePage({
                                 <Label>Status</Label>
                                 <Select
                                     value={form.data.status}
-                                    onValueChange={(v) => form.setData('status', v as any)}
+                                    onValueChange={(v) =>
+                                        form.setData('status', v as any)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {['draft', 'sent', 'paid', 'overdue', 'cancelled'].map((s) => (
+                                        {[
+                                            'draft',
+                                            'sent',
+                                            'paid',
+                                            'overdue',
+                                            'cancelled',
+                                        ].map((s) => (
                                             <SelectItem key={s} value={s}>
-                                                {s.charAt(0).toUpperCase() + s.slice(1)}
+                                                {s.charAt(0).toUpperCase() +
+                                                    s.slice(1)}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -415,14 +532,21 @@ export default function CreateInvoicePage({
                                 <Label>Property</Label>
                                 <Select
                                     value={form.data.property_id}
-                                    onValueChange={(v) => form.setData('property_id', v)}
+                                    onValueChange={(v) =>
+                                        form.setData('property_id', v)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue placeholder="Select property" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {properties.map((p) => (
-                                            <SelectItem key={p.id} value={String(p.id)}>
+                                            <SelectItem
+                                                key={p.id}
+                                                value={String(p.id)}
+                                            >
                                                 {p.name}
                                             </SelectItem>
                                         ))}
@@ -434,14 +558,21 @@ export default function CreateInvoicePage({
                                 <Label>Unit</Label>
                                 <Select
                                     value={form.data.unit_id}
-                                    onValueChange={(v) => form.setData('unit_id', v)}
+                                    onValueChange={(v) =>
+                                        form.setData('unit_id', v)
+                                    }
                                 >
-                                    <SelectTrigger className={`w-full ${inputClass}`}>
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
                                         <SelectValue placeholder="Select unit" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {units.map((u) => (
-                                            <SelectItem key={u.id} value={String(u.id)}>
+                                            <SelectItem
+                                                key={u.id}
+                                                value={String(u.id)}
+                                            >
                                                 {u.unit_number}
                                             </SelectItem>
                                         ))}
@@ -453,7 +584,12 @@ export default function CreateInvoicePage({
                                 <Label>Payment Terms</Label>
                                 <Input
                                     value={form.data._payment_terms}
-                                    onChange={(e) => form.setData('_payment_terms', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            '_payment_terms',
+                                            e.target.value,
+                                        )
+                                    }
                                     className={inputClass}
                                     placeholder="Net 30"
                                 />
@@ -463,31 +599,53 @@ export default function CreateInvoicePage({
 
                     {/* Line Items */}
                     <section className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
-                        <div className="border-b border-border/70 bg-secondary/35 px-5 py-4 flex items-center justify-between">
+                        <div className="flex items-center justify-between border-b border-border/70 bg-secondary/35 px-5 py-4">
                             <div>
                                 <h2 className="font-semibold">Line Items</h2>
-                                <p className="mt-1 text-xs text-muted-foreground">Add services, rent charges, or fees.</p>
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                    Add services, rent charges, or fees.
+                                </p>
                             </div>
-                            <Button type="button" variant="outline" size="sm" onClick={addLineItem}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={addLineItem}
+                            >
                                 <Plus className="size-4" />
                                 Add Item
                             </Button>
                         </div>
-                        <div className="p-5 space-y-3">
+                        <div className="space-y-3 p-5">
                             {/* Header */}
-                            <div className="hidden md:grid md:grid-cols-12 gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground pb-2 border-b border-border/50">
+                            <div className="hidden gap-3 border-b border-border/50 pb-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase md:grid md:grid-cols-12">
                                 <span className="col-span-6">Description</span>
-                                <span className="col-span-2 text-right">Qty</span>
-                                <span className="col-span-2 text-right">Unit Price</span>
-                                <span className="col-span-1 text-right">Amount</span>
+                                <span className="col-span-2 text-right">
+                                    Qty
+                                </span>
+                                <span className="col-span-2 text-right">
+                                    Unit Price
+                                </span>
+                                <span className="col-span-1 text-right">
+                                    Amount
+                                </span>
                                 <span className="col-span-1" />
                             </div>
                             {lineItems.map((item, i) => (
-                                <div key={i} className="grid md:grid-cols-12 gap-3 items-center">
+                                <div
+                                    key={i}
+                                    className="grid items-center gap-3 md:grid-cols-12"
+                                >
                                     <div className="md:col-span-6">
                                         <Input
                                             value={item.description}
-                                            onChange={(e) => updateLineItem(i, 'description', e.target.value)}
+                                            onChange={(e) =>
+                                                updateLineItem(
+                                                    i,
+                                                    'description',
+                                                    e.target.value,
+                                                )
+                                            }
                                             className={inputClass}
                                             placeholder="Service or item description"
                                         />
@@ -498,7 +656,13 @@ export default function CreateInvoicePage({
                                             min="0"
                                             step="1"
                                             value={item.quantity}
-                                            onChange={(e) => updateLineItem(i, 'quantity', e.target.value)}
+                                            onChange={(e) =>
+                                                updateLineItem(
+                                                    i,
+                                                    'quantity',
+                                                    e.target.value,
+                                                )
+                                            }
                                             className={`${inputClass} text-right`}
                                             placeholder="1"
                                         />
@@ -509,17 +673,26 @@ export default function CreateInvoicePage({
                                             min="0"
                                             step="0.01"
                                             value={item.unit_price}
-                                            onChange={(e) => updateLineItem(i, 'unit_price', e.target.value)}
+                                            onChange={(e) =>
+                                                updateLineItem(
+                                                    i,
+                                                    'unit_price',
+                                                    e.target.value,
+                                                )
+                                            }
                                             className={`${inputClass} text-right`}
                                             placeholder="0.00"
                                         />
                                     </div>
-                                    <div className="md:col-span-1 flex items-center justify-end">
+                                    <div className="flex items-center justify-end md:col-span-1">
                                         <span className="text-sm font-semibold tabular-nums">
-                                            {form.data.currency} {parseFloat(item.amount || '0').toFixed(2)}
+                                            {form.data.currency}{' '}
+                                            {parseFloat(
+                                                item.amount || '0',
+                                            ).toFixed(2)}
                                         </span>
                                     </div>
-                                    <div className="md:col-span-1 flex justify-end">
+                                    <div className="flex justify-end md:col-span-1">
                                         <Button
                                             type="button"
                                             variant="ghost"
@@ -535,30 +708,45 @@ export default function CreateInvoicePage({
                             ))}
 
                             {/* Totals */}
-                            <div className="border-t border-border/50 pt-4 mt-4">
+                            <div className="mt-4 border-t border-border/50 pt-4">
                                 <div className="flex justify-end">
                                     <div className="w-full max-w-xs space-y-2">
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Subtotal</span>
+                                            <span className="text-muted-foreground">
+                                                Subtotal
+                                            </span>
                                             <span className="font-medium tabular-nums">
-                                                {form.data.currency} {parseFloat(form.data.amount || '0').toFixed(2)}
+                                                {form.data.currency}{' '}
+                                                {parseFloat(
+                                                    form.data.amount || '0',
+                                                ).toFixed(2)}
                                             </span>
                                         </div>
-                                        <div className="flex items-center justify-between text-sm gap-3">
-                                            <span className="text-muted-foreground shrink-0">Amount Paid</span>
+                                        <div className="flex items-center justify-between gap-3 text-sm">
+                                            <span className="shrink-0 text-muted-foreground">
+                                                Amount Paid
+                                            </span>
                                             <Input
                                                 type="number"
                                                 min="0"
                                                 step="0.01"
                                                 value={form.data.paid_amount}
-                                                onChange={(e) => form.setData('paid_amount', e.target.value)}
-                                                className="h-8 rounded-lg text-right border-border/70 bg-background shadow-none focus-visible:ring-primary/20 w-32"
+                                                onChange={(e) =>
+                                                    form.setData(
+                                                        'paid_amount',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="h-8 w-32 rounded-lg border-border/70 bg-background text-right shadow-none focus-visible:ring-primary/20"
                                             />
                                         </div>
-                                        <div className="flex justify-between text-sm font-semibold border-t border-border/50 pt-2">
+                                        <div className="flex justify-between border-t border-border/50 pt-2 text-sm font-semibold">
                                             <span>Balance Due</span>
-                                            <span className={`tabular-nums ${parseFloat(balance) > 0 ? 'text-destructive' : 'text-green-600'}`}>
-                                                {form.data.currency} {parseFloat(balance).toFixed(2)}
+                                            <span
+                                                className={`tabular-nums ${parseFloat(balance) > 0 ? 'text-destructive' : 'text-green-600'}`}
+                                            >
+                                                {form.data.currency}{' '}
+                                                {parseFloat(balance).toFixed(2)}
                                             </span>
                                         </div>
                                     </div>
@@ -570,14 +758,21 @@ export default function CreateInvoicePage({
                     {/* Payment & Notes */}
                     <section className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
                         <div className="border-b border-border/70 bg-secondary/35 px-5 py-4">
-                            <h2 className="font-semibold">Additional Information</h2>
+                            <h2 className="font-semibold">
+                                Additional Information
+                            </h2>
                         </div>
                         <div className="grid gap-5 p-5 md:grid-cols-2">
                             <div className="space-y-2">
                                 <Label>Bank / Payment Details</Label>
                                 <Textarea
                                     value={form.data._bank_details}
-                                    onChange={(e) => form.setData('_bank_details', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            '_bank_details',
+                                            e.target.value,
+                                        )
+                                    }
                                     className="min-h-[80px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                     placeholder="Account name, number, or mobile money details"
                                 />
@@ -586,7 +781,9 @@ export default function CreateInvoicePage({
                                 <Label>Notes</Label>
                                 <Textarea
                                     value={form.data.notes}
-                                    onChange={(e) => form.setData('notes', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('notes', e.target.value)
+                                    }
                                     className="min-h-[80px] rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                                     placeholder="Thank you for your business…"
                                 />

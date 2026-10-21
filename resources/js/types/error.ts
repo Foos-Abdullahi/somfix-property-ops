@@ -18,20 +18,9 @@ import type { LucideIcon } from 'lucide-react';
  * - toast notifications
  * - auth redirects
  */
-export type ErrorStatusCode =
-    | 403
-    | 404
-    | 429
-    | 500
-    | 502
-    | 503
-    | 504;
+export type ErrorStatusCode = 403 | 404 | 429 | 500 | 502 | 503 | 504;
 
-export type ErrorColor =
-    | 'blue'
-    | 'purple'
-    | 'orange'
-    | 'red';
+export type ErrorColor = 'blue' | 'purple' | 'orange' | 'red';
 
 export interface ErrorConfig {
     title: string;

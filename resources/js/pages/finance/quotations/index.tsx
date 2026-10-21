@@ -60,7 +60,9 @@ export default function QuotationsIndex({
     };
 }) {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [quoteToDelete, setQuoteToDelete] = useState<QuotationRow | null>(null);
+    const [quoteToDelete, setQuoteToDelete] = useState<QuotationRow | null>(
+        null,
+    );
     const [isDeleting, setIsDeleting] = useState(false);
     const [isConverting, setIsConverting] = useState<number | null>(null);
 
@@ -94,7 +96,8 @@ export default function QuotationsIndex({
             {},
             {
                 onFinish: () => setIsConverting(null),
-                onError: () => toast.error('Failed to convert quotation to invoice'),
+                onError: () =>
+                    toast.error('Failed to convert quotation to invoice'),
             },
         );
     };
@@ -112,7 +115,7 @@ export default function QuotationsIndex({
                         >
                             {row.original.invoice_number}
                         </Link>
-                        <p className="text-xs text-muted-foreground truncate max-w-[200px]">
+                        <p className="max-w-[200px] truncate text-xs text-muted-foreground">
                             {row.original.title}
                         </p>
                     </div>
@@ -125,13 +128,15 @@ export default function QuotationsIndex({
                     const tenant = row.original.tenant;
                     const recipient =
                         row.original.recipient_name ||
-                        (tenant ? `${tenant.first_name} ${tenant.last_name}` : '—');
+                        (tenant
+                            ? `${tenant.first_name} ${tenant.last_name}`
+                            : '—');
                     const unit = row.original.unit?.unit_number;
                     const property = row.original.property?.name;
 
                     return (
                         <div>
-                            <p className="font-medium text-sm">{recipient}</p>
+                            <p className="text-sm font-medium">{recipient}</p>
                             {(unit || property) && (
                                 <p className="text-xs text-muted-foreground">
                                     {[unit ? `Unit ${unit}` : null, property]
@@ -148,7 +153,8 @@ export default function QuotationsIndex({
                 header: 'Quoted Amount',
                 cell: ({ row }) => (
                     <span className="font-semibold tabular-nums">
-                        {row.original.currency} {Number(row.original.amount).toFixed(2)}
+                        {row.original.currency}{' '}
+                        {Number(row.original.amount).toFixed(2)}
                     </span>
                 ),
             },
@@ -157,7 +163,8 @@ export default function QuotationsIndex({
                 header: 'Valid Until',
                 cell: ({ row }) => {
                     const dateVal = row.original.due_date;
-                    if (!dateVal) return <span className="text-muted-foreground">—</span>;
+                    if (!dateVal)
+                        return <span className="text-muted-foreground">—</span>;
                     return (
                         <span className="text-xs">
                             {new Date(dateVal).toLocaleDateString('en-US', {
@@ -175,7 +182,10 @@ export default function QuotationsIndex({
                 cell: ({ row }) => (
                     <Badge
                         variant="outline"
-                        className={statusClass[row.original.status] ?? badgeToneClasses.neutral}
+                        className={
+                            statusClass[row.original.status] ??
+                            badgeToneClasses.neutral
+                        }
                     >
                         {row.original.status.toUpperCase()}
                     </Badge>
@@ -186,12 +196,24 @@ export default function QuotationsIndex({
                 header: 'Actions',
                 cell: ({ row }) => (
                     <div className="flex items-center gap-1">
-                        <Button asChild size="icon" variant="ghost" title="View Quotation">
-                            <Link href={`/finance/quotations/${row.original.id}`}>
+                        <Button
+                            asChild
+                            size="icon"
+                            variant="ghost"
+                            title="View Quotation"
+                        >
+                            <Link
+                                href={`/finance/quotations/${row.original.id}`}
+                            >
                                 <Eye className="size-4 text-[#FF8500]" />
                             </Link>
                         </Button>
-                        <Button asChild size="icon" variant="ghost" title="Print Quotation">
+                        <Button
+                            asChild
+                            size="icon"
+                            variant="ghost"
+                            title="Print Quotation"
+                        >
                             <Link href={`/finance/${row.original.id}/print`}>
                                 <Printer className="size-4 text-primary" />
                             </Link>
@@ -207,8 +229,15 @@ export default function QuotationsIndex({
                             >
                                 <ArrowRightLeft className="size-4" />
                             </Button>
-                            <Button asChild size="icon" variant="ghost" title="Edit Quotation">
-                                <Link href={`/finance/quotations/${row.original.id}/edit`}>
+                            <Button
+                                asChild
+                                size="icon"
+                                variant="ghost"
+                                title="Edit Quotation"
+                            >
+                                <Link
+                                    href={`/finance/quotations/${row.original.id}/edit`}
+                                >
                                     <Edit className="size-4 text-[#004317] dark:text-green-300" />
                                 </Link>
                             </Button>
@@ -269,13 +298,20 @@ export default function QuotationsIndex({
             <div className="p-4 md:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <h1 className="page-title-enter text-lg font-semibold">Quotations</h1>
+                        <h1 className="page-title-enter text-lg font-semibold">
+                            Quotations
+                        </h1>
                         <p className="page-description-enter text-xs text-muted-foreground">
-                            Create, send, and convert price estimates and proposals for property services.
+                            Create, send, and convert price estimates and
+                            proposals for property services.
                         </p>
                     </div>
                     <Can permission="finance.manage">
-                        <Button asChild size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+                        <Button
+                            asChild
+                            size="sm"
+                            className="bg-amber-600 text-white hover:bg-amber-700"
+                        >
                             <Link href="/finance/quotations/create">
                                 <Plus className="size-4" />
                                 Create Quotation
@@ -303,8 +339,8 @@ export default function QuotationsIndex({
                 description={
                     <>
                         Are you sure you want to delete quotation{' '}
-                        <strong>{quoteToDelete?.invoice_number}</strong>? This action cannot be
-                        undone.
+                        <strong>{quoteToDelete?.invoice_number}</strong>? This
+                        action cannot be undone.
                     </>
                 }
                 processing={isDeleting}

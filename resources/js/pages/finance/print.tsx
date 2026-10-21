@@ -27,7 +27,13 @@ type Finance = {
     created_at: string;
     property: { id: number; name: string } | null;
     unit: { id: number; unit_number: string } | null;
-    tenant: { id: number; first_name: string; last_name: string; phone?: string; email?: string } | null;
+    tenant: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        phone?: string;
+        email?: string;
+    } | null;
     recipient_name: string | null;
     recipient_email: string | null;
     notes: string | null;
@@ -44,8 +50,14 @@ type PrintPageProps = {
     };
 };
 
-function parseLineItems(description: string, defaultAmount: string | number, currency: string): LineItem[] {
-    const lines = (description || '').split('\n').filter((l) => l.trim().startsWith('•'));
+function parseLineItems(
+    description: string,
+    defaultAmount: string | number,
+    currency: string,
+): LineItem[] {
+    const lines = (description || '')
+        .split('\n')
+        .filter((l) => l.trim().startsWith('•'));
     if (lines.length === 0) {
         return [
             {
@@ -57,7 +69,9 @@ function parseLineItems(description: string, defaultAmount: string | number, cur
         ];
     }
     return lines.map((line) => {
-        const match = line.match(/•\s*(.+?)\s*\(qty:\s*([\d.]+)\s*×\s*[A-Z]+\s*([\d.]+)\)/);
+        const match = line.match(
+            /•\s*(.+?)\s*\(qty:\s*([\d.]+)\s*×\s*[A-Z]+\s*([\d.]+)\)/,
+        );
         if (match) {
             const [, desc, qty, price] = match;
             return {
@@ -91,9 +105,16 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                   description: it.description,
                   quantity: it.quantity,
                   unit_price: it.unit_price,
-                  total: it.amount ?? it.total ?? (Number(it.quantity) * Number(it.unit_price)).toFixed(2),
+                  total:
+                      it.amount ??
+                      it.total ??
+                      (Number(it.quantity) * Number(it.unit_price)).toFixed(2),
               }))
-            : parseLineItems(finance.description, finance.amount, finance.currency);
+            : parseLineItems(
+                  finance.description,
+                  finance.amount,
+                  finance.currency,
+              );
 
     const handlePrint = () => {
         window.print();
@@ -139,7 +160,9 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
 
     const recipient =
         finance.recipient_name ||
-        (finance.tenant ? `${finance.tenant.first_name} ${finance.tenant.last_name}` : '—');
+        (finance.tenant
+            ? `${finance.tenant.first_name} ${finance.tenant.last_name}`
+            : '—');
 
     const backUrl = isInvoice
         ? `/finance/invoices/${finance.id}`
@@ -151,25 +174,30 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
         <>
             <Head title={`${docLabel} - ${finance.invoice_number}`} />
 
-            <div className="min-h-screen bg-[#FBF9F4] dark:bg-background flex flex-col items-center justify-center p-4 md:p-8 animate-in fade-in slide-in-from-bottom-3 duration-300">
+            <div className="flex min-h-screen animate-in flex-col items-center justify-center bg-[#FBF9F4] p-4 duration-300 fade-in slide-in-from-bottom-3 md:p-8 dark:bg-background">
                 {/* Top Action Bar */}
                 <div className="no-print mb-4 flex w-full max-w-md items-center justify-between">
                     <Button
                         asChild
                         variant="outline"
                         size="sm"
-                        className="gap-1.5 text-xs shadow-xs bg-white dark:bg-card hover:bg-muted"
+                        className="gap-1.5 bg-white text-xs shadow-xs hover:bg-muted dark:bg-card"
                     >
                         <Link href={backUrl}>
                             <ArrowLeft className="h-3.5 w-3.5" />
-                            Back to {isInvoice ? 'Invoice' : isQuote ? 'Quotation' : 'Details'}
+                            Back to{' '}
+                            {isInvoice
+                                ? 'Invoice'
+                                : isQuote
+                                  ? 'Quotation'
+                                  : 'Details'}
                         </Link>
                     </Button>
                     <div className="flex items-center gap-2">
                         <Button
                             size="sm"
                             onClick={handlePrint}
-                            className="gap-1.5 text-xs shadow-xs justify-center bg-[#1f1610] hover:bg-[#2d2117] text-white dark:bg-primary dark:hover:bg-primary/90"
+                            className="justify-center gap-1.5 bg-[#1f1610] text-xs text-white shadow-xs hover:bg-[#2d2117] dark:bg-primary dark:hover:bg-primary/90"
                         >
                             <Printer className="h-3.5 w-3.5" />
                             Print {isInvoice ? 'Invoice' : 'Quotation'}
@@ -178,21 +206,21 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                 </div>
 
                 {/* Receipt / Invoice Card */}
-                <div className="mx-auto w-full max-w-md bg-white dark:bg-card rounded-2xl border border-border/80 p-6 md:p-8 shadow-sm h-fit text-foreground">
+                <div className="mx-auto h-fit w-full max-w-md rounded-2xl border border-border/80 bg-white p-6 text-foreground shadow-sm md:p-8 dark:bg-card">
                     {/* Header - POS / Receipt Style */}
                     <div className="mb-4 text-center">
-                        <h1 className="text-xl font-bold text-foreground tracking-tight">
+                        <h1 className="text-xl font-bold tracking-tight text-foreground">
                             {companyName}
                         </h1>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="mt-1 text-xs text-muted-foreground">
                             {companyAddress} · {companyPhone}
                         </p>
                         {companyEmail && (
-                            <p className="text-xs text-muted-foreground mt-0.5">
+                            <p className="mt-0.5 text-xs text-muted-foreground">
                                 {companyEmail}
                             </p>
                         )}
-                        <p className="text-xs text-muted-foreground mt-1 font-medium">
+                        <p className="mt-1 text-xs font-medium text-muted-foreground">
                             {formatDate(finance.created_at)}
                         </p>
                         <div className="mt-3">
@@ -214,7 +242,11 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                     <div className="my-3 space-y-1.5 text-sm">
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">
-                                {isInvoice ? 'Invoice #' : isQuote ? 'Quote #' : 'Record #'}
+                                {isInvoice
+                                    ? 'Invoice #'
+                                    : isQuote
+                                      ? 'Quote #'
+                                      : 'Record #'}
                             </span>
                             <span className="font-semibold text-foreground">
                                 {finance.invoice_number}
@@ -223,8 +255,10 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
 
                         {finance.title && (
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Title</span>
-                                <span className="font-medium text-foreground text-right max-w-[220px] truncate">
+                                <span className="text-muted-foreground">
+                                    Title
+                                </span>
+                                <span className="max-w-[220px] truncate text-right font-medium text-foreground">
                                     {finance.title}
                                 </span>
                             </div>
@@ -234,18 +268,22 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                             <span className="text-muted-foreground">
                                 {isInvoice ? 'Client / Tenant' : 'Prepared For'}
                             </span>
-                            <span className="font-semibold text-foreground text-right">
+                            <span className="text-right font-semibold text-foreground">
                                 {recipient}
                             </span>
                         </div>
 
                         {(finance.property || finance.unit) && (
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Property / Unit</span>
-                                <span className="font-medium text-foreground text-right">
+                                <span className="text-muted-foreground">
+                                    Property / Unit
+                                </span>
+                                <span className="text-right font-medium text-foreground">
                                     {[
                                         finance.property?.name,
-                                        finance.unit ? `Unit ${finance.unit.unit_number}` : null,
+                                        finance.unit
+                                            ? `Unit ${finance.unit.unit_number}`
+                                            : null,
                                     ]
                                         .filter(Boolean)
                                         .join(' · ')}
@@ -265,7 +303,9 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                         )}
 
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">Status</span>
+                            <span className="text-muted-foreground">
+                                Status
+                            </span>
                             <span className="font-medium text-foreground capitalize">
                                 {finance.status}
                             </span>
@@ -282,31 +322,38 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                                     <th className="py-2 text-left text-xs font-semibold text-muted-foreground uppercase">
                                         Item
                                     </th>
-                                    <th className="py-2 text-center text-xs font-semibold text-muted-foreground uppercase w-12">
+                                    <th className="w-12 py-2 text-center text-xs font-semibold text-muted-foreground uppercase">
                                         Qty
                                     </th>
-                                    <th className="py-2 text-right text-xs font-semibold text-muted-foreground uppercase w-20">
+                                    <th className="w-20 py-2 text-right text-xs font-semibold text-muted-foreground uppercase">
                                         Price
                                     </th>
-                                    <th className="py-2 text-right text-xs font-semibold text-muted-foreground uppercase w-20">
+                                    <th className="w-20 py-2 text-right text-xs font-semibold text-muted-foreground uppercase">
                                         Total
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {items.map((item, idx) => (
-                                    <tr key={idx} className="border-b border-border/50">
-                                        <td className="py-2 text-foreground font-medium">
+                                    <tr
+                                        key={idx}
+                                        className="border-b border-border/50"
+                                    >
+                                        <td className="py-2 font-medium text-foreground">
                                             {item.description}
                                         </td>
-                                        <td className="py-2 text-center text-foreground font-mono">
+                                        <td className="py-2 text-center font-mono text-foreground">
                                             {item.quantity}
                                         </td>
-                                        <td className="py-2 text-right text-muted-foreground font-mono">
+                                        <td className="py-2 text-right font-mono text-muted-foreground">
                                             {formatMoney(item.unit_price)}
                                         </td>
-                                        <td className="py-2 text-right font-semibold font-mono text-foreground">
-                                            {formatMoney(item.total ?? (Number(item.quantity) * Number(item.unit_price)))}
+                                        <td className="py-2 text-right font-mono font-semibold text-foreground">
+                                            {formatMoney(
+                                                item.total ??
+                                                    Number(item.quantity) *
+                                                        Number(item.unit_price),
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
@@ -328,25 +375,29 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                     <div className="mt-4 space-y-1.5 text-sm">
                         <div className="flex justify-between text-muted-foreground">
                             <span>Subtotal</span>
-                            <span className="font-mono">{formatMoney(grandTotal)}</span>
+                            <span className="font-mono">
+                                {formatMoney(grandTotal)}
+                            </span>
                         </div>
                         <Separator className="my-2" />
                         <div className="flex justify-between pt-0.5 text-base font-bold text-foreground">
                             <span>Total</span>
-                            <span className="font-mono">{formatMoney(grandTotal)}</span>
+                            <span className="font-mono">
+                                {formatMoney(grandTotal)}
+                            </span>
                         </div>
                         {isInvoice && (
                             <>
                                 <div className="flex justify-between text-muted-foreground">
                                     <span>Paid</span>
-                                    <span className="font-semibold font-mono text-emerald-600 dark:text-emerald-400">
+                                    <span className="font-mono font-semibold text-emerald-600 dark:text-emerald-400">
                                         {formatMoney(totalPaid)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between text-muted-foreground">
                                     <span>Balance Due</span>
                                     <span
-                                        className={`font-semibold font-mono ${
+                                        className={`font-mono font-semibold ${
                                             balanceDue > 0
                                                 ? 'text-rose-600 dark:text-rose-400'
                                                 : 'text-emerald-600 dark:text-emerald-400'
@@ -366,19 +417,29 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                             </h2>
                             <div className="space-y-1.5 text-xs">
                                 <div className="flex justify-between gap-3">
-                                    <span className="text-muted-foreground">Merchant Number</span>
-                                    <span className="font-semibold font-mono">65 21 09</span>
+                                    <span className="text-muted-foreground">
+                                        Merchant Number
+                                    </span>
+                                    <span className="font-mono font-semibold">
+                                        65 21 09
+                                    </span>
                                 </div>
                                 <div className="flex justify-between gap-3">
-                                    <span className="text-muted-foreground">Payment Code</span>
-                                    <span className="font-semibold font-mono whitespace-nowrap">{'*789*652109*$#'}</span>
+                                    <span className="text-muted-foreground">
+                                        Payment Code
+                                    </span>
+                                    <span className="font-mono font-semibold whitespace-nowrap">
+                                        {'*789*652109*$#'}
+                                    </span>
                                 </div>
                                 <p className="text-muted-foreground">
                                     Replace $ with the amount you wish to pay.
-                                    {isQuote && ' Pay only after the quotation is accepted and payment is agreed.'}
+                                    {isQuote &&
+                                        ' Pay only after the quotation is accepted and payment is agreed.'}
                                 </p>
                                 <p className="text-muted-foreground">
-                                    Use {finance.invoice_number} as your payment reference when available.
+                                    Use {finance.invoice_number} as your payment
+                                    reference when available.
                                 </p>
                             </div>
                         </div>
@@ -390,7 +451,7 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                             <p className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
                                 {isQuote ? 'Terms & Notes' : 'Payment Notes'}
                             </p>
-                            <p className="text-xs text-muted-foreground whitespace-pre-wrap">
+                            <p className="text-xs whitespace-pre-wrap text-muted-foreground">
                                 {finance.notes}
                             </p>
                         </div>
@@ -402,9 +463,9 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
                     </div>
 
                     {/* Print Button inside card */}
-                    <div className="no-print mt-4 border-t border-border pt-4 flex items-center justify-center">
+                    <div className="no-print mt-4 flex items-center justify-center border-t border-border pt-4">
                         <Button
-                            className="w-full gap-2 shadow-xs justify-center bg-[#1f1610] hover:bg-[#2d2117] text-white dark:bg-primary dark:hover:bg-primary/90"
+                            className="w-full justify-center gap-2 bg-[#1f1610] text-white shadow-xs hover:bg-[#2d2117] dark:bg-primary dark:hover:bg-primary/90"
                             onClick={handlePrint}
                         >
                             <Printer className="h-4 w-4" />

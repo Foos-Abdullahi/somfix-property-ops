@@ -68,7 +68,8 @@ export default function LeasesIndex({ leases, stats }: Props) {
                         <Button asChild size="sm">
                             <Link href={create()}>
                                 <Plus className="size-4" />
-                                Add <span className="hidden sm:inline">lease</span>
+                                Add{' '}
+                                <span className="hidden sm:inline">lease</span>
                             </Link>
                         </Button>
                     </Can>

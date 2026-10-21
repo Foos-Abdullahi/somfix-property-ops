@@ -62,7 +62,9 @@ export default function ServiceTeamIndex({
                                 <Link href={create()}>
                                     <Plus className="size-4" />
                                     Add{' '}
-                                    <span className="hidden sm:inline">member</span>
+                                    <span className="hidden sm:inline">
+                                        member
+                                    </span>
                                 </Link>
                             </Button>
                         </Can>

@@ -247,7 +247,9 @@ export default function ErrorPage({
 
                                 {/* Description */}
                                 <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-                                    {message && message !== 'Forbidden' && message !== 'Unauthorized'
+                                    {message &&
+                                    message !== 'Forbidden' &&
+                                    message !== 'Unauthorized'
                                         ? message
                                         : config.description}
                                 </p>
@@ -260,17 +262,19 @@ export default function ErrorPage({
                                         Suggested actions
                                     </p>
                                     <ul className="mt-2.5 space-y-2 text-sm text-foreground/90">
-                                        {config.suggestions.map((suggestion) => (
-                                            <li
-                                                key={suggestion}
-                                                className="flex items-start gap-2"
-                                            >
-                                                <span
-                                                    className={`mt-1.5 size-1.5 shrink-0 rounded-full ${colors.text} bg-current`}
-                                                />
-                                                <span>{suggestion}</span>
-                                            </li>
-                                        ))}
+                                        {config.suggestions.map(
+                                            (suggestion) => (
+                                                <li
+                                                    key={suggestion}
+                                                    className="flex items-start gap-2"
+                                                >
+                                                    <span
+                                                        className={`mt-1.5 size-1.5 shrink-0 rounded-full ${colors.text} bg-current`}
+                                                    />
+                                                    <span>{suggestion}</span>
+                                                </li>
+                                            ),
+                                        )}
                                     </ul>
                                 </div>
                             )}
@@ -279,7 +283,7 @@ export default function ErrorPage({
                             {config.autoRetry && countdown !== null && (
                                 <p className="text-center text-xs text-muted-foreground">
                                     Auto-retrying in{' '}
-                                    <span className="font-semibold tabular-nums text-foreground">
+                                    <span className="font-semibold text-foreground tabular-nums">
                                         {countdown}s
                                     </span>
                                     …

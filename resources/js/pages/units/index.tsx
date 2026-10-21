@@ -67,7 +67,8 @@ export default function UnitsIndex({
                         <Button asChild size="sm">
                             <Link href={create()}>
                                 <Plus className="size-4" />
-                                Add <span className="hidden sm:inline">unit</span>
+                                Add{' '}
+                                <span className="hidden sm:inline">unit</span>
                             </Link>
                         </Button>
                     </Can>

@@ -71,7 +71,9 @@ export default function TenantsIndex({
                                 <Link href={create()}>
                                     <Plus className="size-4" />
                                     Add{' '}
-                                    <span className="hidden sm:inline">tenant</span>
+                                    <span className="hidden sm:inline">
+                                        tenant
+                                    </span>
                                 </Link>
                             </Button>
                         </Can>

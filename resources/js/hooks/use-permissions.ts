@@ -15,11 +15,16 @@ export function usePermissions() {
     }>().props;
 
     const permissions = auth?.permissions ?? [];
-    const roleSlug = (auth?.user as { role?: { slug?: string } } | undefined)?.role?.slug ?? '';
+    const roleSlug =
+        (auth?.user as { role?: { slug?: string } } | undefined)?.role?.slug ??
+        '';
     const isViewer = roleSlug === 'viewer';
 
     const can = (permission: string) => {
-        if (isViewer && (permission.endsWith('.manage') || permission.includes('.manage'))) {
+        if (
+            isViewer &&
+            (permission.endsWith('.manage') || permission.includes('.manage'))
+        ) {
             return false;
         }
         return permissions.includes(permission);

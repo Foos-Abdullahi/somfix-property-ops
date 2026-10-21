@@ -1,5 +1,239 @@
-import { Head, Link, router } from '@inertiajs/react'; import type { ColumnDef } from '@tanstack/react-table'; import { CalendarDays, Edit, Eye, Plus, Target, Trash2, UserRound } from 'lucide-react'; import { useMemo, useState } from 'react'; import { toast } from 'sonner'; import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog'; import { StatsCard, type StatSection } from '@/components/tools/StatsCard'; import { DataTable } from '@/components/tools/table/main-table'; import { Badge, badgeToneClasses } from '@/components/ui/badge'; import { Button } from '@/components/ui/button';
+import { Head, Link, router } from '@inertiajs/react';
+import type { ColumnDef } from '@tanstack/react-table';
+import {
+    CalendarDays,
+    Edit,
+    Eye,
+    Plus,
+    Target,
+    Trash2,
+    UserRound,
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
+import { DataTable } from '@/components/tools/table/main-table';
+import { Badge, badgeToneClasses } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Can } from '@/components/can';
 import { usePermissions } from '@/hooks/use-permissions';
-type Lead={id:number;title:string;service_category:string;customer:{name:string}|null;source:string;estimated_value:string|null;status:string;preferred_visit_date:string|null}; const tone=(s:string)=>s==='converted'?badgeToneClasses.success:s==='closed'?badgeToneClasses.neutral:s==='quoted'?badgeToneClasses.info:badgeToneClasses.warning;
-export default function Leads({leads}:{leads:Lead[]}){const [target,setTarget]=useState<Lead|null>(null);const [deleting,setDeleting]=useState(false);const columns=useMemo<ColumnDef<Lead>[]>(()=>[{accessorKey:'title',header:'Service request',cell:({row})=><div><Link className="font-semibold text-primary hover:underline" href={`/sales/leads/${row.original.id}`}>{row.original.title}</Link><p className="text-xs text-muted-foreground">{row.original.service_category}</p></div>},{id:'customer',header:'Customer',cell:({row})=>row.original.customer?.name??<span className="text-muted-foreground">Unassigned</span>},{accessorKey:'source',header:'Source',cell:({row})=><span className="capitalize">{row.original.source.replaceAll('_',' ')}</span>},{accessorKey:'estimated_value',header:'Est. value',cell:({row})=>row.original.estimated_value?`$${Number(row.original.estimated_value).toFixed(2)}`:'—'},{accessorKey:'preferred_visit_date',header:'Visit date',cell:({row})=>row.original.preferred_visit_date??'—'},{accessorKey:'status',header:'Stage',cell:({row})=><Badge variant="outline" className={tone(row.original.status)}>{row.original.status.replaceAll('_',' ')}</Badge>},{id:'actions',header:'Actions',cell:({row})=><div className="flex gap-1"><Button asChild size="icon" variant="ghost" title="View"><Link href={`/sales/leads/${row.original.id}`}><Eye/></Link></Button><Can permission="sales.manage"><Button asChild size="icon" variant="ghost" title="Edit"><Link href={`/sales/leads/${row.original.id}/edit`}><Edit className="text-primary"/></Link></Button><Button size="icon" variant="ghost" title="Delete" className="text-destructive" onClick={()=>setTarget(row.original)}><Trash2/></Button></Can></div>}],[]);const sections:StatSection[]=[{title:'All leads',value:leads.length,description:'Service enquiries',icon:Target,color:'primary'},{title:'New leads',value:leads.filter(x=>x.status==='new').length,description:'Need first contact',icon:UserRound,color:'warning'},{title:'Site visits',value:leads.filter(x=>x.status==='inspection_scheduled').length,description:'Inspection scheduled',icon:CalendarDays,color:'info'}];const remove=()=>{if(!target)return;setDeleting(true);router.delete(`/sales/leads/${target.id}`,{onSuccess:()=>{toast.success('Lead deleted');setTarget(null)},onError:()=>toast.error('Could not delete lead'),onFinish:()=>setDeleting(false)})};return <><Head title="Leads — SOMFIX"/><div className="p-4 md:p-6"><div className="flex items-start justify-between gap-4"><div><h1 className="page-title-enter text-lg font-semibold">Leads</h1><p className="page-description-enter text-xs text-muted-foreground">Track new service enquiries from first contact to approved work.</p></div><Can permission="sales.manage"><Button asChild size="sm"><Link href="/sales/leads/create"><Plus/>New lead</Link></Button></Can></div><StatsCard sections={sections}/><div className="mt-6 animate-in fade-in slide-in-from-bottom-6 duration-1000"><DataTable title="Leads" searchTitle="Filter leads by customer, service or source..." columns={columns} data={leads}/></div></div><ConfirmDeleteDialog open={!!target} onOpenChange={open=>!open&&setTarget(null)} title="Delete Lead" description={<>Delete <strong>{target?.title}</strong>? This cannot be undone.</>} processing={deleting} onConfirm={remove}/></>};Leads.layout={breadcrumbs:[{title:'Sales & Jobs',href:'/sales'},{title:'Leads',href:'/sales/leads'}]};
+type Lead = {
+    id: number;
+    title: string;
+    service_category: string;
+    customer: { name: string } | null;
+    source: string;
+    estimated_value: string | null;
+    status: string;
+    preferred_visit_date: string | null;
+};
+const tone = (s: string) =>
+    s === 'converted'
+        ? badgeToneClasses.success
+        : s === 'closed'
+          ? badgeToneClasses.neutral
+          : s === 'quoted'
+            ? badgeToneClasses.info
+            : badgeToneClasses.warning;
+export default function Leads({ leads }: { leads: Lead[] }) {
+    const [target, setTarget] = useState<Lead | null>(null);
+    const [deleting, setDeleting] = useState(false);
+    const columns = useMemo<ColumnDef<Lead>[]>(
+        () => [
+            {
+                accessorKey: 'title',
+                header: 'Service request',
+                cell: ({ row }) => (
+                    <div>
+                        <Link
+                            className="font-semibold text-primary hover:underline"
+                            href={`/sales/leads/${row.original.id}`}
+                        >
+                            {row.original.title}
+                        </Link>
+                        <p className="text-xs text-muted-foreground">
+                            {row.original.service_category}
+                        </p>
+                    </div>
+                ),
+            },
+            {
+                id: 'customer',
+                header: 'Customer',
+                cell: ({ row }) =>
+                    row.original.customer?.name ?? (
+                        <span className="text-muted-foreground">
+                            Unassigned
+                        </span>
+                    ),
+            },
+            {
+                accessorKey: 'source',
+                header: 'Source',
+                cell: ({ row }) => (
+                    <span className="capitalize">
+                        {row.original.source.replaceAll('_', ' ')}
+                    </span>
+                ),
+            },
+            {
+                accessorKey: 'estimated_value',
+                header: 'Est. value',
+                cell: ({ row }) =>
+                    row.original.estimated_value
+                        ? `$${Number(row.original.estimated_value).toFixed(2)}`
+                        : '—',
+            },
+            {
+                accessorKey: 'preferred_visit_date',
+                header: 'Visit date',
+                cell: ({ row }) => row.original.preferred_visit_date ?? '—',
+            },
+            {
+                accessorKey: 'status',
+                header: 'Stage',
+                cell: ({ row }) => (
+                    <Badge
+                        variant="outline"
+                        className={tone(row.original.status)}
+                    >
+                        {row.original.status.replaceAll('_', ' ')}
+                    </Badge>
+                ),
+            },
+            {
+                id: 'actions',
+                header: 'Actions',
+                cell: ({ row }) => (
+                    <div className="flex gap-1">
+                        <Button
+                            asChild
+                            size="icon"
+                            variant="ghost"
+                            title="View"
+                        >
+                            <Link href={`/sales/leads/${row.original.id}`}>
+                                <Eye />
+                            </Link>
+                        </Button>
+                        <Can permission="sales.manage">
+                            <Button
+                                asChild
+                                size="icon"
+                                variant="ghost"
+                                title="Edit"
+                            >
+                                <Link
+                                    href={`/sales/leads/${row.original.id}/edit`}
+                                >
+                                    <Edit className="text-primary" />
+                                </Link>
+                            </Button>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                title="Delete"
+                                className="text-destructive"
+                                onClick={() => setTarget(row.original)}
+                            >
+                                <Trash2 />
+                            </Button>
+                        </Can>
+                    </div>
+                ),
+            },
+        ],
+        [],
+    );
+    const sections: StatSection[] = [
+        {
+            title: 'All leads',
+            value: leads.length,
+            description: 'Service enquiries',
+            icon: Target,
+            color: 'primary',
+        },
+        {
+            title: 'New leads',
+            value: leads.filter((x) => x.status === 'new').length,
+            description: 'Need first contact',
+            icon: UserRound,
+            color: 'warning',
+        },
+        {
+            title: 'Site visits',
+            value: leads.filter((x) => x.status === 'inspection_scheduled')
+                .length,
+            description: 'Inspection scheduled',
+            icon: CalendarDays,
+            color: 'info',
+        },
+    ];
+    const remove = () => {
+        if (!target) return;
+        setDeleting(true);
+        router.delete(`/sales/leads/${target.id}`, {
+            onSuccess: () => {
+                toast.success('Lead deleted');
+                setTarget(null);
+            },
+            onError: () => toast.error('Could not delete lead'),
+            onFinish: () => setDeleting(false),
+        });
+    };
+    return (
+        <>
+            <Head title="Leads — SOMFIX" />
+            <div className="p-4 md:p-6">
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <h1 className="page-title-enter text-lg font-semibold">
+                            Leads
+                        </h1>
+                        <p className="page-description-enter text-xs text-muted-foreground">
+                            Track new service enquiries from first contact to
+                            approved work.
+                        </p>
+                    </div>
+                    <Can permission="sales.manage">
+                        <Button asChild size="sm">
+                            <Link href="/sales/leads/create">
+                                <Plus />
+                                New lead
+                            </Link>
+                        </Button>
+                    </Can>
+                </div>
+                <StatsCard sections={sections} />
+                <div className="mt-6 animate-in duration-1000 fade-in slide-in-from-bottom-6">
+                    <DataTable
+                        title="Leads"
+                        searchTitle="Filter leads by customer, service or source..."
+                        columns={columns}
+                        data={leads}
+                    />
+                </div>
+            </div>
+            <ConfirmDeleteDialog
+                open={!!target}
+                onOpenChange={(open) => !open && setTarget(null)}
+                title="Delete Lead"
+                description={
+                    <>
+                        Delete <strong>{target?.title}</strong>? This cannot be
+                        undone.
+                    </>
+                }
+                processing={deleting}
+                onConfirm={remove}
+            />
+        </>
+    );
+}
+Leads.layout = {
+    breadcrumbs: [
+        { title: 'Sales & Jobs', href: '/sales' },
+        { title: 'Leads', href: '/sales/leads' },
+    ],
+};

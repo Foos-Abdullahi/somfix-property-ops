@@ -11,34 +11,34 @@ SOMFIX is a property-operations and field-service system. It should manage both:
 
 ## Current system coverage
 
-| Current navigation area | What it already supports | Sales & Jobs role |
-| --- | --- | --- |
-| Dashboard | Business overview | Add service sales, outstanding invoices, and jobs requiring action. |
-| Properties, Units, Tenants, Leases | Managed-property and tenant records | Links property-related jobs to the relevant site and tenant. |
-| Website Requests | Public repair requests | Creates a maintenance request or a new sales lead. |
-| Maintenance | Reported property issues, priority, cost, and completion | Tracks the reported issue before work is approved. |
-| Work Orders | Assignment, scheduling, and completion of work | The operational job record. |
-| Vendors & Technicians | People who carry out work | Assigned to job tasks and labor cost. |
-| Finance: Quotations | Price offered to a customer | Commercial offer before customer approval. |
-| Finance: Invoices | Customer billing and balance | Final billing after work or agreed deposit. |
-| Inventory | Stock, cost, suppliers, and reorder level | Materials used by the job and their cost. |
-| Reports | Operational and finance reporting | Sales funnel, collections, job margin, and technician performance. |
+| Current navigation area            | What it already supports                                 | Sales & Jobs role                                                   |
+| ---------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------- |
+| Dashboard                          | Business overview                                        | Add service sales, outstanding invoices, and jobs requiring action. |
+| Properties, Units, Tenants, Leases | Managed-property and tenant records                      | Links property-related jobs to the relevant site and tenant.        |
+| Website Requests                   | Public repair requests                                   | Creates a maintenance request or a new sales lead.                  |
+| Maintenance                        | Reported property issues, priority, cost, and completion | Tracks the reported issue before work is approved.                  |
+| Work Orders                        | Assignment, scheduling, and completion of work           | The operational job record.                                         |
+| Vendors & Technicians              | People who carry out work                                | Assigned to job tasks and labor cost.                               |
+| Finance: Quotations                | Price offered to a customer                              | Commercial offer before customer approval.                          |
+| Finance: Invoices                  | Customer billing and balance                             | Final billing after work or agreed deposit.                         |
+| Inventory                          | Stock, cost, suppliers, and reorder level                | Materials used by the job and their cost.                           |
+| Reports                            | Operational and finance reporting                        | Sales funnel, collections, job margin, and technician performance.  |
 
 ## Gap analysis
 
 The existing modules provide most of the building blocks, but their relationship is not recorded as one business journey.
 
-| Required capability | Current position | Sales & Jobs addition |
-| --- | --- | --- |
-| External customer | Tenant is available, but not every service customer is a tenant. | Add Customers: individual or company, phone, email, address, and linked properties. |
-| Sales pipeline | Demo Requests capture interest but are not service sales. | Add Leads with source, service needed, owner, estimated value, and stage. |
-| One linked job | Maintenance, quotation, work order, and invoice are separate records. | Add a Job record and link every document to it. |
-| Customer approval | Quotation is sent, but approval is not a controlled status. | Add Sent, Accepted, Rejected, Expired, and Revised statuses plus approval date. |
-| Job materials | Inventory exists, but material usage is not linked to a job. | Add Job Materials; deduct stock only when usage is confirmed. |
-| Labor cost | Technician and work order exist but no cost log. | Add Job Labor entries: technician, hours, rate, and cost. |
-| Payment evidence | Invoice has paid amount and balance only. | Add Payments with amount, method, transaction/reference number, proof, and recorder. |
-| Quotation history | Converting a quotation currently changes it into an invoice. | Preserve the quotation and create a separately numbered linked invoice. |
-| Profit | Estimated and actual maintenance costs exist, but not job margin. | Calculate revenue minus approved materials, labor, vendor, and other costs. |
+| Required capability | Current position                                                      | Sales & Jobs addition                                                                |
+| ------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| External customer   | Tenant is available, but not every service customer is a tenant.      | Add Customers: individual or company, phone, email, address, and linked properties.  |
+| Sales pipeline      | Demo Requests capture interest but are not service sales.             | Add Leads with source, service needed, owner, estimated value, and stage.            |
+| One linked job      | Maintenance, quotation, work order, and invoice are separate records. | Add a Job record and link every document to it.                                      |
+| Customer approval   | Quotation is sent, but approval is not a controlled status.           | Add Sent, Accepted, Rejected, Expired, and Revised statuses plus approval date.      |
+| Job materials       | Inventory exists, but material usage is not linked to a job.          | Add Job Materials; deduct stock only when usage is confirmed.                        |
+| Labor cost          | Technician and work order exist but no cost log.                      | Add Job Labor entries: technician, hours, rate, and cost.                            |
+| Payment evidence    | Invoice has paid amount and balance only.                             | Add Payments with amount, method, transaction/reference number, proof, and recorder. |
+| Quotation history   | Converting a quotation currently changes it into an invoice.          | Preserve the quotation and create a separately numbered linked invoice.              |
+| Profit              | Estimated and actual maintenance costs exist, but not job margin.     | Calculate revenue minus approved materials, labor, vendor, and other costs.          |
 
 ## End-to-end workflow
 
@@ -142,30 +142,30 @@ Keep **Maintenance** and **Work Orders** in Operations because technicians use t
 
 ## Minimum new data model
 
-| Record | Essential fields | Main links |
-| --- | --- | --- |
-| Customer | name, type, phone, email, address | Has many leads, jobs, quotations, invoices. |
-| Lead | source, service category, description, stage, estimated value | Belongs to customer; may create a job. |
-| Job | number, title, status, customer, property/unit, approved value | Belongs to customer; has work orders, quotations, invoice(s), costs, payments through invoices. |
-| Payment | number, amount, date, method, reference, proof | Belongs to invoice. |
-| Job Material | quantity, unit cost, selling price, approval status | Belongs to job and inventory item. |
-| Job Labor | technician, hours, cost rate, selling rate | Belongs to job and technician. |
+| Record       | Essential fields                                               | Main links                                                                                      |
+| ------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Customer     | name, type, phone, email, address                              | Has many leads, jobs, quotations, invoices.                                                     |
+| Lead         | source, service category, description, stage, estimated value  | Belongs to customer; may create a job.                                                          |
+| Job          | number, title, status, customer, property/unit, approved value | Belongs to customer; has work orders, quotations, invoice(s), costs, payments through invoices. |
+| Payment      | number, amount, date, method, reference, proof                 | Belongs to invoice.                                                                             |
+| Job Material | quantity, unit cost, selling price, approval status            | Belongs to job and inventory item.                                                              |
+| Job Labor    | technician, hours, cost rate, selling rate                     | Belongs to job and technician.                                                                  |
 
 Each quotation and invoice needs a nullable `job_id`. Each work order needs a nullable `job_id`; property-maintenance work can initially link its maintenance record to the job.
 
 ## Reporting and dashboard measures
 
-| Measure | Meaning |
-| --- | --- |
-| New leads | Requests not yet quoted. |
-| Quote value | Total value of quotations by status. |
-| Quote conversion rate | Accepted quotations divided by sent quotations. |
-| Jobs in progress | Work that needs operational attention. |
-| Revenue invoiced | Value of invoices issued in the period. |
-| Cash collected | Sum of recorded payments in the period. |
-| Outstanding balance | Open invoice balance. |
-| Job gross profit | Invoice revenue minus material, labor, vendor, and other direct costs. |
-| Low-stock materials | Inventory items under reorder level. |
+| Measure               | Meaning                                                                |
+| --------------------- | ---------------------------------------------------------------------- |
+| New leads             | Requests not yet quoted.                                               |
+| Quote value           | Total value of quotations by status.                                   |
+| Quote conversion rate | Accepted quotations divided by sent quotations.                        |
+| Jobs in progress      | Work that needs operational attention.                                 |
+| Revenue invoiced      | Value of invoices issued in the period.                                |
+| Cash collected        | Sum of recorded payments in the period.                                |
+| Outstanding balance   | Open invoice balance.                                                  |
+| Job gross profit      | Invoice revenue minus material, labor, vendor, and other direct costs. |
+| Low-stock materials   | Inventory items under reorder level.                                   |
 
 ## Delivery roadmap
 

@@ -64,7 +64,9 @@ export default function InvoicesIndex({
     };
 }) {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceRow | null>(null);
+    const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceRow | null>(
+        null,
+    );
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = (invoice: InvoiceRow) => {
@@ -103,7 +105,7 @@ export default function InvoicesIndex({
                         >
                             {row.original.invoice_number}
                         </Link>
-                        <p className="text-xs text-muted-foreground truncate max-w-[200px]">
+                        <p className="max-w-[200px] truncate text-xs text-muted-foreground">
                             {row.original.title}
                         </p>
                     </div>
@@ -116,13 +118,15 @@ export default function InvoicesIndex({
                     const tenant = row.original.tenant;
                     const recipient =
                         row.original.recipient_name ||
-                        (tenant ? `${tenant.first_name} ${tenant.last_name}` : '—');
+                        (tenant
+                            ? `${tenant.first_name} ${tenant.last_name}`
+                            : '—');
                     const unit = row.original.unit?.unit_number;
                     const property = row.original.property?.name;
 
                     return (
                         <div>
-                            <p className="font-medium text-sm">{recipient}</p>
+                            <p className="text-sm font-medium">{recipient}</p>
                             {(unit || property) && (
                                 <p className="text-xs text-muted-foreground">
                                     {[unit ? `Unit ${unit}` : null, property]
@@ -139,7 +143,8 @@ export default function InvoicesIndex({
                 header: 'Total',
                 cell: ({ row }) => (
                     <span className="font-semibold tabular-nums">
-                        {row.original.currency} {Number(row.original.amount).toFixed(2)}
+                        {row.original.currency}{' '}
+                        {Number(row.original.amount).toFixed(2)}
                     </span>
                 ),
             },
@@ -147,8 +152,9 @@ export default function InvoicesIndex({
                 accessorKey: 'paid_amount',
                 header: 'Paid',
                 cell: ({ row }) => (
-                    <span className="text-green-600 font-medium tabular-nums">
-                        {row.original.currency} {Number(row.original.paid_amount).toFixed(2)}
+                    <span className="font-medium text-green-600 tabular-nums">
+                        {row.original.currency}{' '}
+                        {Number(row.original.paid_amount).toFixed(2)}
                     </span>
                 ),
             },
@@ -160,7 +166,9 @@ export default function InvoicesIndex({
                     return (
                         <span
                             className={`font-semibold tabular-nums ${
-                                balance > 0 ? 'text-destructive' : 'text-muted-foreground'
+                                balance > 0
+                                    ? 'text-destructive'
+                                    : 'text-muted-foreground'
                             }`}
                         >
                             {row.original.currency} {balance.toFixed(2)}
@@ -173,7 +181,8 @@ export default function InvoicesIndex({
                 header: 'Due Date',
                 cell: ({ row }) => {
                     const dateVal = row.original.due_date;
-                    if (!dateVal) return <span className="text-muted-foreground">—</span>;
+                    if (!dateVal)
+                        return <span className="text-muted-foreground">—</span>;
                     return (
                         <span className="text-xs">
                             {new Date(dateVal).toLocaleDateString('en-US', {
@@ -191,7 +200,10 @@ export default function InvoicesIndex({
                 cell: ({ row }) => (
                     <Badge
                         variant="outline"
-                        className={statusClass[row.original.status] ?? badgeToneClasses.neutral}
+                        className={
+                            statusClass[row.original.status] ??
+                            badgeToneClasses.neutral
+                        }
                     >
                         {row.original.status.toUpperCase()}
                     </Badge>
@@ -202,19 +214,36 @@ export default function InvoicesIndex({
                 header: 'Actions',
                 cell: ({ row }) => (
                     <div className="flex items-center gap-1">
-                        <Button asChild size="icon" variant="ghost" title="View Invoice">
+                        <Button
+                            asChild
+                            size="icon"
+                            variant="ghost"
+                            title="View Invoice"
+                        >
                             <Link href={`/finance/invoices/${row.original.id}`}>
                                 <Eye className="size-4 text-[#FF8500]" />
                             </Link>
                         </Button>
-                        <Button asChild size="icon" variant="ghost" title="Print Invoice">
+                        <Button
+                            asChild
+                            size="icon"
+                            variant="ghost"
+                            title="Print Invoice"
+                        >
                             <Link href={`/finance/${row.original.id}/print`}>
                                 <Printer className="size-4 text-primary" />
                             </Link>
                         </Button>
                         <Can permission="finance.manage">
-                            <Button asChild size="icon" variant="ghost" title="Edit Invoice">
-                                <Link href={`/finance/invoices/${row.original.id}/edit`}>
+                            <Button
+                                asChild
+                                size="icon"
+                                variant="ghost"
+                                title="Edit Invoice"
+                            >
+                                <Link
+                                    href={`/finance/invoices/${row.original.id}/edit`}
+                                >
                                     <Edit className="size-4 text-[#004317] dark:text-green-300" />
                                 </Link>
                             </Button>
@@ -281,9 +310,12 @@ export default function InvoicesIndex({
             <div className="p-4 md:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <h1 className="page-title-enter text-lg font-semibold">Invoices</h1>
+                        <h1 className="page-title-enter text-lg font-semibold">
+                            Invoices
+                        </h1>
                         <p className="page-description-enter text-xs text-muted-foreground">
-                            Manage tenant billing, rent charges, payment tracking, and balance collection.
+                            Manage tenant billing, rent charges, payment
+                            tracking, and balance collection.
                         </p>
                     </div>
                     <Can permission="finance.manage">
@@ -315,8 +347,8 @@ export default function InvoicesIndex({
                 description={
                     <>
                         Are you sure you want to delete invoice{' '}
-                        <strong>{invoiceToDelete?.invoice_number}</strong>? This action cannot be
-                        undone.
+                        <strong>{invoiceToDelete?.invoice_number}</strong>? This
+                        action cannot be undone.
                     </>
                 }
                 processing={isDeleting}

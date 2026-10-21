@@ -29,7 +29,7 @@ export function ConfirmDeleteDialog({
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground pt-2">
+                    <DialogDescription className="pt-2 text-sm text-muted-foreground">
                         {description}
                     </DialogDescription>
                 </DialogHeader>

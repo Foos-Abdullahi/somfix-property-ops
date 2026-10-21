@@ -30,11 +30,18 @@ export default function RepairInbox({
             <Head title="Website repair requests" />
             <div className="w-full space-y-6 p-4 md:p-6">
                 <div className="flex items-start gap-3">
-                    <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><Globe2 className="size-5" /></span>
-                    <div><h1 className="text-xl font-semibold">Website repair requests</h1>
-                    <p className="text-sm text-muted-foreground">
-                        Review public enquiries, contact the customer, then convert the request into the Sales and Jobs workflow.
-                    </p>
+                    <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <Globe2 className="size-5" />
+                    </span>
+                    <div>
+                        <h1 className="text-xl font-semibold">
+                            Website repair requests
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            Review public enquiries, contact the customer, then
+                            convert the request into the Sales and Jobs
+                            workflow.
+                        </p>
                     </div>
                 </div>
                 {requests.data.length === 0 && <p>No repair requests yet.</p>}
@@ -45,9 +52,17 @@ export default function RepairInbox({
                             className="space-y-3 rounded-xl border bg-card p-5"
                         >
                             <div className="flex flex-wrap items-start justify-between gap-2">
-                                <div><h2 className="font-semibold">
-                                    {request.name} · {request.service}
-                                </h2><Badge variant="outline" className={`mt-2 capitalize ${request.status === 'converted' ? badgeToneClasses.success : badgeToneClasses.warning}`}>{request.status}</Badge></div>
+                                <div>
+                                    <h2 className="font-semibold">
+                                        {request.name} · {request.service}
+                                    </h2>
+                                    <Badge
+                                        variant="outline"
+                                        className={`mt-2 capitalize ${request.status === 'converted' ? badgeToneClasses.success : badgeToneClasses.warning}`}
+                                    >
+                                        {request.status}
+                                    </Badge>
+                                </div>
                                 <time
                                     className="text-xs text-muted-foreground"
                                     dateTime={request.created_at}
@@ -82,13 +97,27 @@ export default function RepairInbox({
                                 {request.lead_url ? (
                                     <Button asChild size="sm" variant="outline">
                                         <Link href={request.lead_url}>
-                                            <CheckCircle2 />Open lead
+                                            <CheckCircle2 />
+                                            Open lead
                                         </Link>
                                     </Button>
                                 ) : (
-                                    <Can anyOf={['maintenance.manage', 'sales.manage']}>
-                                        <Button size="sm" onClick={() => router.post(`/repair-requests/${request.id}/convert`)}>
-                                            Create customer and lead<ArrowRight />
+                                    <Can
+                                        anyOf={[
+                                            'maintenance.manage',
+                                            'sales.manage',
+                                        ]}
+                                    >
+                                        <Button
+                                            size="sm"
+                                            onClick={() =>
+                                                router.post(
+                                                    `/repair-requests/${request.id}/convert`,
+                                                )
+                                            }
+                                        >
+                                            Create customer and lead
+                                            <ArrowRight />
                                         </Button>
                                     </Can>
                                 )}

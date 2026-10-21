@@ -118,12 +118,18 @@ export default function FinanceIndex({
     // Compute Collection Efficiency Rate
     const collectionRate =
         stats.invoicedAmount > 0
-            ? Math.min(100, Math.round((stats.totalPaid / stats.invoicedAmount) * 100))
+            ? Math.min(
+                  100,
+                  Math.round((stats.totalPaid / stats.invoicedAmount) * 100),
+              )
             : 0;
 
     const outstandingRate =
         stats.invoicedAmount > 0
-            ? Math.min(100, Math.round((stats.totalBalance / stats.invoicedAmount) * 100))
+            ? Math.min(
+                  100,
+                  Math.round((stats.totalBalance / stats.invoicedAmount) * 100),
+              )
             : 0;
 
     // Financial Momentum trend data
@@ -147,13 +153,16 @@ export default function FinanceIndex({
     return (
         <>
             <Head title="Finance Overview — SOMFIX" />
-            <div className="w-full p-4 md:p-6 space-y-6">
+            <div className="w-full space-y-6 p-4 md:p-6">
                 {/* Header Section */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                     <div>
-                        <h1 className="page-title-enter text-lg font-semibold">Finance Overview</h1>
+                        <h1 className="page-title-enter text-lg font-semibold">
+                            Finance Overview
+                        </h1>
                         <p className="page-description-enter text-xs text-muted-foreground">
-                            High-level operational summary of billed revenue, collections, outstanding receivables, and proposals.
+                            High-level operational summary of billed revenue,
+                            collections, outstanding receivables, and proposals.
                         </p>
                     </div>
                     <Can permission="finance.manage">
@@ -178,21 +187,23 @@ export default function FinanceIndex({
                 <StatsCard sections={metrics} />
 
                 {/* Quick Actions Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     <Can permission="finance.manage">
                         <Link
                             href="/finance/invoices/create"
-                            className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-primary/50 hover:shadow-sm transition-all"
+                            className="group flex flex-col justify-between rounded-xl border border-border/70 bg-card p-4 transition-all hover:border-primary/50 hover:shadow-sm"
                         >
                             <div className="flex items-center gap-3">
-                                <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                                <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-transform group-hover:scale-105">
                                     <Receipt className="size-5" />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">
+                                    <h3 className="text-sm font-semibold transition-colors group-hover:text-primary">
                                         Create Invoice
                                     </h3>
-                                    <p className="text-xs text-muted-foreground">Bill tenant or client</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Bill tenant or client
+                                    </p>
                                 </div>
                             </div>
                             <div className="mt-3 flex items-center gap-1 text-xs font-medium text-primary">
@@ -205,17 +216,19 @@ export default function FinanceIndex({
                     <Can permission="finance.manage">
                         <Link
                             href="/finance/quotations/create"
-                            className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-amber-500/50 hover:shadow-sm transition-all"
+                            className="group flex flex-col justify-between rounded-xl border border-border/70 bg-card p-4 transition-all hover:border-amber-500/50 hover:shadow-sm"
                         >
                             <div className="flex items-center gap-3">
-                                <div className="size-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
+                                <div className="flex size-10 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-transform group-hover:scale-105 dark:text-amber-400">
                                     <FileText className="size-5" />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                    <h3 className="text-sm font-semibold transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-400">
                                         Create Quotation
                                     </h3>
-                                    <p className="text-xs text-muted-foreground">Estimate & proposals</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Estimate & proposals
+                                    </p>
                                 </div>
                             </div>
                             <div className="mt-3 flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
@@ -227,14 +240,16 @@ export default function FinanceIndex({
 
                     <Link
                         href="/finance/invoices"
-                        className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-border hover:shadow-sm transition-all"
+                        className="group flex flex-col justify-between rounded-xl border border-border/70 bg-card p-4 transition-all hover:border-border hover:shadow-sm"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-lg bg-secondary flex items-center justify-center text-foreground group-hover:scale-105 transition-transform">
+                            <div className="flex size-10 items-center justify-center rounded-lg bg-secondary text-foreground transition-transform group-hover:scale-105">
                                 <Wallet className="size-5" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-sm">Manage Invoices</h3>
+                                <h3 className="text-sm font-semibold">
+                                    Manage Invoices
+                                </h3>
                                 <p className="text-xs text-muted-foreground">
                                     {stats.invoicesCount} total invoices
                                 </p>
@@ -248,14 +263,16 @@ export default function FinanceIndex({
 
                     <Link
                         href="/finance/quotations"
-                        className="group flex flex-col justify-between p-4 rounded-xl border border-border/70 bg-card hover:border-border hover:shadow-sm transition-all"
+                        className="group flex flex-col justify-between rounded-xl border border-border/70 bg-card p-4 transition-all hover:border-border hover:shadow-sm"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-lg bg-secondary flex items-center justify-center text-foreground group-hover:scale-105 transition-transform">
+                            <div className="flex size-10 items-center justify-center rounded-lg bg-secondary text-foreground transition-transform group-hover:scale-105">
                                 <Layers3 className="size-5" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-sm">Manage Quotations</h3>
+                                <h3 className="text-sm font-semibold">
+                                    Manage Quotations
+                                </h3>
                                 <p className="text-xs text-muted-foreground">
                                     {stats.quotationsCount} active quotes
                                 </p>
@@ -280,10 +297,14 @@ export default function FinanceIndex({
                                         Cashflow & Revenue Momentum
                                     </CardTitle>
                                     <CardDescription className="mt-1 text-xs">
-                                        Historical billing performance and cash realization velocity.
+                                        Historical billing performance and cash
+                                        realization velocity.
                                     </CardDescription>
                                 </div>
-                                <Badge variant="outline" className={badgeToneClasses.success}>
+                                <Badge
+                                    variant="outline"
+                                    className={badgeToneClasses.success}
+                                >
                                     {collectionRate}% Realization Rate
                                 </Badge>
                             </div>
@@ -370,14 +391,15 @@ export default function FinanceIndex({
                     </Card>
 
                     {/* Collection Health Breakdown */}
-                    <Card className="border-border/70 shadow-sm flex flex-col justify-between">
+                    <Card className="flex flex-col justify-between border-border/70 shadow-sm">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-base">
                                 <Wallet className="size-5 text-primary" />
                                 Collection Health
                             </CardTitle>
                             <CardDescription className="text-xs">
-                                Distribution of receivables and converted proposals.
+                                Distribution of receivables and converted
+                                proposals.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -426,7 +448,8 @@ export default function FinanceIndex({
                                                 100,
                                                 stats.invoicedAmount > 0
                                                     ? Math.round(
-                                                          (stats.quotedAmount / stats.invoicedAmount) *
+                                                          (stats.quotedAmount /
+                                                              stats.invoicedAmount) *
                                                               100,
                                                       )
                                                     : 50,
@@ -436,10 +459,13 @@ export default function FinanceIndex({
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-border/60 bg-muted/30 p-3 pt-3.5 space-y-1">
-                                <p className="text-xs font-semibold">Operational Summary</p>
-                                <p className="text-xs text-muted-foreground leading-relaxed">
-                                    {stats.invoicesCount} active billing accounts with{' '}
+                            <div className="space-y-1 rounded-xl border border-border/60 bg-muted/30 p-3 pt-3.5">
+                                <p className="text-xs font-semibold">
+                                    Operational Summary
+                                </p>
+                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                    {stats.invoicesCount} active billing
+                                    accounts with{' '}
                                     <span className="font-semibold text-foreground">
                                         ${stats.totalBalance.toLocaleString()}
                                     </span>{' '}
@@ -459,17 +485,28 @@ export default function FinanceIndex({
                                 Recent Financial Activity
                             </CardTitle>
                             <CardDescription className="mt-1 text-xs">
-                                Latest issued invoices and quotations across properties.
+                                Latest issued invoices and quotations across
+                                properties.
                             </CardDescription>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Button asChild variant="ghost" size="sm" className="gap-1 text-xs">
+                            <Button
+                                asChild
+                                variant="ghost"
+                                size="sm"
+                                className="gap-1 text-xs"
+                            >
                                 <Link href="/finance/invoices">
                                     All Invoices
                                     <ArrowUpRight className="size-3.5" />
                                 </Link>
                             </Button>
-                            <Button asChild variant="ghost" size="sm" className="gap-1 text-xs">
+                            <Button
+                                asChild
+                                variant="ghost"
+                                size="sm"
+                                className="gap-1 text-xs"
+                            >
                                 <Link href="/finance/quotations">
                                     All Quotations
                                     <ArrowUpRight className="size-3.5" />
@@ -482,18 +519,27 @@ export default function FinanceIndex({
                             <table className="w-full min-w-[720px] text-left text-xs">
                                 <thead className="border-y border-border/70 bg-secondary/35 text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                                     <tr>
-                                        <th className="px-6 py-3">Document #</th>
+                                        <th className="px-6 py-3">
+                                            Document #
+                                        </th>
                                         <th className="px-6 py-3">Type</th>
-                                        <th className="px-6 py-3">Client / Tenant</th>
+                                        <th className="px-6 py-3">
+                                            Client / Tenant
+                                        </th>
                                         <th className="px-6 py-3">Status</th>
                                         <th className="px-6 py-3">Amount</th>
-                                        <th className="px-6 py-3">Balance Due</th>
-                                        <th className="px-6 py-3 text-right">Action</th>
+                                        <th className="px-6 py-3">
+                                            Balance Due
+                                        </th>
+                                        <th className="px-6 py-3 text-right">
+                                            Action
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-border/70">
                                     {recentRecords.map((row) => {
-                                        const isInvoice = row.type === 'invoice';
+                                        const isInvoice =
+                                            row.type === 'invoice';
                                         const link = isInvoice
                                             ? `/finance/invoices/${row.id}`
                                             : `/finance/quotations/${row.id}`;
@@ -520,23 +566,29 @@ export default function FinanceIndex({
                                                     >
                                                         {row.invoice_number}
                                                     </Link>
-                                                    <p className="text-[11px] font-normal text-muted-foreground truncate max-w-[180px]">
+                                                    <p className="max-w-[180px] truncate text-[11px] font-normal text-muted-foreground">
                                                         {row.title}
                                                     </p>
                                                 </td>
                                                 <td className="px-6 py-3.5">
                                                     <Badge
                                                         variant="secondary"
-                                                        className="text-[10px] uppercase font-semibold"
+                                                        className="text-[10px] font-semibold uppercase"
                                                     >
-                                                        {isInvoice ? 'Invoice' : 'Quotation'}
+                                                        {isInvoice
+                                                            ? 'Invoice'
+                                                            : 'Quotation'}
                                                     </Badge>
                                                 </td>
                                                 <td className="px-6 py-3.5 font-medium">
                                                     {recipient}
                                                     {row.unit && (
                                                         <span className="block text-[11px] text-muted-foreground">
-                                                            Unit {row.unit.unit_number}
+                                                            Unit{' '}
+                                                            {
+                                                                row.unit
+                                                                    .unit_number
+                                                            }
                                                         </span>
                                                     )}
                                                 </td>
@@ -544,7 +596,9 @@ export default function FinanceIndex({
                                                     <Badge
                                                         variant="outline"
                                                         className={
-                                                            statusClass[row.status] ??
+                                                            statusClass[
+                                                                row.status
+                                                            ] ??
                                                             badgeToneClasses.neutral
                                                         }
                                                     >
@@ -552,17 +606,22 @@ export default function FinanceIndex({
                                                     </Badge>
                                                 </td>
                                                 <td className="px-6 py-3.5 font-semibold tabular-nums">
-                                                    {row.currency} {Number(row.amount).toFixed(2)}
+                                                    {row.currency}{' '}
+                                                    {Number(row.amount).toFixed(
+                                                        2,
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-3.5 font-medium tabular-nums">
                                                     <span
                                                         className={
-                                                            balance > 0 && isInvoice
-                                                                ? 'text-destructive font-semibold'
+                                                            balance > 0 &&
+                                                            isInvoice
+                                                                ? 'font-semibold text-destructive'
                                                                 : 'text-muted-foreground'
                                                         }
                                                     >
-                                                        {row.currency} {balance.toFixed(2)}
+                                                        {row.currency}{' '}
+                                                        {balance.toFixed(2)}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-3.5 text-right">
@@ -572,7 +631,9 @@ export default function FinanceIndex({
                                                         size="sm"
                                                         className="h-7 text-xs"
                                                     >
-                                                        <Link href={link}>Open</Link>
+                                                        <Link href={link}>
+                                                            Open
+                                                        </Link>
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -582,7 +643,7 @@ export default function FinanceIndex({
                                         <tr>
                                             <td
                                                 colSpan={7}
-                                                className="px-6 py-8 text-center text-muted-foreground text-xs"
+                                                className="px-6 py-8 text-center text-xs text-muted-foreground"
                                             >
                                                 No financial records found.
                                             </td>

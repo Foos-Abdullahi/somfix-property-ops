@@ -70,7 +70,8 @@ export default function InventoryIndex({
                         <Button asChild size="sm">
                             <Link href={create()}>
                                 <Plus className="size-4" />
-                                Add <span className="hidden sm:inline">item</span>
+                                Add{' '}
+                                <span className="hidden sm:inline">item</span>
                             </Link>
                         </Button>
                     </Can>
