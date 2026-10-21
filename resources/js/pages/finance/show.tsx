@@ -1,7 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Receipt, Printer } from 'lucide-react';
 import DetailPage, { date, label, money } from '@/components/detail-page';
-import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/finance';
 import { Button } from '@/components/ui/button';
 
@@ -27,7 +26,6 @@ type RecordDetail = {
 };
 
 export default function FinanceShow({ finance }: { finance: RecordDetail }) {
-    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={finance.invoice_number}
@@ -99,8 +97,8 @@ export default function FinanceShow({ finance }: { finance: RecordDetail }) {
             icon={Receipt}
             backHref={index.url()}
             managePermission="finance.manage"
-            editHref={canManage('finance') ? edit.url(finance.id) : undefined}
-            deleteHref={canManage('finance') ? destroy.url(finance.id) : undefined}
+            editHref={edit.url(finance.id)}
+            deleteHref={destroy.url(finance.id)}
         />
     );
 }

@@ -1,6 +1,5 @@
 import { ClipboardList } from 'lucide-react';
 import DetailPage, { date, label } from '@/components/detail-page';
-import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/work-orders';
 
 type RecordDetail = {
@@ -23,7 +22,6 @@ export default function WorkOrderShow({
 }: {
     workOrder: RecordDetail;
 }) {
-    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={workOrder.title}
@@ -104,9 +102,10 @@ export default function WorkOrderShow({
             ]}
             status={workOrder.status}
             icon={ClipboardList}
+            managePermission="work-orders.manage"
             backHref={index.url()}
-            editHref={canManage('work-orders') ? edit.url(workOrder.id) : undefined}
-            deleteHref={canManage('work-orders') ? destroy.url(workOrder.id) : undefined}
+            editHref={edit.url(workOrder.id)}
+            deleteHref={destroy.url(workOrder.id)}
         />
     );
 }

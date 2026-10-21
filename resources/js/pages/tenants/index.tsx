@@ -5,7 +5,7 @@ import { RecordImport } from '@/components/record-import';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
-import { usePermissions } from '@/hooks/use-permissions';
+import { Can } from '@/components/can';
 import { create, index } from '@/routes/tenants';
 
 export default function TenantsIndex({
@@ -20,7 +20,6 @@ export default function TenantsIndex({
         unassignedTenants: number;
     };
 }) {
-    const { canManage } = usePermissions();
     const sections: StatSection[] = [
         {
             title: 'Total tenants',
@@ -66,8 +65,8 @@ export default function TenantsIndex({
                         </p>
                     </div>
                     <div className="flex flex-wrap justify-end gap-2">
-                        <RecordImport module="tenants" />
-                        {canManage('tenants') && (
+                        <Can permission="tenants.manage">
+                            <RecordImport module="tenants" />
                             <Button asChild size="sm">
                                 <Link href={create()}>
                                     <Plus className="size-4" />
@@ -75,7 +74,7 @@ export default function TenantsIndex({
                                     <span className="hidden sm:inline">tenant</span>
                                 </Link>
                             </Button>
-                        )}
+                        </Can>
                     </div>
                 </div>
                 <StatsCard sections={sections} />

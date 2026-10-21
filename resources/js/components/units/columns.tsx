@@ -1,9 +1,9 @@
 import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye } from 'lucide-react';
+import { Can } from '@/components/can';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { usePermissions } from '@/hooks/use-permissions';
 import { edit, show } from '@/routes/units';
 
 export type UnitRow = {
@@ -67,24 +67,21 @@ export const unitColumns: ColumnDef<UnitRow>[] = [
     {
         id: 'actions',
         header: 'Actions',
-        cell: ({ row }) => {
-            const { canManage } = usePermissions();
-            return (
-                <div className="flex gap-1">
+        cell: ({ row }) => (
+            <div className="flex gap-1">
+                <Button asChild size="icon" variant="ghost">
+                    <Link href={show(row.original.id)}>
+                        <Eye className="size-4 text-[#FF8500]" />
+                    </Link>
+                </Button>
+                <Can permission="units.manage">
                     <Button asChild size="icon" variant="ghost">
-                        <Link href={show(row.original.id)}>
-                            <Eye className="size-4 text-[#FF8500]" />
+                        <Link href={edit(row.original.id)}>
+                            <Edit className="size-4 text-[#004317] dark:text-green-300" />
                         </Link>
                     </Button>
-                    {canManage('units') && (
-                        <Button asChild size="icon" variant="ghost">
-                            <Link href={edit(row.original.id)}>
-                                <Edit className="size-4 text-[#004317] dark:text-green-300" />
-                            </Link>
-                        </Button>
-                    )}
-                </div>
-            );
-        },
+                </Can>
+            </div>
+        ),
     },
 ];

@@ -24,8 +24,8 @@ export function usePermissions() {
         }
         return permissions.includes(permission);
     };
-    const canAny = (perms: string[]) => perms.some((p) => permissions.includes(p));
-    const canAll = (perms: string[]) => perms.every((p) => permissions.includes(p));
+    const canAny = (perms: string[]) => perms.some((p) => can(p));
+    const canAll = (perms: string[]) => perms.every((p) => can(p));
     const hasRole = (slug: string) => roleSlug === slug;
     const canManage = (module: string) =>
         !isViewer && permissions.includes(`${module}.manage`);

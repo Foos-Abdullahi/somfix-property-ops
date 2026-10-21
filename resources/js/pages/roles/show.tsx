@@ -25,6 +25,13 @@ export default function RoleShow({
             status={role.is_system ? 'system_role' : 'custom_role'}
             icon={ShieldCheck}
             backHref="/settings/roles"
+            managePermission="roles.manage"
+            editHref={!role.is_system ? `/settings/roles/${role.id}/edit` : undefined}
+            deleteHref={
+                !role.is_system && role.users_count === 0
+                    ? `/settings/roles/${role.id}`
+                    : undefined
+            }
             summary={[
                 {
                     title: 'Access',

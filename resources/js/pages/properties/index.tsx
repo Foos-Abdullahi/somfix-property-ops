@@ -7,7 +7,7 @@ import {
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
-import { usePermissions } from '@/hooks/use-permissions';
+import { Can } from '@/components/can';
 import { create, index } from '@/routes/properties';
 
 type Props = {
@@ -20,7 +20,6 @@ type Props = {
 };
 
 export default function PropertiesIndex({ properties, stats }: Props) {
-    const { canManage } = usePermissions();
     const sections: StatSection[] = [
         {
             title: 'Total properties',
@@ -68,7 +67,7 @@ export default function PropertiesIndex({ properties, stats }: Props) {
                         </p>
                     </div>
 
-                    {canManage('properties') && (
+                    <Can permission="properties.manage">
                         <Button asChild size="sm">
                             <Link href={create()}>
                                 <Plus className="size-4" />
@@ -76,7 +75,7 @@ export default function PropertiesIndex({ properties, stats }: Props) {
                                 <span className="hidden sm:inline">property</span>
                             </Link>
                         </Button>
-                    )}
+                    </Can>
                 </div>
 
                 <StatsCard sections={sections} />

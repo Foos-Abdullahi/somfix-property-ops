@@ -1,6 +1,5 @@
 import { HardHat } from 'lucide-react';
 import DetailPage, { label } from '@/components/detail-page';
-import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/service-team';
 
 type RecordDetail = {
@@ -18,7 +17,6 @@ export default function ServiceTeamShow({
 }: {
     serviceTeam: RecordDetail;
 }) {
-    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={serviceTeam.name}
@@ -37,8 +35,8 @@ export default function ServiceTeamShow({
             icon={HardHat}
             backHref={index.url()}
             managePermission="service-team.manage"
-            editHref={canManage('service-team') ? edit.url(serviceTeam.id) : undefined}
-            deleteHref={canManage('service-team') ? destroy.url(serviceTeam.id) : undefined}
+            editHref={edit.url(serviceTeam.id)}
+            deleteHref={destroy.url(serviceTeam.id)}
         />
     );
 }

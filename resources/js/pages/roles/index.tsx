@@ -7,6 +7,7 @@ import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { AccessPage, DeleteRecord } from '@/components/access-management';
 import { Button } from '@/components/ui/button';
+import { Can } from '@/components/can';
 
 type Role = {
     id: number;
@@ -82,16 +83,16 @@ export default function Roles({
             cell: ({ row }) => {
                 const role = row.original;
                 return (
-                    <>
-                        <div className="flex gap-1">
-                            <Button asChild variant="ghost" size="icon">
-                                <Link
-                                    href={`/settings/roles/${role.id}`}
-                                    aria-label={`View ${role.name}`}
-                                >
-                                    <Eye className="size-4 text-[#FF8500]" />
-                                </Link>
-                            </Button>
+                    <div className="flex gap-1">
+                        <Button asChild variant="ghost" size="icon">
+                            <Link
+                                href={`/settings/roles/${role.id}`}
+                                aria-label={`View ${role.name}`}
+                            >
+                                <Eye className="size-4 text-[#FF8500]" />
+                            </Link>
+                        </Button>
+                        <Can permission="roles.manage">
                             {!role.is_system && (
                                 <Button asChild size="icon" variant="ghost">
                                     <Link
@@ -112,8 +113,8 @@ export default function Roles({
                                     <Trash2 className="size-4" />
                                 </Button>
                             )}
-                        </div>
-                    </>
+                        </Can>
+                    </div>
                 );
             },
         },
@@ -122,12 +123,14 @@ export default function Roles({
         <AccessPage
             title="Roles & permissions"
             actions={
-                <Button asChild size="sm">
-                    <Link href="/settings/roles/create">
-                        <Plus className="size-4" />
-                        Add role
-                    </Link>
-                </Button>
+                <Can permission="roles.manage">
+                    <Button asChild size="sm">
+                        <Link href="/settings/roles/create">
+                            <Plus className="size-4" />
+                            Add role
+                        </Link>
+                    </Button>
+                </Can>
             }
             stats={[
                 {

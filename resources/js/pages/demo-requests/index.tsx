@@ -13,6 +13,7 @@ import { StatsCard } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Can } from '@/components/can';
 import { stages, type Inquiry } from './types';
 export { stages, type Inquiry } from './types';
 type Filters = {
@@ -36,8 +37,6 @@ export default function Requests({
     filters: Filters;
     stats: { total: number; new: number; scheduled: number; converted: number };
 }) {
-    const { auth } = usePage<{ auth: { permissions: string[] } }>().props;
-    const canManage = auth.permissions.includes('demo-requests.manage');
     const navigate = (changes: Record<string, unknown>) =>
         router.get(
             '/demo-requests',
@@ -113,7 +112,7 @@ export default function Requests({
             cell: ({ row }) => (
                 <div className="flex gap-1">
                     {filters.archived ? (
-                        canManage && (
+                        <Can permission="demo-requests.manage">
                             <Button
                                 size="sm"
                                 variant="outline"
@@ -126,7 +125,7 @@ export default function Requests({
                                 <RotateCcw className="size-4" />
                                 Restore
                             </Button>
-                        )
+                        </Can>
                     ) : (
                         <>
                             <Button asChild size="icon" variant="ghost">
@@ -137,7 +136,7 @@ export default function Requests({
                                     <Eye className="size-4 text-[#FF8500]" />
                                 </Link>
                             </Button>
-                            {canManage && (
+                            <Can permission="demo-requests.manage">
                                 <Button asChild size="icon" variant="ghost">
                                     <Link
                                         aria-label={`Edit request from ${row.original.name}`}
@@ -146,7 +145,7 @@ export default function Requests({
                                         <Pencil className="size-4 text-[#004317] dark:text-green-300" />
                                     </Link>
                                 </Button>
-                            )}
+                            </Can>
                         </>
                     )}
                 </div>
@@ -167,14 +166,14 @@ export default function Requests({
                             tenant conversion.
                         </p>
                     </div>
-                    {canManage && (
+                    <Can permission="demo-requests.manage">
                         <Button asChild size="sm">
                             <Link href="/demo-requests/create">
                                 <Plus className="size-4" />
                                 Add request
                             </Link>
                         </Button>
-                    )}
+                    </Can>
                 </div>
                 <StatsCard
                     sections={[

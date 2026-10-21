@@ -8,7 +8,7 @@ import {
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
-import { usePermissions } from '@/hooks/use-permissions';
+import { Can } from '@/components/can';
 import { create, index } from '@/routes/service-team';
 
 export default function ServiceTeamIndex({
@@ -18,7 +18,6 @@ export default function ServiceTeamIndex({
     serviceTeams: ServiceTeamRow[];
     stats: { totalMembers: number; activeMembers: number; onLeave: number };
 }) {
-    const { canManage } = usePermissions();
     const sections: StatSection[] = [
         {
             title: 'Total members',
@@ -57,14 +56,16 @@ export default function ServiceTeamIndex({
                         </p>
                     </div>
                     <div className="flex flex-wrap justify-end gap-2">
-                        <RecordImport module="service-team" />
-                        <Button asChild size="sm">
-                            <Link href={create()}>
-                                <Plus className="size-4" />
-                                Add{' '}
-                                <span className="hidden sm:inline">member</span>
-                            </Link>
-                        </Button>
+                        <Can permission="service-team.manage">
+                            <RecordImport module="service-team" />
+                            <Button asChild size="sm">
+                                <Link href={create()}>
+                                    <Plus className="size-4" />
+                                    Add{' '}
+                                    <span className="hidden sm:inline">member</span>
+                                </Link>
+                            </Button>
+                        </Can>
                     </div>
                 </div>
                 <StatsCard sections={sections} />

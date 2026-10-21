@@ -20,6 +20,7 @@ import {
 } from '@/components/access-management';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Can } from '@/components/can';
 
 type Role = { id: number; name: string; slug: string; permissions: string[] };
 type ManagedUser = {
@@ -104,7 +105,7 @@ export default function Users({
             cell: ({ row }) => {
                 const user = row.original;
                 return (
-                    <>
+                    <Can permission="users.manage">
                         <div className="flex gap-1">
                             {(isAdministrator ||
                                 user.role?.slug !== 'administrator') && (
@@ -129,7 +130,7 @@ export default function Users({
                                     </Button>
                                 )}
                         </div>
-                    </>
+                    </Can>
                 );
             },
         },
@@ -138,12 +139,14 @@ export default function Users({
         <AccessPage
             title="User management"
             actions={
-                <Button asChild size="sm">
-                    <Link href="/settings/users/create">
-                        <Plus className="size-4" />
-                        Add user
-                    </Link>
-                </Button>
+                <Can permission="users.manage">
+                    <Button asChild size="sm">
+                        <Link href="/settings/users/create">
+                            <Plus className="size-4" />
+                            Add user
+                        </Link>
+                    </Button>
+                </Can>
             }
             stats={[
                 {

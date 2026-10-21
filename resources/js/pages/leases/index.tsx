@@ -4,7 +4,7 @@ import { leaseColumns, type LeaseRow } from '@/components/leases/columns';
 import { StatsCard, type StatSection } from '@/components/tools/StatsCard';
 import { DataTable } from '@/components/tools/table/main-table';
 import { Button } from '@/components/ui/button';
-import { usePermissions } from '@/hooks/use-permissions';
+import { Can } from '@/components/can';
 import { create, index } from '@/routes/leases';
 
 type Props = {
@@ -17,7 +17,6 @@ type Props = {
 };
 
 export default function LeasesIndex({ leases, stats }: Props) {
-    const { canManage } = usePermissions();
     const sections: StatSection[] = [
         {
             title: 'Total leases',
@@ -65,14 +64,14 @@ export default function LeasesIndex({ leases, stats }: Props) {
                         </p>
                     </div>
 
-                    {canManage('leases') && (
+                    <Can permission="leases.manage">
                         <Button asChild size="sm">
                             <Link href={create()}>
                                 <Plus className="size-4" />
                                 Add <span className="hidden sm:inline">lease</span>
                             </Link>
                         </Button>
-                    )}
+                    </Can>
                 </div>
 
                 <StatsCard sections={sections} />

@@ -1,6 +1,5 @@
 import { Wrench } from 'lucide-react';
 import DetailPage, { date, label, money } from '@/components/detail-page';
-import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/maintenance';
 
 type Maintenance = {
@@ -44,7 +43,6 @@ export default function MaintenanceShow({
 }: {
     maintenance: Maintenance;
 }) {
-    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={maintenance.title}
@@ -111,9 +109,10 @@ export default function MaintenanceShow({
             ]}
             status={maintenance.status}
             icon={Wrench}
+            managePermission="maintenance.manage"
             backHref={index.url()}
-            editHref={canManage('maintenance') ? edit.url(maintenance.id) : undefined}
-            deleteHref={canManage('maintenance') ? destroy.url(maintenance.id) : undefined}
+            editHref={edit.url(maintenance.id)}
+            deleteHref={destroy.url(maintenance.id)}
         />
     );
 }

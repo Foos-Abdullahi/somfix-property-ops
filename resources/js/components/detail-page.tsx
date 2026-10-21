@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Pencil, Trash2, type LucideIcon } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { Can } from '@/components/can';
+import { usePermissions } from '@/hooks/use-permissions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -120,6 +121,7 @@ export default function DetailPage({
     aside?: DetailSection[];
     badge?: string;
 }) {
+    const { isViewer } = usePermissions();
     const [confirming, setConfirming] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const positive = [
@@ -185,7 +187,7 @@ export default function DetailPage({
                                 Back
                             </Link>
                         </Button>
-                        {editHref && (
+                        {editHref && !isViewer && (
                             <Can permission={managePermission}>
                                 <Button asChild size="sm">
                                     <Link href={editHref}>
@@ -195,7 +197,7 @@ export default function DetailPage({
                                 </Button>
                             </Can>
                         )}
-                        {deleteHref && (
+                        {deleteHref && !isViewer && (
                             <Can permission={managePermission}>
                                 <Button
                                     variant="outline"

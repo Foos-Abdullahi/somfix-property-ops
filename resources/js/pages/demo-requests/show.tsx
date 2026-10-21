@@ -1,12 +1,11 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { ClipboardList } from 'lucide-react';
 import DetailPage from '@/components/detail-page';
+import { Can } from '@/components/can';
 import { stages, type Inquiry } from './types';
 const appointment = (value: string | null) =>
     value ? new Date(value).toLocaleString() : 'Not scheduled';
 export default function RequestShow({ inquiry }: { inquiry: Inquiry }) {
-    const { auth } = usePage<{ auth: { permissions: string[] } }>().props;
-    const canManage = auth.permissions.includes('demo-requests.manage');
     return (
         <div className="w-full animate-in duration-700 fade-in slide-in-from-bottom-6 [&>div]:max-w-none">
             <DetailPage
@@ -16,12 +15,9 @@ export default function RequestShow({ inquiry }: { inquiry: Inquiry }) {
                 icon={ClipboardList}
                 backHref="/demo-requests"
                 deleteMessage="You can restore this request from Deleted requests."
-                editHref={
-                    canManage ? `/demo-requests/${inquiry.id}/edit` : undefined
-                }
-                deleteHref={
-                    canManage ? `/demo-requests/${inquiry.id}` : undefined
-                }
+                managePermission="demo-requests.manage"
+                editHref={`/demo-requests/${inquiry.id}/edit`}
+                deleteHref={`/demo-requests/${inquiry.id}`}
                 summary={[
                     {
                         title: 'Contact',
@@ -60,11 +56,11 @@ export default function RequestShow({ inquiry }: { inquiry: Inquiry }) {
                             },
                             {
                                 label: 'Tenant',
-                                value:
-                                    inquiry.tenant_id &&
-                                    auth.permissions.includes(
-                                        'tenants.view',
-                                    ) ? (
+                                value: inquiry.tenant_id ? (
+                                    <Can
+                                        permission="tenants.view"
+                                        fallback={<span>Tenant linked</span>}
+                                    >
                                         <Link
                                             className="underline"
                                             href={`/tenants/${inquiry.tenant_id}`}
@@ -72,11 +68,10 @@ export default function RequestShow({ inquiry }: { inquiry: Inquiry }) {
                                             Open linked tenant #
                                             {inquiry.tenant_id}
                                         </Link>
-                                    ) : inquiry.tenant_id ? (
-                                        'Tenant linked'
-                                    ) : (
-                                        'No tenant linked'
-                                    ),
+                                    </Can>
+                                ) : (
+                                    'No tenant linked'
+                                ),
                             },
                         ],
                     },
@@ -91,24 +86,22 @@ export default function RequestShow({ inquiry }: { inquiry: Inquiry }) {
                         title: 'Next steps',
                         content: (
                             <div className="flex flex-col gap-3 text-sm">
-                                {auth.permissions.includes(
-                                    'tenants.manage',
-                                ) && (
+                                <Can permission="tenants.manage">
                                     <Link
                                         className="underline"
                                         href="/tenants/create"
                                     >
                                         Create a tenant first
                                     </Link>
-                                )}
-                                {auth.permissions.includes('leases.manage') && (
+                                </Can>
+                                <Can permission="leases.manage">
                                     <Link
                                         className="underline"
                                         href="/leases/create"
                                     >
                                         Create a lease
                                     </Link>
-                                )}
+                                </Can>
                                 <p className="text-xs text-muted-foreground">
                                     Email links open your mail app. Dates record
                                     appointments; invitations are sent

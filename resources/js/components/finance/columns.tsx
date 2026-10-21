@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye, Printer } from 'lucide-react';
+import { Can } from '@/components/can';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, show } from '@/routes/finance';
@@ -95,11 +96,13 @@ export const financeColumns: ColumnDef<FinanceRow>[] = [
                         <Printer className="size-4 text-primary" />
                     </Link>
                 </Button>
-                <Button asChild size="icon" variant="ghost">
-                    <Link href={edit(row.original.id)}>
-                        <Edit className="size-4 text-[#004317] dark:text-green-300" />
-                    </Link>
-                </Button>
+                <Can permission="finance.manage">
+                    <Button asChild size="icon" variant="ghost">
+                        <Link href={edit(row.original.id)}>
+                            <Edit className="size-4 text-[#004317] dark:text-green-300" />
+                        </Link>
+                    </Button>
+                </Can>
             </div>
         ),
     },

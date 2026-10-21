@@ -1,6 +1,5 @@
 import { DoorOpen } from 'lucide-react';
 import DetailPage, { label, money } from '@/components/detail-page';
-import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/units';
 
 type RecordDetail = {
@@ -17,7 +16,6 @@ type RecordDetail = {
 };
 
 export default function UnitShow({ unit }: { unit: RecordDetail }) {
-    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={`Unit ${unit.unit_number}`}
@@ -44,9 +42,10 @@ export default function UnitShow({ unit }: { unit: RecordDetail }) {
             ]}
             status={unit.status}
             icon={DoorOpen}
+            managePermission="units.manage"
             backHref={index.url()}
-            editHref={canManage('units') ? edit.url(unit.id) : undefined}
-            deleteHref={canManage('units') ? destroy.url(unit.id) : undefined}
+            editHref={edit.url(unit.id)}
+            deleteHref={destroy.url(unit.id)}
         />
     );
 }

@@ -1,6 +1,5 @@
 import { UserRound } from 'lucide-react';
 import DetailPage, { date } from '@/components/detail-page';
-import { usePermissions } from '@/hooks/use-permissions';
 import { destroy, edit, index } from '@/routes/tenants';
 
 type RecordDetail = {
@@ -18,7 +17,6 @@ type RecordDetail = {
 };
 
 export default function TenantShow({ tenant }: { tenant: RecordDetail }) {
-    const { canManage } = usePermissions();
     return (
         <DetailPage
             title={`${tenant.first_name} ${tenant.last_name}`}
@@ -57,9 +55,10 @@ export default function TenantShow({ tenant }: { tenant: RecordDetail }) {
             ]}
             status={tenant.status}
             icon={UserRound}
+            managePermission="tenants.manage"
             backHref={index.url()}
-            editHref={canManage('tenants') ? edit.url(tenant.id) : undefined}
-            deleteHref={canManage('tenants') ? destroy.url(tenant.id) : undefined}
+            editHref={edit.url(tenant.id)}
+            deleteHref={destroy.url(tenant.id)}
         />
     );
 }
