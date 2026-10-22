@@ -15,15 +15,24 @@ PUBLIC_PATH=/home/somfix/public_html
 # release from the absolute release path referenced by public_html/index.php.
 APP_PATH=''
 APP_CANDIDATES=''
+APP_COUNT=0
+ONLY_CANDIDATE=''
 for candidate in /home/somfix/deploy-* /home/somfix/somfix-app; do
     if /usr/bin/test -f "$candidate/artisan" && /usr/bin/test -f "$candidate/.env"; then
         APP_CANDIDATES="${APP_CANDIDATES}${candidate}\n"
-        if /bin/grep -Fq "$candidate/" "$PUBLIC_PATH/index.php"; then
+        APP_COUNT=$((APP_COUNT + 1))
+        ONLY_CANDIDATE="$candidate"
+        if /bin/grep -Fq "$candidate/" "$PUBLIC_PATH/index.php" || \
+            /bin/grep -Fq "$(/usr/bin/basename "$candidate")/" "$PUBLIC_PATH/index.php"; then
             APP_PATH="$candidate"
             break
         fi
     fi
 done
+
+if /usr/bin/test -z "$APP_PATH" && /usr/bin/test "$APP_COUNT" -eq 1; then
+    APP_PATH="$ONLY_CANDIDATE"
+fi
 
 if /usr/bin/test -z "$APP_PATH"; then
     printf 'could not identify active app from public_html/index.php\ncandidates:\n%b' "$APP_CANDIDATES" > "$STATUS_FILE"
