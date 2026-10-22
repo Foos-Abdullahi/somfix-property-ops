@@ -1,20 +1,4 @@
 ---
 deployment:
   tasks:
-    - export PUBLICPATH=$(/usr/bin/readlink -f /home/somfix/public_html)
-    - export APPPATH=${PUBLICPATH%/public}
-    - /usr/bin/test -f $APPPATH/artisan
-    - /usr/bin/test -f $APPPATH/.env
-    - /bin/cp -a database/. $APPPATH/database/
-    - /opt/alt/php84/usr/bin/php $APPPATH/artisan migrate --force
-    - /bin/cp -a app/. $APPPATH/app/
-    - /bin/cp -a bootstrap/. $APPPATH/bootstrap/
-    - /bin/cp -a config/. $APPPATH/config/
-    - /bin/cp -a public/. $APPPATH/public/
-    - /bin/cp -a resources/. $APPPATH/resources/
-    - /bin/cp -a routes/. $APPPATH/routes/
-    - /bin/cp artisan composer.json composer.lock $APPPATH/
-    - /opt/alt/php84/usr/bin/php $APPPATH/artisan optimize:clear
-    - /opt/alt/php84/usr/bin/php $APPPATH/artisan config:cache
-    - /opt/alt/php84/usr/bin/php $APPPATH/artisan route:cache
-    - /opt/alt/php84/usr/bin/php $APPPATH/artisan view:cache
+    - /bin/bash scripts/deploy-cpanel-git.sh
