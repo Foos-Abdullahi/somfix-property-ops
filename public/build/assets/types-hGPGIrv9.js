@@ -1,0 +1,1 @@
+var e={new:`New`,contacted:`Contacted`,scheduled:`Walkthrough scheduled`,completed:`Walkthrough completed`,converted:`Linked to tenant`,closed:`Closed`};export{e as t};
