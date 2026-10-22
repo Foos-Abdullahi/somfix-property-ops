@@ -7,16 +7,29 @@ trap 'code=$?; printf "failed at line %s (exit %s)\n" "$LINENO" "$code" > "$STAT
 
 printf 'started\n' > "$STATUS_FILE"
 
-PUBLIC_PATH="$(/usr/bin/readlink -f /home/somfix/public_html)"
-case "$PUBLIC_PATH" in
-    /home/somfix/deploy-*/public) ;;
-    *)
-        printf 'unexpected public path: %s\n' "$PUBLIC_PATH" > "$STATUS_FILE"
-        exit 1
-        ;;
-esac
+PUBLIC_PATH=/home/somfix/public_html
+/usr/bin/test -d "$PUBLIC_PATH"
+/usr/bin/test -f "$PUBLIC_PATH/index.php"
 
-APP_PATH="${PUBLIC_PATH%/public}"
+# This server keeps Laravel outside the public document root. Locate the active
+# release from the absolute release path referenced by public_html/index.php.
+APP_PATH=''
+APP_CANDIDATES=''
+for candidate in /home/somfix/deploy-* /home/somfix/somfix-app; do
+    if /usr/bin/test -f "$candidate/artisan" && /usr/bin/test -f "$candidate/.env"; then
+        APP_CANDIDATES="${APP_CANDIDATES}${candidate}\n"
+        if /bin/grep -Fq "$candidate/" "$PUBLIC_PATH/index.php"; then
+            APP_PATH="$candidate"
+            break
+        fi
+    fi
+done
+
+if /usr/bin/test -z "$APP_PATH"; then
+    printf 'could not identify active app from public_html/index.php\ncandidates:\n%b' "$APP_CANDIDATES" > "$STATUS_FILE"
+    exit 1
+fi
+
 /usr/bin/test -f "$APP_PATH/artisan"
 /usr/bin/test -f "$APP_PATH/.env"
 
@@ -47,9 +60,20 @@ done
 /bin/cp -a routes/. "$APP_PATH/routes/"
 /bin/cp artisan composer.json composer.lock "$APP_PATH/"
 
+# Publish browser assets without replacing the production bootstrap index.php,
+# which intentionally points at the private application directory above.
+/bin/mkdir -p "$PUBLIC_PATH/build" "$PUBLIC_PATH/images"
+/bin/cp -a public/build/. "$PUBLIC_PATH/build/"
+/bin/cp -a public/images/. "$PUBLIC_PATH/images/"
+for asset in apple-touch-icon.png favicon-32x32.png favicon.ico favicon.svg icon-192.png icon-512.png robots.txt site.webmanifest; do
+    if /usr/bin/test -f "public/$asset"; then
+        /bin/cp -a "public/$asset" "$PUBLIC_PATH/$asset"
+    fi
+done
+
 "$PHP_BIN" "$APP_PATH/artisan" optimize:clear
 "$PHP_BIN" "$APP_PATH/artisan" config:cache
 "$PHP_BIN" "$APP_PATH/artisan" route:cache
 "$PHP_BIN" "$APP_PATH/artisan" view:cache
 
-printf 'success: %s\n' "$(/usr/bin/date -u +%Y-%m-%dT%H:%M:%SZ)" > "$STATUS_FILE"
+printf 'success: %s\napp: %s\npublic: %s\n' "$(/usr/bin/date -u +%Y-%m-%dT%H:%M:%SZ)" "$APP_PATH" "$PUBLIC_PATH" > "$STATUS_FILE"
