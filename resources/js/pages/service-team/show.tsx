@@ -6,7 +6,6 @@ type RecordDetail = {
     id: number;
     name: string;
     specialization: string;
-    district: string | null;
     phone: string;
     email: string;
     status: string;
@@ -26,7 +25,6 @@ export default function ServiceTeamShow({
                 {
                     title: 'Contact',
                     fields: [
-                        { label: 'District', value: serviceTeam.district },
                         { label: 'Phone', value: serviceTeam.phone },
                         { label: 'Email', value: serviceTeam.email },
                     ],

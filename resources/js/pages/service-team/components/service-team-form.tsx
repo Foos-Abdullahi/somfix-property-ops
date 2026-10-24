@@ -18,7 +18,6 @@ import { index, store, update } from '@/routes/service-team';
 export type ServiceTeamFormValues = {
     name: string;
     specialization: string;
-    district: string;
     phone: string;
     email: string;
     status: 'active' | 'inactive' | 'on_leave';
@@ -37,7 +36,6 @@ export function ServiceTeamForm({
     const form = useForm<ServiceTeamFormValues>({
         name: serviceTeam?.name ?? '',
         specialization: serviceTeam?.specialization ?? '',
-        district: serviceTeam?.district ?? '',
         phone: serviceTeam?.phone ?? '',
         email: serviceTeam?.email ?? '',
         status: serviceTeam?.status ?? 'active',
@@ -76,12 +74,6 @@ export function ServiceTeamForm({
                             form.setData('specialization', value)
                         }
                         error={form.errors.specialization}
-                    />
-                    <Field
-                        label="District"
-                        value={form.data.district}
-                        onChange={(value) => form.setData('district', value)}
-                        error={form.errors.district}
                     />
                     <Field
                         label="Phone"

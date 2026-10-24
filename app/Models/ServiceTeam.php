@@ -14,13 +14,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $phone
  * @property string $email
  * @property string $status
- * @property string|null $district
  * @property string|null $notes
  */
 #[Fillable([
     'name',
     'specialization',
-    'district',
     'phone',
     'email',
     'status',

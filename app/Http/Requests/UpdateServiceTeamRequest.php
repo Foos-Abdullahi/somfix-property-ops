@@ -28,7 +28,6 @@ class UpdateServiceTeamRequest extends StoreServiceTeamRequest
             'phone' => ['sometimes', 'string', 'max:20'],
             'email' => ['sometimes', 'email', 'max:255'],
             'status' => ['sometimes', Rule::in(['active', 'inactive', 'on_leave'])],
-            'district' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
         ];
     }

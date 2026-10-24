@@ -10,7 +10,6 @@ export type ServiceTeamRow = {
     id: number;
     name: string;
     specialization: string;
-    district: string | null;
     phone: string;
     email: string;
     status: 'active' | 'inactive' | 'on_leave';
@@ -32,11 +31,6 @@ export const serviceTeamColumns: ColumnDef<ServiceTeamRow>[] = [
                 </p>
             </div>
         ),
-    },
-    {
-        accessorKey: 'district',
-        header: 'District',
-        cell: ({ row }) => row.original.district ?? '—',
     },
     {
         accessorKey: 'phone',

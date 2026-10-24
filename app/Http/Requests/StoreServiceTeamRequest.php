@@ -29,7 +29,6 @@ class StoreServiceTeamRequest extends FormRequest
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255'],
             'status' => ['required', Rule::in(['active', 'inactive', 'on_leave'])],
-            'district' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
         ];
     }
