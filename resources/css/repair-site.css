@@ -106,6 +106,20 @@
     margin: 26px 0 18px;
     max-width: 680px;
 }
+.repair-hero h1.repair-hero-somali {
+    color: #0f2a17;
+    font-size: clamp(42px, 5vw, 70px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+    margin-bottom: 14px;
+}
+.repair-hero p.repair-hero-english {
+    color: #b85f08;
+    font-size: clamp(24px, 2.4vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin: 0 0 22px;
+}
 .repair-somali {
     font-size: 22px;
     color: #b85f08;
@@ -237,6 +251,20 @@
 .repair-number {
     color: #9ca997;
     font-size: 13px;
+}
+.repair-service-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: #004317;
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(0, 67, 23, 0.22);
+}
+.repair-card:hover .repair-service-icon {
+    background: #b85f08;
 }
 .repair-price {
     font-size: 11px;
@@ -572,6 +600,9 @@
     .repair-hero h1 {
         letter-spacing: -2px;
         font-size: 49px;
+    }
+    .repair-hero h1.repair-hero-somali {
+        font-size: 42px;
     }
     .repair-hero p {
         font-size: 16px;
