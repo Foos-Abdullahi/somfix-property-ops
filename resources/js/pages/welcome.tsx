@@ -1,11 +1,21 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState, type FormEvent } from 'react';
 import {
+    AppWindow,
+    Archive,
     ArrowRight,
+    Bug,
     Check,
+    CookingPot,
+    DoorOpen,
+    Droplets,
+    GlassWater,
+    Hammer,
     Menu,
     MessageCircle,
+    PaintRoller,
     Phone,
+    Sparkles,
     Wrench,
     X,
 } from 'lucide-react';
@@ -77,6 +87,18 @@ const services = [
         'Small jobs around the home or office. If you are not sure we do it, just ask.',
     ],
 ] as const;
+const serviceIcons = [
+    DoorOpen,
+    AppWindow,
+    Droplets,
+    Bug,
+    GlassWater,
+    Archive,
+    CookingPot,
+    Sparkles,
+    PaintRoller,
+    Hammer,
+];
 const navigation = [
     ['Home', '/'],
     ['Services', '/services'],
@@ -234,28 +256,39 @@ function Cards({ items }: { items: string[][] }) {
     );
 }
 function ServiceCards({ home = false }: { home?: boolean }) {
-    const items = home ? services.filter((_, i) => i < 7 || i === 9) : services;
+    const items = services
+        .map((service, index) => ({ service, index }))
+        .filter(({ index }) => !home || index < 7 || index === 9);
     return (
         <div className="repair-grid">
-            {items.map(([title, somali, price, description], i) => (
-                <article className="repair-card" key={title}>
-                    <div className="repair-card-top">
-                        <span className="repair-number">
-                            {String(i + 1).padStart(2, '0')}
-                        </span>
-                        {!home && <span className="repair-price">{price}</span>}
-                    </div>
-                    <h3>{title}</h3>
-                    {!home && somali && <small>{somali}</small>}
-                    <p>{description}</p>
-                    <a
-                        href={`${whatsapp}${encodeURIComponent(title)}`}
-                        className="repair-text-link"
-                    >
-                        Ask for a quote <ArrowRight size={16} />
-                    </a>
-                </article>
-            ))}
+            {items.map(({ service, index }) => {
+                const [title, somali, price, description] = service;
+                const Icon = serviceIcons[index];
+                return (
+                    <article className="repair-card" key={title}>
+                        <div className="repair-card-top">
+                            <span
+                                className="repair-service-icon"
+                                aria-hidden="true"
+                            >
+                                <Icon size={30} strokeWidth={2} />
+                            </span>
+                            {!home && (
+                                <span className="repair-price">{price}</span>
+                            )}
+                        </div>
+                        <h3>{title}</h3>
+                        {!home && somali && <small>{somali}</small>}
+                        <p>{description}</p>
+                        <a
+                            href={`${whatsapp}${encodeURIComponent(title)}`}
+                            className="repair-text-link"
+                        >
+                            Ask for a quote <ArrowRight size={16} />
+                        </a>
+                    </article>
+                );
+            })}
         </div>
     );
 }
@@ -462,11 +495,17 @@ export default function Welcome({
                                 <Wrench size={16} /> HOME REPAIR & MAINTENANCE ·
                                 MOGADISHU
                             </span>
-                            <h1>{heading}</h1>
-                            {home && (
-                                <h2 className="repair-somali">
-                                    Hal wicitaan ciladada ku xali
-                                </h2>
+                            {home ? (
+                                <>
+                                    <h1 className="repair-hero-somali">
+                                        Hal wicitaan ciladada ku xali
+                                    </h1>
+                                    <p className="repair-hero-english">
+                                        One call. We fix it.
+                                    </p>
+                                </>
+                            ) : (
+                                <h1>{heading}</h1>
                             )}
                             {publicPage === 'property-management' && (
                                 <h2 className="repair-somali">
