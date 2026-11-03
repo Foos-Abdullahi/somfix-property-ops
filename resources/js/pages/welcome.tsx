@@ -1,5 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import {
     ArrowRight,
     Blinds,
@@ -227,6 +227,45 @@ const metadata: Record<string, [string, string, string]> = {
         'Call or WhatsApp SOMFIX on 0617963640. Via Taleex, KM4, Mogadishu. Send a photo of the problem and get a price fast.',
     ],
 };
+const heroPhotos = [
+    'Modern building overlooking Mogadishu and the Indian Ocean',
+    'Mogadishu street at sunset',
+    'Mogadishu city skyline',
+    'Somali flags above Mogadishu',
+    'Street with tuk-tuks in Mogadishu',
+    'Mogadishu skyline with mosque at sunset',
+    'Apartment buildings in Mogadishu',
+    'Mogadishu streets and buildings from above',
+    'Aerial view of Mogadishu neighborhoods',
+];
+function HeroSlideshow() {
+    const [active, setActive] = useState(0);
+    useEffect(() => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+        const timer = window.setInterval(
+            () => setActive((current) => (current + 1) % heroPhotos.length),
+            5000,
+        );
+        return () => window.clearInterval(timer);
+    }, []);
+    return (
+        <>
+            {heroPhotos.map((alt, index) => (
+                <img
+                    key={alt}
+                    src={`/images/landing/mogadishu-${index + 1}.jpg`}
+                    alt={alt}
+                    className={`repair-hero-slide ${index === active ? 'is-active' : ''}`}
+                    aria-hidden={index === active ? undefined : true}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
+                />
+            ))}
+        </>
+    );
+}
 function Actions({ label = 'WhatsApp us: 0617963640' }: { label?: string }) {
     return (
         <div className="repair-actions">
@@ -538,11 +577,7 @@ export default function Welcome({
                         </div>
                         {home && (
                             <div className="repair-hero-image">
-                                <img
-                                    src="/images/landing/technician.jpg"
-                                    alt="Technician working on a repair"
-                                    fetchPriority="high"
-                                />
+                                <HeroSlideshow />
                                 <div className="repair-image-caption">
                                     <span>
                                         <Check />
@@ -585,8 +620,8 @@ export default function Welcome({
                             </section>
                             <section className="repair-container repair-highlight">
                                 <img
-                                    src="/images/landing/property.jpg"
-                                    alt="Residential property"
+                                    src="/images/landing/mogadishu-property.jpg"
+                                    alt="Residential buildings in Mogadishu"
                                     loading="lazy"
                                 />
                                 <div>
