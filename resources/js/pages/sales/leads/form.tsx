@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 import { ArrowLeft, Save, Target } from 'lucide-react';
+import { CustomerSelect } from '@/components/customer-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,7 +15,13 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-type Option = { id: number; name?: string; unit_number?: string };
+type Option = {
+    id: number;
+    name?: string;
+    phone?: string | null;
+    unit_number?: string;
+    property_id?: number;
+};
 const inputClass =
     'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
 
@@ -93,16 +100,16 @@ export default function LeadForm({
                         </p>
                     </div>
                     <div className="grid gap-5 p-5 md:grid-cols-2">
-                        <AppSelect
+                        <CustomerSelect
                             label="Customer"
                             value={form.data.customer_id}
-                            set={(v) => form.setData('customer_id', v)}
-                            placeholder="Select customer"
-                            items={customers.map((x) => [
-                                String(x.id),
-                                x.name!,
-                            ])}
-                            optional
+                            customers={customers.map((x) => ({
+                                id: x.id,
+                                name: x.name!,
+                                phone: x.phone,
+                            }))}
+                            onChange={(v) => form.setData('customer_id', v)}
+                            error={form.errors.customer_id}
                         />
                         <AppSelect
                             label="Lead source"
@@ -154,8 +161,14 @@ export default function LeadForm({
                         <AppSelect
                             label="Property"
                             value={form.data.property_id}
-                            set={(v) => form.setData('property_id', v)}
-                            placeholder="No managed property"
+                            set={(v) =>
+                                form.setData((data) => ({
+                                    ...data,
+                                    property_id: v,
+                                    unit_id: '',
+                                }))
+                            }
+                            placeholder="Not a managed property"
                             items={properties.map((x) => [
                                 String(x.id),
                                 x.name!,
@@ -167,10 +180,13 @@ export default function LeadForm({
                             value={form.data.unit_id}
                             set={(v) => form.setData('unit_id', v)}
                             placeholder="No unit"
-                            items={units.map((x) => [
-                                String(x.id),
-                                x.unit_number!,
-                            ])}
+                            items={units
+                                .filter(
+                                    (x) =>
+                                        String(x.property_id) ===
+                                        form.data.property_id,
+                                )
+                                .map((x) => [String(x.id), x.unit_number!])}
                             optional
                         />
                         <Field
