@@ -23,11 +23,9 @@ class StoreMaintenanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'property_id' => ['nullable', 'exists:properties,id'],
+            'property_id' => ['required', 'exists:properties,id'],
             'unit_id' => ['nullable', 'exists:units,id'],
             'tenant_id' => ['nullable', 'exists:tenants,id'],
-            'customer_id' => ['nullable', 'exists:customers,id'],
-            'location' => ['nullable', 'string', 'max:255'],
             'category' => ['required', 'string', 'max:100'],
             'priority' => ['required', 'in:low,medium,high,urgent'],
             'title' => ['required', 'string', 'max:255'],
@@ -50,10 +48,10 @@ class StoreMaintenanceRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'property_id.required' => 'Please select a property.',
             'property_id.exists' => 'The selected property does not exist.',
             'unit_id.exists' => 'The selected unit does not exist.',
             'tenant_id.exists' => 'The selected tenant does not exist.',
-            'customer_id.exists' => 'The selected customer does not exist.',
             'category.required' => 'Please select a maintenance category.',
             'category.max' => 'Category must be 100 characters or less.',
             'priority.required' => 'Please select a priority level.',

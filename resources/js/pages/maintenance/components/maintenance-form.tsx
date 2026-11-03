@@ -1,8 +1,6 @@
 import { Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 import { ArrowLeft, Save, Wrench } from 'lucide-react';
-import { CustomerSelect } from '@/components/customer-select';
-import type { CustomerOption } from '@/components/customer-select';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,8 +19,6 @@ export type MaintenanceFormValues = {
     property_id: string;
     unit_id: string;
     tenant_id: string;
-    customer_id: string;
-    location: string;
     category: string;
     priority: 'low' | 'medium' | 'high' | 'urgent';
     title: string;
@@ -43,14 +39,10 @@ type MaintenanceFormProps = {
     units?: Array<{
         id: number;
         unit_number: string;
-        property_id?: number;
         property?: { name: string };
     }>;
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
-    customers?: CustomerOption[];
 };
-
-const NONE = '__none__';
 
 const fieldClassName =
     'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
@@ -61,14 +53,11 @@ export function MaintenanceForm({
     properties = [],
     units = [],
     tenants = [],
-    customers = [],
 }: MaintenanceFormProps) {
     const form = useForm<MaintenanceFormValues>({
-        property_id: String(maintenance?.property_id ?? ''),
-        unit_id: String(maintenance?.unit_id ?? ''),
-        tenant_id: String(maintenance?.tenant_id ?? ''),
-        customer_id: String(maintenance?.customer_id ?? ''),
-        location: maintenance?.location ?? '',
+        property_id: maintenance?.property_id ?? '',
+        unit_id: maintenance?.unit_id ?? '',
+        tenant_id: maintenance?.tenant_id ?? '',
         category: maintenance?.category ?? 'general',
         priority: maintenance?.priority ?? 'medium',
         title: maintenance?.title ?? '',
@@ -81,11 +70,6 @@ export function MaintenanceForm({
         actual_cost: maintenance?.actual_cost ?? '',
         notes: maintenance?.notes ?? '',
     });
-
-    const managed = form.data.property_id !== '';
-    const propertyUnits = units.filter(
-        (unit) => String(unit.property_id) === form.data.property_id,
-    );
 
     function submit(event: FormEvent<HTMLFormElement>): void {
         event.preventDefault();
@@ -116,18 +100,12 @@ export function MaintenanceForm({
 
                 <div className="grid gap-5 p-5 md:grid-cols-2">
                     <div className="space-y-2">
-                        <Label htmlFor="property_id">Property (optional)</Label>
+                        <Label htmlFor="property_id">Property</Label>
                         <Select
-                            value={form.data.property_id || NONE}
-                            onValueChange={(value) => {
-                                const next = value === NONE ? '' : value;
-                                form.setData((data) => ({
-                                    ...data,
-                                    property_id: next,
-                                    unit_id: '',
-                                    tenant_id: next ? data.tenant_id : '',
-                                }));
-                            }}
+                            value={form.data.property_id}
+                            onValueChange={(value) =>
+                                form.setData('property_id', value)
+                            }
                         >
                             <SelectTrigger
                                 id="property_id"
@@ -137,9 +115,6 @@ export function MaintenanceForm({
                                 <SelectValue placeholder="Select a property" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value={NONE}>
-                                    Not a managed property
-                                </SelectItem>
                                 {properties.map((property) => (
                                     <SelectItem
                                         key={property.id}
@@ -152,96 +127,66 @@ export function MaintenanceForm({
                         </Select>
                         <InputError message={form.errors.property_id} />
                     </div>
-                    {managed ? (
-                        <div className="space-y-2">
-                            <Label htmlFor="unit_id">Unit (optional)</Label>
-                            <Select
-                                value={form.data.unit_id || NONE}
-                                onValueChange={(value) =>
-                                    form.setData(
-                                        'unit_id',
-                                        value === NONE ? '' : value,
-                                    )
-                                }
+                    <div className="space-y-2">
+                        <Label htmlFor="unit_id">Unit (optional)</Label>
+                        <Select
+                            value={form.data.unit_id}
+                            onValueChange={(value) =>
+                                form.setData('unit_id', value)
+                            }
+                        >
+                            <SelectTrigger
+                                id="unit_id"
+                                className={`w-full ${fieldClassName}`}
+                                aria-invalid={Boolean(form.errors.unit_id)}
                             >
-                                <SelectTrigger
-                                    id="unit_id"
-                                    className={`w-full ${fieldClassName}`}
-                                    aria-invalid={Boolean(form.errors.unit_id)}
-                                >
-                                    <SelectValue placeholder="Select a unit" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value={NONE}>No unit</SelectItem>
-                                    {propertyUnits.map((unit) => (
-                                        <SelectItem
-                                            key={unit.id}
-                                            value={String(unit.id)}
-                                        >
-                                            {unit.unit_number}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <InputError message={form.errors.unit_id} />
-                        </div>
-                    ) : (
-                        <div className="space-y-2">
-                            <Label htmlFor="location">
-                                Job location (optional)
-                            </Label>
-                            <Input
-                                id="location"
-                                className={fieldClassName}
-                                value={form.data.location}
-                                onChange={(e) =>
-                                    form.setData('location', e.target.value)
-                                }
-                                placeholder="Address or area of the job"
-                            />
-                            <InputError message={form.errors.location} />
-                        </div>
-                    )}
-                    {managed && (
-                        <div className="space-y-2">
-                            <Label htmlFor="tenant_id">Tenant (optional)</Label>
-                            <Select
-                                value={form.data.tenant_id || NONE}
-                                onValueChange={(value) =>
-                                    form.setData(
-                                        'tenant_id',
-                                        value === NONE ? '' : value,
-                                    )
-                                }
+                                <SelectValue placeholder="Select a unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="">None</SelectItem>
+                                {units.map((unit) => (
+                                    <SelectItem
+                                        key={unit.id}
+                                        value={String(unit.id)}
+                                    >
+                                        {unit.unit_number} —{' '}
+                                        {unit.property?.name ||
+                                            'Unknown Property'}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={form.errors.unit_id} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="tenant_id">Tenant (optional)</Label>
+                        <Select
+                            value={form.data.tenant_id}
+                            onValueChange={(value) =>
+                                form.setData('tenant_id', value)
+                            }
+                        >
+                            <SelectTrigger
+                                id="tenant_id"
+                                className={`w-full ${fieldClassName}`}
+                                aria-invalid={Boolean(form.errors.tenant_id)}
                             >
-                                <SelectTrigger
-                                    id="tenant_id"
-                                    className={`w-full ${fieldClassName}`}
-                                    aria-invalid={Boolean(form.errors.tenant_id)}
-                                >
-                                    <SelectValue placeholder="Select a tenant" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value={NONE}>None</SelectItem>
-                                    {tenants.map((tenant) => (
-                                        <SelectItem
-                                            key={tenant.id}
-                                            value={String(tenant.id)}
-                                        >
-                                            {tenant.first_name} {tenant.last_name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <InputError message={form.errors.tenant_id} />
-                        </div>
-                    )}
-                    <CustomerSelect
-                        value={form.data.customer_id}
-                        customers={customers}
-                        onChange={(value) => form.setData('customer_id', value)}
-                        error={form.errors.customer_id}
-                    />
+                                <SelectValue placeholder="Select a tenant" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="">None</SelectItem>
+                                {tenants.map((tenant) => (
+                                    <SelectItem
+                                        key={tenant.id}
+                                        value={String(tenant.id)}
+                                    >
+                                        {tenant.first_name} {tenant.last_name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={form.errors.tenant_id} />
+                    </div>
                     <div className="space-y-2">
                         <Label htmlFor="category">Category</Label>
                         <Select

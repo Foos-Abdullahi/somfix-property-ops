@@ -14,11 +14,9 @@ type Props = {
     units?: Array<{
         id: number;
         unit_number: string;
-        property_id?: number;
         property?: { name: string };
     }>;
     tenants?: Array<{ id: number; first_name: string; last_name: string }>;
-    customers?: Array<{ id: number; name: string; phone?: string | null }>;
 };
 
 export default function MaintenanceEdit({
@@ -26,7 +24,6 @@ export default function MaintenanceEdit({
     properties = [],
     units = [],
     tenants = [],
-    customers = [],
 }: Props) {
     return (
         <>
@@ -51,7 +48,6 @@ export default function MaintenanceEdit({
                     properties={properties}
                     units={units}
                     tenants={tenants}
-                    customers={customers}
                 />
             </div>
         </>

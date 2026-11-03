@@ -10,9 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
- * @property int|null $property_id
- * @property int|null $customer_id
- * @property string|null $location
+ * @property int $property_id
  * @property int|null $unit_id
  * @property int|null $tenant_id
  * @property string $category
@@ -31,8 +29,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'property_id',
     'unit_id',
     'tenant_id',
-    'customer_id',
-    'location',
     'job_id',
     'category',
     'priority',
@@ -91,12 +87,6 @@ class Maintenance extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
-    }
-
-    /** @return BelongsTo<Customer, $this> */
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class);
     }
 
     /** @return BelongsTo<Job, $this> */

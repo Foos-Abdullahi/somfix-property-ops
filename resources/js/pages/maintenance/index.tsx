@@ -126,7 +126,7 @@ function MaintenanceCard({ request }: { request: MaintenanceRow }) {
                         <div className="flex items-center gap-2">
                             <Building2 className="size-3.5 shrink-0 text-primary" />
                             <span className="truncate">
-                                {request.property?.name || 'Not a managed property'}
+                                {request.property?.name || 'No property'}
                                 {request.unit?.unit_number
                                     ? ` · Unit ${request.unit.unit_number}`
                                     : ''}

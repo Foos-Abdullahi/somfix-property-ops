@@ -4,9 +4,7 @@ import { destroy, edit, index } from '@/routes/maintenance';
 
 type Maintenance = {
     id: number;
-    property_id: number | null;
-    customer_id: number | null;
-    location: string | null;
+    property_id: number;
     unit_id: number | null;
     tenant_id: number | null;
     category: string;
@@ -31,12 +29,6 @@ type Maintenance = {
         id: number;
         unit_number: string;
     };
-    customer?: {
-        id: number;
-        name: string;
-        phone: string | null;
-        email: string | null;
-    } | null;
     tenant?: {
         id: number;
         first_name: string;
@@ -101,19 +93,17 @@ export default function MaintenanceShow({
                     fields: [
                         {
                             label: 'Property',
-                            value: maintenance.property?.name ?? 'Not a managed property',
+                            value: maintenance.property?.name,
                         },
-                        { label: 'Location', value: maintenance.location },
                         { label: 'Unit', value: maintenance.unit?.unit_number },
-                        { label: 'Customer', value: maintenance.customer?.name },
                         {
                             label: 'Tenant',
                             value: maintenance.tenant
                                 ? `${maintenance.tenant.first_name} ${maintenance.tenant.last_name}`
                                 : null,
                         },
-                        { label: 'Email', value: maintenance.tenant?.email ?? maintenance.customer?.email },
-                        { label: 'Phone', value: maintenance.tenant?.phone ?? maintenance.customer?.phone },
+                        { label: 'Email', value: maintenance.tenant?.email },
+                        { label: 'Phone', value: maintenance.tenant?.phone },
                     ],
                 },
             ]}

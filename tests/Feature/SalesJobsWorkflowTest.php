@@ -143,32 +143,3 @@ it('runs the complete website request to paid and closed job workflow', function
     $this->get(route('sales.index'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('sales/index'));
     expect($job->fresh()->status)->toBe('closed');
 });
-
-it('creates maintenance work without a managed property and adds a customer quickly', function () {
-    $admin = User::factory()->create([
-        'role_id' => Role::where('slug', 'administrator')->sole()->id,
-        'is_active' => true,
-    ]);
-
-    $response = $this->actingAs($admin)
-        ->postJson(route('sales.customers.quick'), ['name' => 'Walk-in Client', 'phone' => '0615000000'])
-        ->assertCreated()
-        ->assertJsonPath('name', 'Walk-in Client');
-
-    $this->post(route('maintenance.store'), [
-        'property_id' => '',
-        'customer_id' => $response->json('id'),
-        'location' => 'Hodan, near the market',
-        'category' => 'plumbing',
-        'priority' => 'medium',
-        'title' => 'Leaking pipe',
-        'description' => 'Pipe under the sink.',
-        'status' => 'open',
-    ])->assertSessionHasNoErrors();
-
-    $maintenance = \App\Models\Maintenance::query()->sole();
-    expect($maintenance->property_id)->toBeNull()
-        ->and($maintenance->customer_id)->toBe($response->json('id'));
-
-    $this->postJson(route('sales.customers.quick'), ['name' => ''])->assertUnprocessable();
-});
