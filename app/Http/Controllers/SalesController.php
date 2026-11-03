@@ -14,6 +14,7 @@ use App\Models\Property;
 use App\Models\ServiceTeam;
 use App\Models\Unit;
 use App\Models\WorkOrder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -73,6 +74,19 @@ class SalesController extends Controller
     {
         $customer = Customer::create($this->customerData($request));
         return to_route('sales.customers.show', $customer)->with('toast', ['type' => 'success', 'message' => 'Customer created successfully.']);
+    }
+
+    public function customerQuickStore(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:50'],
+            'type' => ['nullable', Rule::in(['individual', 'company'])],
+            'address' => ['nullable', 'string', 'max:255'],
+        ]);
+        $customer = Customer::create([...$data, 'type' => $data['type'] ?? 'individual', 'status' => 'active']);
+
+        return response()->json($customer->only(['id', 'name', 'phone']), 201);
     }
 
     public function customerShow(Customer $customer): Response
@@ -245,7 +259,7 @@ class SalesController extends Controller
     }
     private function catalog(): array
     {
-        return ['customers' => Customer::orderBy('name')->get(['id', 'name']), 'properties' => Property::orderBy('name')->get(['id', 'name']), 'units' => Unit::orderBy('unit_number')->get(['id', 'unit_number', 'property_id']), 'inventories' => Inventory::where('current_stock', '>', 0)->orderBy('name')->get(['id', 'name', 'current_stock', 'unit_cost']), 'serviceTeams' => ServiceTeam::where('status', 'active')->orderBy('name')->get(['id', 'name', 'specialization'])];
+        return ['customers' => Customer::orderBy('name')->get(['id', 'name', 'phone']), 'properties' => Property::orderBy('name')->get(['id', 'name']), 'units' => Unit::orderBy('unit_number')->get(['id', 'unit_number', 'property_id']), 'inventories' => Inventory::where('current_stock', '>', 0)->orderBy('name')->get(['id', 'name', 'current_stock', 'unit_cost']), 'serviceTeams' => ServiceTeam::where('status', 'active')->orderBy('name')->get(['id', 'name', 'specialization'])];
     }
     private function nextNumber(string $prefix): string
     {
