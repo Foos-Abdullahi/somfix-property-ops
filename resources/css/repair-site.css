@@ -270,15 +270,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
-    border-radius: 16px;
-    background: #004317;
-    color: #fff;
-    box-shadow: 0 6px 14px rgba(0, 67, 23, 0.22);
+    color: #004317;
+}
+.repair-service-icon svg {
+    width: 44px;
+    height: 44px;
 }
 .repair-card:hover .repair-service-icon {
-    background: #b85f08;
+    color: #b85f08;
 }
 .repair-price {
     font-size: 11px;
