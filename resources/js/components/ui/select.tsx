@@ -70,6 +70,7 @@ function SelectContent({
         position={position}
         side={side}
         sideOffset={sideOffset}
+        avoidCollisions={false}
         align={align}
         {...props}
       >
@@ -78,7 +79,7 @@ function SelectContent({
           className={cn(
             "p-1",
             position === "popper" &&
-              "w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1"
+              "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1"
           )}
         >
           {children}
