@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMaintenanceRequest;
 use App\Http\Requests\UpdateMaintenanceRequest;
+use App\Models\Customer;
 use App\Models\Maintenance;
 use App\Models\Property;
 use App\Models\Tenant;
@@ -20,7 +21,7 @@ class MaintenanceController extends Controller
     public function index(): Response
     {
         $maintenances = Maintenance::query()
-            ->with(['property', 'unit', 'tenant'])
+            ->with(['property', 'unit', 'tenant', 'customer'])
             ->latest()
             ->get();
 
@@ -53,6 +54,7 @@ class MaintenanceController extends Controller
                 ->where('status', 'active')
                 ->orderBy('first_name')
                 ->get(['id', 'first_name', 'last_name']),
+            'customers' => Customer::query()->orderBy('name')->get(['id', 'name', 'phone']),
         ]);
     }
 
@@ -76,7 +78,7 @@ class MaintenanceController extends Controller
      */
     public function show(Maintenance $maintenance): Response
     {
-        $maintenance->load(['property', 'unit', 'tenant']);
+        $maintenance->load(['property', 'unit', 'tenant', 'customer']);
 
         return Inertia::render('maintenance/show', [
             'maintenance' => $maintenance,
@@ -88,7 +90,7 @@ class MaintenanceController extends Controller
      */
     public function edit(Maintenance $maintenance): Response
     {
-        $maintenance->load(['property', 'unit', 'tenant']);
+        $maintenance->load(['property', 'unit', 'tenant', 'customer']);
 
         return Inertia::render('maintenance/edit', [
             'maintenance' => $maintenance,
@@ -104,6 +106,7 @@ class MaintenanceController extends Controller
                 ->where('status', 'active')
                 ->orderBy('first_name')
                 ->get(['id', 'first_name', 'last_name']),
+            'customers' => Customer::query()->orderBy('name')->get(['id', 'name', 'phone']),
         ]);
     }
 
