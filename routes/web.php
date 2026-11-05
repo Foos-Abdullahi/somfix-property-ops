@@ -8,6 +8,7 @@ use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RecordImportController;
 use App\Http\Controllers\RepairRequestController;
+use App\Http\Controllers\MyRepairRequestController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ServiceTeamController;
 use App\Http\Controllers\SalesController;
@@ -27,6 +28,11 @@ Route::post('/repair-requests/{repairRequest}/convert', [RepairRequestController
 Route::post('/demo-requests', [DemoRequestController::class, 'store'])->middleware('throttle:5,1')->name('demo-inquiries.store');
 
 Route::middleware('auth')->group(function () {
+    Route::prefix('my-requests')->name('my-requests.')->group(function () {
+        Route::get('/', [MyRepairRequestController::class, 'index'])->name('index');
+        Route::post('/', [MyRepairRequestController::class, 'store'])->middleware('throttle:10,1')->name('store');
+        Route::get('{repairRequest}/photo', [MyRepairRequestController::class, 'photo'])->name('photo');
+    });
     Route::get('demo-requests/create', [DemoRequestController::class, 'create'])->name('demo-requests.create');
     Route::post('demo-requests/admin', [DemoRequestController::class, 'adminStore'])->name('demo-requests.store');
     Route::get('demo-requests/{demoRequest}/edit', [DemoRequestController::class, 'edit'])->name('demo-requests.edit');
