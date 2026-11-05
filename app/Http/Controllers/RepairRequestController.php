@@ -34,7 +34,10 @@ class RepairRequestController extends Controller
             $data['photo_path'] = $request->file('photo')->store('repair-requests', 'local');
         }
         try {
-            RepairRequest::create($data);
+            RepairRequest::create([
+                ...$data,
+                'user_id' => $request->user()?->id,
+            ]);
         } catch (\Throwable $exception) {
             if (! empty($data['photo_path'])) {
                 Storage::disk('local')->delete($data['photo_path']);

@@ -15,16 +15,23 @@ class EnforceAccess
         if (! $user) {
             return $next($request);
         }
-        if (! $user->is_active || $user->role?->slug === 'standard-user') {
-            $message = ! $user->is_active
-                ? 'This account is inactive. Contact your administrator.'
-                : 'Standard accounts are not permitted to access the system. Contact your administrator.';
+        if (! $user->is_active) {
+            $message = 'This account is inactive. Contact your administrator.';
 
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             return redirect('/login')->withErrors(['email' => $message]);
+        }
+
+        if ($user->role?->slug === 'standard-user') {
+            $routeName = $request->route()?->getName() ?? '';
+            $isPublicRoute = $routeName === 'home' || str_starts_with($routeName, 'public.');
+
+            if (! $isPublicRoute && ! str_starts_with($routeName, 'my-requests.') && ! in_array($routeName, ['profile.edit', 'profile.update', 'profile.destroy', 'security.edit', 'user-password.update', 'logout'], true)) {
+                return redirect()->route('my-requests.index');
+            }
         }
         $name = $request->route()?->getName() ?? '';
         [$module, $action] = array_pad(explode('.', $name, 2), 2, '');

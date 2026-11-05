@@ -45,7 +45,6 @@ class FortifyServiceProvider extends ServiceProvider
 
             return $user
                 && $user->is_active
-                && $user->role?->slug !== 'standard-user'
                 && Hash::check($request->input('password'), $user->password)
                 ? $user
                 : null;
