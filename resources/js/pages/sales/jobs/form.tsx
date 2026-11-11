@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 import { ArrowLeft, BriefcaseBusiness, Save } from 'lucide-react';
+import { CustomerSelect } from '@/components/customer-select';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
@@ -14,7 +15,12 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-type Option = { id: number; name?: string; unit_number?: string };
+type Option = {
+    id: number;
+    name?: string;
+    phone?: string | null;
+    unit_number?: string;
+};
 const inputClass =
     'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
 
@@ -93,16 +99,18 @@ export default function JobForm({
                         </p>
                     </div>
                     <div className="grid gap-5 p-5 md:grid-cols-2">
-                        <AppSelect
+                        <CustomerSelect
                             label="Customer"
                             value={form.data.customer_id}
-                            set={(value) => form.setData('customer_id', value)}
-                            placeholder="Select customer"
-                            items={customers.map((item) => [
-                                String(item.id),
-                                item.name!,
-                            ])}
-                            optional
+                            customers={customers.map((item) => ({
+                                id: item.id,
+                                name: item.name!,
+                                phone: item.phone,
+                            }))}
+                            onChange={(value) =>
+                                form.setData('customer_id', value)
+                            }
+                            error={form.errors.customer_id}
                         />
                         <Field
                             label="Job title"
