@@ -19,6 +19,7 @@ import {
     X,
 } from 'lucide-react';
 import BrandLogo from '@/components/brand-logo';
+import AccountMenu from '@/components/account-menu';
 import '../../css/repair-site.css';
 
 const whatsapp =
@@ -518,10 +519,7 @@ export default function Welcome({
                                 </Link>
                             ))}
                         </nav>
-                        <Link className="repair-header-cta" href="/login">
-                            Get Started
-                            <ArrowRight size={18} />
-                        </Link>
+                        <AccountMenu compact />
                     </div>
                 </header>
                 <main id="main">
@@ -927,7 +925,7 @@ export default function Welcome({
                         </div>
                         <div className="repair-footer-bottom">
                             <span>© 2026 SOMFIX. All rights reserved.</span>
-                            <Link href="/login">Staff sign in</Link>
+                            <Link href="/login">Account sign in</Link>
                         </div>
                     </div>
                 </footer>

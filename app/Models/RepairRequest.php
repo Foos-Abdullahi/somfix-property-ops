@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'phone', 'area', 'service', 'message', 'photo_path', 'status', 'customer_id', 'lead_id', 'converted_at'])]
+#[Fillable(['name', 'phone', 'area', 'service', 'message', 'photo_path', 'status', 'user_id', 'customer_id', 'lead_id', 'converted_at'])]
 #[Hidden(['photo_path'])]
 class RepairRequest extends Model
 {
@@ -20,6 +20,12 @@ class RepairRequest extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    /** @return BelongsTo<User, $this> */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /** @return BelongsTo<Lead, $this> */
