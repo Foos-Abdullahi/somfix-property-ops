@@ -31,7 +31,9 @@ class ProfileController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
 
-        return to_route('profile.edit');
+        return $request->user()->role?->slug === 'standard-user'
+            ? to_route('account.show', ['tab' => 'profile'])
+            : to_route('profile.edit');
     }
 
     /**

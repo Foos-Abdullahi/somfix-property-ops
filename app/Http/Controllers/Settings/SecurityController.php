@@ -61,6 +61,8 @@ class SecurityController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Password updated.')]);
 
-        return back();
+        return $request->user()->role?->slug === 'standard-user'
+            ? to_route('account.show', ['tab' => 'security'])
+            : back();
     }
 }

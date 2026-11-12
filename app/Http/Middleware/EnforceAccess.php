@@ -29,8 +29,8 @@ class EnforceAccess
             $routeName = $request->route()?->getName() ?? '';
             $isPublicRoute = $routeName === 'home' || str_starts_with($routeName, 'public.');
 
-            if (! $isPublicRoute && ! str_starts_with($routeName, 'my-requests.') && ! in_array($routeName, ['profile.edit', 'profile.update', 'profile.destroy', 'security.edit', 'user-password.update', 'logout'], true)) {
-                return redirect()->route('my-requests.index');
+            if (! $isPublicRoute && ! str_starts_with($routeName, 'account.') && ! str_starts_with($routeName, 'my-requests.') && ! in_array($routeName, ['profile.edit', 'profile.update', 'profile.destroy', 'security.edit', 'user-password.update', 'logout'], true)) {
+                return redirect()->route('account.show');
             }
         }
         $name = $request->route()?->getName() ?? '';

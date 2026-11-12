@@ -7,20 +7,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Inertia\Inertia;
-use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MyRepairRequestController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): RedirectResponse
     {
-        $requests = $request->user()->repairRequests()
-            ->latest()
-            ->paginate(10)
-            ->through(fn (RepairRequest $repair) => $this->requestData($repair));
-
-        return Inertia::render('my-requests/index', ['requests' => $requests]);
+        return to_route('account.show', ['tab' => 'requests']);
     }
 
     public function store(Request $request): RedirectResponse
@@ -48,7 +41,7 @@ class MyRepairRequestController extends Controller
             throw $exception;
         }
 
-        return to_route('my-requests.index')->with('toast', [
+        return to_route('account.show', ['tab' => 'requests'])->with('toast', [
             'type' => 'success',
             'message' => 'Your repair request has been sent. We will contact you soon.',
         ]);
@@ -63,18 +56,5 @@ class MyRepairRequestController extends Controller
             'Cache-Control' => 'private, no-store',
             'X-Content-Type-Options' => 'nosniff',
         ]);
-    }
-
-    private function requestData(RepairRequest $repair): array
-    {
-        return [
-            'id' => $repair->id,
-            'service' => $repair->service,
-            'area' => $repair->area,
-            'message' => $repair->message,
-            'status' => $repair->status,
-            'created_at' => $repair->created_at?->toIso8601String(),
-            'photo_url' => $repair->photo_path ? route('my-requests.photo', $repair) : null,
-        ];
     }
 }

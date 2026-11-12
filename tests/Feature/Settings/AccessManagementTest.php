@@ -81,8 +81,8 @@ it('defaults accounts without an explicit role to standard user with no operatio
         ->and($user->hasPermission('properties.manage'))->toBeFalse()
         ->and($user->hasPermission('users.manage'))->toBeFalse();
 
-    $this->actingAs($user)->get('/properties')->assertRedirect('/login');
-    $this->assertGuest();
+    $this->actingAs($user)->get('/properties')->assertRedirect(route('account.show'));
+    $this->assertAuthenticatedAs($user);
 });
 
 it('prevents self lockout and administrator deletion', function () {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Features;
@@ -63,19 +64,22 @@ test('users can logout', function () {
     $this->assertGuest();
 });
 
-test('standard users cannot log in', function () {
-    $user = User::factory()->create(['role_id' => \App\Models\Role::where('slug', 'standard-user')->value('id')]);
-    $this->post(route('login.store'), [
+test('standard users can log in to the customer portal', function () {
+    $user = User::factory()->create(['role_id' => Role::where('slug', 'standard-user')->value('id')]);
+    $response = $this->post(route('login.store'), [
         'email' => $user->email,
         'password' => 'password',
     ]);
-    $this->assertGuest();
+    $this->assertAuthenticatedAs($user);
+    $response->assertRedirect(route('dashboard', absolute: false));
+    $this->get('/dashboard')->assertRedirect(route('account.show'));
+    $this->get(route('account.show'))->assertOk();
 });
 
-test('standard users logged in via bypass are kicked out by middleware', function () {
-    $user = User::factory()->create(['role_id' => \App\Models\Role::where('slug', 'standard-user')->value('id')]);
-    $this->actingAs($user)->get('/dashboard')->assertRedirect('/login');
-    $this->assertGuest();
+test('standard users are redirected away from operational routes without being logged out', function () {
+    $user = User::factory()->create(['role_id' => Role::where('slug', 'standard-user')->value('id')]);
+    $this->actingAs($user)->get('/dashboard')->assertRedirect(route('account.show'));
+    $this->assertAuthenticatedAs($user);
 });
 
 test('users are rate limited', function () {
