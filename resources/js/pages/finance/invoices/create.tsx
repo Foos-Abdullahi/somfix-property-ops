@@ -49,6 +49,7 @@ type InvoiceFormValues = {
     paid_date: string;
     status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
     property_id: string;
+    job_id: string;
     unit_id: string;
     tenant_id: string;
     recipient_name: string;
@@ -87,10 +88,14 @@ export default function CreateInvoicePage({
     properties,
     units,
     tenants,
+    jobs = [],
+    selectedJobId = null,
 }: {
     properties: PropertyOption[];
     units: UnitOption[];
     tenants: TenantOption[];
+    jobs?: { id: number; job_number: string; title: string }[];
+    selectedJobId?: number | null;
 }) {
     const form = useForm<InvoiceFormValues>({
         invoice_number: generateInvoiceNumber(),
@@ -105,6 +110,7 @@ export default function CreateInvoicePage({
         paid_date: '',
         status: 'draft',
         property_id: '',
+        job_id: selectedJobId ? String(selectedJobId) : '',
         unit_id: '',
         tenant_id: '',
         recipient_name: '',
@@ -216,6 +222,7 @@ export default function CreateInvoicePage({
         delete (data as any)._bank_details;
 
         if (!data.property_id) delete data.property_id;
+        if (!data.job_id) delete data.job_id;
         if (!data.unit_id) delete data.unit_id;
         if (!data.tenant_id) delete data.tenant_id;
         if (!data.recipient_name) delete data.recipient_name;
@@ -521,6 +528,30 @@ export default function CreateInvoicePage({
                                     </SelectContent>
                                 </Select>
                                 <InputError message={form.errors.status} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Job (revenue & margin tracking)</Label>
+                                <Select
+                                    value={form.data.job_id || 'none'}
+                                    onValueChange={(v) =>
+                                        form.setData('job_id', v === 'none' ? '' : v)
+                                    }
+                                >
+                                    <SelectTrigger
+                                        className={`w-full ${inputClass}`}
+                                    >
+                                        <SelectValue placeholder="Link to a job..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Not linked to a job</SelectItem>
+                                        {jobs.map((j) => (
+                                            <SelectItem key={j.id} value={String(j.id)}>
+                                                {j.job_number} — {j.title}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <InputError message={form.errors.job_id} />
                             </div>
                             <div className="space-y-2">
                                 <Label>Property</Label>

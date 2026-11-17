@@ -30,11 +30,13 @@ export default function LeadForm({
     customers,
     properties,
     units,
+    services = [],
 }: {
     lead?: any;
     customers: Option[];
     properties: Option[];
     units: Option[];
+    services?: { name: string; category: string; price: string | null }[];
 }) {
     const editing = !!lead;
     const form = useForm({
@@ -123,11 +125,41 @@ export default function LeadForm({
                                 'referral',
                             ].map((x) => [x, x.replaceAll('_', ' ')])}
                         />
-                        <Field
-                            label="Service category"
+                        <AppSelect
+                            label="Service (from Service List)"
                             value={form.data.service_category}
-                            set={(v) => form.setData('service_category', v)}
-                            required
+                            placeholder="Choose a service"
+                            set={(v) => {
+                                const picked = services.find(
+                                    (s) => s.name === v,
+                                );
+                                form.setData((data) => ({
+                                    ...data,
+                                    service_category: v,
+                                    estimated_value:
+                                        data.estimated_value === '' &&
+                                        picked?.price
+                                            ? picked.price
+                                            : data.estimated_value,
+                                }));
+                            }}
+                            items={[
+                                ...services.map((s) => [
+                                    s.name,
+                                    `${s.name} · ${s.category}${s.price ? ` · from $${Number(s.price)}` : ''}`,
+                                ]),
+                                ...(lead?.service_category &&
+                                !services.some(
+                                    (s) => s.name === lead.service_category,
+                                )
+                                    ? [
+                                          [
+                                              lead.service_category,
+                                              `${lead.service_category} (not in Service List)`,
+                                          ],
+                                      ]
+                                    : []),
+                            ]}
                         />
                         <Field
                             label="Request title"

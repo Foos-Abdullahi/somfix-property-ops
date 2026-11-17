@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user()?->loadMissing('role'),
                 'permissions' => array_values(array_filter(array_filter(array_keys(config('permissions')), 'is_string'), fn ($permission) => $request->user()?->hasPermission($permission) ?? false)),
             ],
+            'financeCurrency' => fn () => $request->user() ? \App\Models\FinanceSetting::get('currency', 'USD') : 'USD',
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

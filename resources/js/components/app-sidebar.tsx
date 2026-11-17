@@ -1,12 +1,22 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
+    Banknote,
+    Briefcase,
     BarChart3,
+    Coins,
+    CreditCard,
+    FileBarChart,
+    HandCoins,
+    Landmark,
+    Scale,
+    ShoppingBag,
     Building2,
     ClipboardList,
     DoorOpen,
     FileText,
     HardHat,
     LayoutDashboard,
+    ListChecks,
     Package,
     Receipt,
     BriefcaseBusiness,
@@ -35,6 +45,7 @@ import { index as leasesIndex } from '@/routes/leases';
 import { index as maintenanceIndex } from '@/routes/maintenance';
 import { index as propertiesIndex } from '@/routes/properties';
 import { index as reportsIndex } from '@/routes/reports';
+import { index as serviceListIndex } from '@/routes/service-list';
 import { index as serviceTeamIndex } from '@/routes/service-team';
 import { index as tenantsIndex } from '@/routes/tenants';
 import { index as unitsIndex } from '@/routes/units';
@@ -93,24 +104,36 @@ const operationsNavItems: NavItem[] = [
         href: serviceTeamIndex(),
         icon: HardHat,
     },
+    {
+        title: 'Service List',
+        href: serviceListIndex(),
+        icon: ListChecks,
+    },
 ];
 
 const financeNavItems: NavItem[] = [
-    {
-        title: 'Overview',
-        href: financeIndex(),
-        icon: Wallet,
-    },
-    {
-        title: 'Invoices',
-        href: '/finance/invoices',
-        icon: Receipt,
-    },
-    {
-        title: 'Quotations',
-        href: '/finance/quotations',
-        icon: FileText,
-    },
+    { title: 'Overview', href: financeIndex(), icon: Wallet },
+    { title: 'Job Profitability', href: '/finance/jobs', icon: Briefcase },
+    { title: 'Invoices', href: '/finance/invoices', icon: Receipt },
+    { title: 'Quotations', href: '/finance/quotations', icon: FileText },
+    { title: 'Customer Payments', href: '/finance/payments', icon: HandCoins },
+    { title: 'Expenses', href: '/finance/expenses', icon: CreditCard },
+];
+
+const payoutNavItems: NavItem[] = [
+    { title: 'Technician Pay', href: '/finance/technicians', icon: HardHat },
+    { title: 'Commissions', href: '/finance/commissions', icon: Coins },
+    { title: 'Payroll', href: '/finance/payroll', icon: Banknote },
+    { title: 'Rent Collections', href: '/finance/rent', icon: Building2 },
+    { title: 'Property Owners', href: '/finance/owners', icon: Landmark },
+    { title: 'Owner Expenses', href: '/finance/property-expenses', icon: ShoppingBag },
+    { title: 'Owner Payouts', href: '/finance/owner-payouts', icon: Landmark },
+];
+
+const accountingNavItems: NavItem[] = [
+    { title: 'Cash Ledger', href: '/finance/ledger', icon: Scale },
+    { title: 'Profit & Loss', href: '/finance/reports', icon: FileBarChart },
+    { title: 'Finance Settings', href: '/finance/settings', icon: Settings },
 ];
 
 const salesNavItems: NavItem[] = [
@@ -204,6 +227,8 @@ export function AppSidebar() {
                 />
                 <NavMain label="Sales & Jobs" items={visible(salesNavItems)} />
                 <NavMain label="Finance" items={visible(financeNavItems)} />
+                <NavMain label="Payouts & Owners" items={visible(payoutNavItems)} />
+                <NavMain label="Accounting" items={visible(accountingNavItems)} />
                 <NavMain label="Business" items={visible(businessNavItems)} />
                 <NavMain
                     label="System Settings"

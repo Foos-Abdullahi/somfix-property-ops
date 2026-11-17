@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DemoRequestController;
+use App\Http\Controllers\Finance as FinanceModule;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LeaseController;
@@ -12,15 +13,18 @@ use App\Http\Controllers\RecordImportController;
 use App\Http\Controllers\RepairRequestController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\ServiceCatalogController;
 use App\Http\Controllers\ServiceTeamController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WorkOrderController;
+use App\Models\ServiceCatalog;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', fn () => Inertia::render('welcome', ['serviceOptions' => ServiceCatalog::requestOptions()]))->name('home');
 foreach (['services', 'property-management', 'maintenance-plans', 'how-it-works', 'about', 'faq', 'contact'] as $page) {
-    Route::inertia('/'.$page, 'welcome', ['publicPage' => $page])->name('public.'.$page);
+    Route::get('/'.$page, fn () => Inertia::render('welcome', ['publicPage' => $page, 'serviceOptions' => ServiceCatalog::requestOptions()]))->name('public.'.$page);
 }
 Route::post('/repair-requests', [RepairRequestController::class, 'store'])->middleware('throttle:5,1')->name('repair-requests.store');
 Route::get('/repair-requests', [RepairRequestController::class, 'index'])->middleware('auth')->name('repair-requests.index');
@@ -46,7 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::resource('properties', PropertyController::class);
     Route::resource('units', UnitController::class);
-    foreach (['tenants', 'service-team'] as $module) {
+    foreach (['tenants', 'service-team', 'service-list'] as $module) {
         Route::post($module.'/import', [RecordImportController::class, 'store'])->defaults('module', $module)->middleware('throttle:10,1')->name($module.'.import');
         Route::get($module.'/import-template', [RecordImportController::class, 'template'])->defaults('module', $module)->name($module.'.import-template');
     }
@@ -55,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('maintenance', MaintenanceController::class);
     Route::resource('work-orders', WorkOrderController::class);
     Route::resource('service-team', ServiceTeamController::class);
+    Route::resource('service-list', ServiceCatalogController::class);
     Route::resource('inventory', InventoryController::class);
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::get('/', [SalesController::class, 'index'])->name('index');
@@ -110,6 +115,35 @@ Route::middleware('auth')->group(function () {
         Route::put('quotations/{finance}', [FinanceController::class, 'updateQuote'])->name('quotations.update');
         Route::post('quotations/{finance}/convert', [FinanceController::class, 'convertQuote'])->name('quotations.convert');
         Route::delete('quotations/{finance}', [FinanceController::class, 'destroyQuote'])->name('quotations.destroy');
+
+        // Money in: customer payments and rent. Money out: expenses, commissions, payroll, owner payouts.
+        Route::resource('payments', FinanceModule\PaymentController::class);
+        Route::resource('expenses', FinanceModule\ExpenseController::class);
+        Route::resource('commissions', FinanceModule\TechnicianPayoutController::class);
+        Route::post('commissions/{commission}/pay', [FinanceModule\TechnicianPayoutController::class, 'pay'])->name('commissions.pay');
+        Route::post('payroll/generate', [FinanceModule\PayrollController::class, 'generate'])->name('payroll.generate');
+        Route::resource('payroll', FinanceModule\PayrollController::class)->parameters(['payroll' => 'payroll']);
+        Route::post('payroll/{payroll}/pay', [FinanceModule\PayrollController::class, 'pay'])->name('payroll.pay');
+        Route::resource('rent', FinanceModule\RentCollectionController::class)->parameters(['rent' => 'rent']);
+        Route::resource('property-expenses', FinanceModule\PropertyExpenseController::class);
+        Route::resource('owner-payouts', FinanceModule\OwnerPayoutController::class);
+
+        // Connected views: job profitability, technician earnings, owner statements.
+        Route::get('jobs', [FinanceModule\JobFinanceController::class, 'index'])->name('jobs.index');
+        Route::get('jobs/{job}', [FinanceModule\JobFinanceController::class, 'show'])->name('jobs.show');
+        Route::get('technicians', [FinanceModule\TechnicianFinanceController::class, 'index'])->name('technicians.index');
+        Route::get('technicians/{technician}', [FinanceModule\TechnicianFinanceController::class, 'show'])->name('technicians.show');
+        Route::put('technicians/{technician}', [FinanceModule\TechnicianFinanceController::class, 'update'])->name('technicians.update');
+        Route::get('owners', [FinanceModule\OwnerController::class, 'index'])->name('owners.index');
+        Route::get('owners/{owner}', [FinanceModule\OwnerController::class, 'show'])->name('owners.show');
+        Route::get('owners/{owner}/print', [FinanceModule\OwnerController::class, 'print'])->name('owners.print');
+        Route::put('owners/{owner}', [FinanceModule\OwnerController::class, 'update'])->name('owners.update');
+
+        // Accounting
+        Route::get('ledger', [FinanceModule\LedgerController::class, 'index'])->name('ledger.index');
+        Route::get('reports', [FinanceModule\ReportController::class, 'index'])->name('reports.index');
+        Route::get('settings', [FinanceModule\SettingsController::class, 'index'])->name('settings.index');
+        Route::put('settings', [FinanceModule\SettingsController::class, 'update'])->name('settings.update');
 
         // Direct compatibility routes for user links
         Route::get('create/invoice', [FinanceController::class, 'createInvoice'])->name('create.invoice');

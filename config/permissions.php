@@ -17,6 +17,8 @@ return [
     'work-orders.manage' => 'Manage work orders',
     'service-team.view' => 'View service team',
     'service-team.manage' => 'Manage service team',
+    'service-list.view' => 'View service list',
+    'service-list.manage' => 'Manage service list',
     'inventory.view' => 'View inventory',
     'inventory.manage' => 'Manage inventory',
     'finance.view' => 'View finance',

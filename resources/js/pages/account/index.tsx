@@ -71,6 +71,7 @@ type Props = {
     activeTab: Tab;
     profile: Profile;
     passwordRules: string;
+    serviceOptions: string[];
     requestStats: { total: number; open: number; in_progress: number };
     requests: {
         data: Repair[];
@@ -171,6 +172,7 @@ export default function AccountPortal(props: Props) {
                                 profile={props.profile}
                                 stats={props.requestStats}
                                 requests={props.requests}
+                                serviceOptions={props.serviceOptions}
                             />
                         )}
                     </main>
@@ -522,10 +524,12 @@ function RequestsTab({
     profile,
     stats,
     requests,
+    serviceOptions,
 }: {
     profile: Profile;
     stats: Props['requestStats'];
     requests: Props['requests'];
+    serviceOptions?: string[];
 }) {
     const form = useForm({
         name: profile.name,
@@ -687,7 +691,7 @@ function RequestsTab({
                                 }
                                 className="h-9 w-full rounded-md border bg-white px-3 text-sm text-foreground"
                             >
-                                {services.map((service) => (
+                                {(serviceOptions ?? services).map((service) => (
                                     <option key={service}>{service}</option>
                                 ))}
                             </select>

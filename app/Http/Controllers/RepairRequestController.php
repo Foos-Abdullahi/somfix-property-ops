@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Lead;
 use App\Models\RepairRequest;
+use App\Models\ServiceCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,15 +17,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RepairRequestController extends Controller
 {
-    public const SERVICES = ['Door repair', 'Window repair', 'Plumbing', 'Mosquito screens', 'Broken glass', 'Wardrobes & cabinets', 'Kitchen repair', 'Cleaning', 'Renovation', 'Any other household repair', 'Property management', 'Not sure'];
-
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'phone' => ['required', 'string', 'max:40'],
             'area' => ['nullable', 'string', 'max:120'],
-            'service' => ['required', Rule::in(self::SERVICES)],
+            'service' => ['required', Rule::in(ServiceCatalog::requestOptions())],
             'message' => ['nullable', 'string', 'max:3000'],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'website' => ['nullable', 'string', 'max:0'],
@@ -87,6 +86,7 @@ class RepairRequestController extends Controller
                 'title' => $repairRequest->service.' request from '.$repairRequest->name,
                 'description' => $repairRequest->message ?: 'Website repair request. Contact the customer to confirm the scope.',
                 'status' => 'new',
+                'estimated_value' => ServiceCatalog::priceFor($repairRequest->service),
                 'notes' => $repairRequest->area ? 'Service area: '.$repairRequest->area : null,
             ]);
 

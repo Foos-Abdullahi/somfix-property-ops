@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreServiceCatalogRequest;
 use App\Http\Requests\StoreServiceTeamRequest;
 use App\Http\Requests\StoreTenantRequest;
+use App\Models\ServiceCatalog;
 use App\Models\ServiceTeam;
 use App\Models\Tenant;
 use DateTimeInterface;
@@ -13,26 +15,64 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use OpenSpout\Common\Entity\Row;
 use OpenSpout\Reader\CSV\Reader as CsvReader;
 use OpenSpout\Reader\XLSX\Options;
 use OpenSpout\Reader\XLSX\Reader as ExcelReader;
+use OpenSpout\Writer\XLSX\Writer as ExcelWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 use ZipArchive;
 
 class RecordImportController extends Controller
 {
+    /** @return array<string, mixed> */
+    private function rules(string $module): array
+    {
+        return match ($module) {
+            'tenants' => (new StoreTenantRequest)->rules(),
+            'service-list' => (new StoreServiceCatalogRequest)->rules(),
+            default => (new StoreServiceTeamRequest)->rules(),
+        };
+    }
+
     /** @return list<string> */
     private function fields(string $module): array
     {
-        return array_keys($module === 'tenants'
-            ? (new StoreTenantRequest)->rules()
-            : (new StoreServiceTeamRequest)->rules());
+        return array_keys($this->rules($module));
+    }
+
+    /** @return class-string<\Illuminate\Database\Eloquent\Model> */
+    private function model(string $module): string
+    {
+        return match ($module) {
+            'tenants' => Tenant::class,
+            'service-list' => ServiceCatalog::class,
+            default => ServiceTeam::class,
+        };
+    }
+
+    /** @return list<string> */
+    private function requiredHeaders(string $module): array
+    {
+        return match ($module) {
+            'tenants' => ['first_name', 'last_name', 'phone'],
+            'service-list' => ['name', 'category'],
+            default => ['name', 'specialization', 'phone', 'email'],
+        };
     }
 
     public function template(Request $request): StreamedResponse
     {
         $module = $request->route('module');
+        if ($module === 'service-list') {
+            return response()->streamDownload(function () use ($module) {
+                $writer = new ExcelWriter;
+                $writer->openToFile('php://output');
+                $writer->addRow(Row::fromValues($this->fields($module)));
+                $writer->close();
+            }, 'service-list-import-template.xlsx', ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+        }
 
         return response()->streamDownload(function () use ($module) {
             $stream = fopen('php://output', 'w');
@@ -101,7 +141,7 @@ class RecordImportController extends Controller
                     }
                     if ($headers === null) {
                         $headers = array_map(fn ($value) => strtolower(preg_replace('/[\s-]+/', '_', ltrim($value, "\xEF\xBB\xBF"))), $values);
-                        $required = $module === 'tenants' ? ['first_name', 'last_name', 'phone'] : ['name', 'specialization', 'phone', 'email'];
+                        $required = $this->requiredHeaders($module);
                         if (count(array_unique($headers)) !== count($headers) || array_diff($required, $headers) || array_diff($headers, $fields)) {
                             throw ValidationException::withMessages(['file' => 'Columns do not match the template. Use the template headers; status is optional and defaults to active.']);
                         }
@@ -116,6 +156,9 @@ class RecordImportController extends Controller
                         $data[$header] = ($values[$index] ?? '') === '' ? null : $values[$index];
                     }
                     $data['status'] = strtolower(str_replace(' ', '_', $data['status'] ?? 'active'));
+                    if (isset($data['price'])) {
+                        $data['price'] = str_replace([',', '$', ' '], '', $data['price']);
+                    }
                     if (! empty($data['email'])) {
                         $data['email'] = strtolower($data['email']);
                     }
@@ -140,8 +183,14 @@ class RecordImportController extends Controller
         }
         try {
             $result = DB::transaction(function () use ($rows, $module) {
-                $model = $module === 'tenants' ? Tenant::class : ServiceTeam::class;
-                $rules = $module === 'tenants' ? (new StoreTenantRequest)->rules() : (new StoreServiceTeamRequest)->rules();
+                $model = $this->model($module);
+                $rules = $this->rules($module);
+                if ($module === 'service-list') {
+                    // Duplicates are handled below by name, so the row is skipped rather than rejected.
+                    $rules['name'] = ['required', 'string', 'max:255'];
+
+                    return $this->importServices($rows, $rules);
+                }
                 $phones = [];
                 $emails = [];
                 foreach ($model::query()->get(['phone', 'email']) as $record) {
@@ -181,6 +230,46 @@ class RecordImportController extends Controller
         }
 
         return response()->json($result);
+    }
+
+    /**
+     * @param  list<array{row: int, data: array<string, mixed>}>  $rows
+     * @param  array<string, mixed>  $rules
+     * @return array{imported: int, duplicates: int, invalid: int, issues: list<array{row: int, message: string}>}
+     */
+    private function importServices(array $rows, array $rules): array
+    {
+        $names = [];
+        foreach (ServiceCatalog::query()->pluck('name') as $name) {
+            $names[$this->nameKey($name)] = true;
+        }
+        $result = ['imported' => 0, 'duplicates' => 0, 'invalid' => 0, 'issues' => []];
+        foreach ($rows as $row) {
+            $validator = Validator::make($row['data'], $rules);
+            if ($validator->fails()) {
+                $result['invalid']++;
+                $result['issues'][] = ['row' => $row['row'], 'message' => implode(' ', $validator->errors()->all())];
+
+                continue;
+            }
+            $key = $this->nameKey($row['data']['name']);
+            if (isset($names[$key])) {
+                $result['duplicates']++;
+                $result['issues'][] = ['row' => $row['row'], 'message' => 'Service name already exists; existing record kept.'];
+
+                continue;
+            }
+            ServiceCatalog::create($validator->validated());
+            $names[$key] = true;
+            $result['imported']++;
+        }
+
+        return $result;
+    }
+
+    private function nameKey(string $name): string
+    {
+        return mb_strtolower(preg_replace('/\s+/', ' ', trim($name)));
     }
 
     private function phoneKey(string $phone): string
