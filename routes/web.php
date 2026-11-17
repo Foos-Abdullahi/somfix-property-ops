@@ -12,6 +12,7 @@ use App\Http\Controllers\RecordImportController;
 use App\Http\Controllers\RepairRequestController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\ServiceCatalogController;
 use App\Http\Controllers\ServiceTeamController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
@@ -46,7 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::resource('properties', PropertyController::class);
     Route::resource('units', UnitController::class);
-    foreach (['tenants', 'service-team'] as $module) {
+    foreach (['tenants', 'service-team', 'service-list'] as $module) {
         Route::post($module.'/import', [RecordImportController::class, 'store'])->defaults('module', $module)->middleware('throttle:10,1')->name($module.'.import');
         Route::get($module.'/import-template', [RecordImportController::class, 'template'])->defaults('module', $module)->name($module.'.import-template');
     }
@@ -55,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('maintenance', MaintenanceController::class);
     Route::resource('work-orders', WorkOrderController::class);
     Route::resource('service-team', ServiceTeamController::class);
+    Route::resource('service-list', ServiceCatalogController::class);
     Route::resource('inventory', InventoryController::class);
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::get('/', [SalesController::class, 'index'])->name('index');

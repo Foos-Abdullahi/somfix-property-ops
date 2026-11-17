@@ -7,6 +7,7 @@ import {
     FileText,
     HardHat,
     LayoutDashboard,
+    ListChecks,
     Package,
     Receipt,
     BriefcaseBusiness,
@@ -35,6 +36,7 @@ import { index as leasesIndex } from '@/routes/leases';
 import { index as maintenanceIndex } from '@/routes/maintenance';
 import { index as propertiesIndex } from '@/routes/properties';
 import { index as reportsIndex } from '@/routes/reports';
+import { index as serviceListIndex } from '@/routes/service-list';
 import { index as serviceTeamIndex } from '@/routes/service-team';
 import { index as tenantsIndex } from '@/routes/tenants';
 import { index as unitsIndex } from '@/routes/units';
@@ -92,6 +94,11 @@ const operationsNavItems: NavItem[] = [
         title: 'Vendors & Technicians',
         href: serviceTeamIndex(),
         icon: HardHat,
+    },
+    {
+        title: 'Service List',
+        href: serviceListIndex(),
+        icon: ListChecks,
     },
 ];
 

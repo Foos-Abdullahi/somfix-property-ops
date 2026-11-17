@@ -24,8 +24,13 @@ type ImportResult = {
 export function RecordImport({
     module,
 }: {
-    module: 'tenants' | 'service-team';
+    module: 'tenants' | 'service-team' | 'service-list';
 }) {
+    const config = {
+        tenants: { title: 'tenants', prop: 'tenants' },
+        'service-team': { title: 'service team', prop: 'serviceTeams' },
+        'service-list': { title: 'services', prop: 'services' },
+    }[module];
     const { canManage } = usePermissions();
     const [open, setOpen] = useState(false);
     const [file, setFile] = useState<File | null>(null);
@@ -77,10 +82,7 @@ export function RecordImport({
             setResult(await response.json());
             setFile(null);
             router.reload({
-                only: [
-                    module === 'tenants' ? 'tenants' : 'serviceTeams',
-                    'stats',
-                ],
+                only: [config.prop, 'stats'],
             });
         } catch (exception) {
             setError(
@@ -109,33 +111,41 @@ export function RecordImport({
             </DialogTrigger>
             <DialogContent className="max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>
-                        Import{' '}
-                        {module === 'tenants' ? 'tenants' : 'service team'}
-                    </DialogTitle>
+                    <DialogTitle>Import {config.title}</DialogTitle>
                     <DialogDescription>
                         Upload Excel (.xlsx) or UTF-8 CSV. Maximum 5 MB and
                         2,000 records. Excel imports use the first worksheet.
                     </DialogDescription>
                 </DialogHeader>
                 <p className="text-sm text-muted-foreground">
-                    Duplicates in the file or existing records are skipped by
-                    email or phone. Existing records are kept. Invalid rows are
-                    skipped and listed below.
+                    Duplicates in the file or existing records are skipped by{' '}
+                    {module === 'service-list'
+                        ? 'service name'
+                        : 'email or phone'}
+                    . Existing records are kept. Invalid rows are skipped and
+                    listed below.
                 </p>
                 <a
                     className="text-sm underline"
                     href={`/${module}/import-template`}
                 >
-                    Download CSV template (opens in Excel)
+                    {module === 'service-list'
+                        ? 'Download Excel template (.xlsx)'
+                        : 'Download CSV template (opens in Excel)'}
                 </a>
                 <p className="text-xs text-muted-foreground">
-                    Keep template column names. Status defaults to active. Use
-                    YYYY-MM-DD for dates and format phone columns as text to
-                    preserve + and leading zeros.
-                    {module === 'tenants'
-                        ? ' Optional unit_id must be an existing unit ID.'
-                        : ' Status can be active, inactive or on_leave.'}
+                    {module === 'service-list' ? (
+                        'Keep template column names. name and category are required; description, unit, price, duration, status and notes are optional. Status can be active or inactive (defaults to active).'
+                    ) : (
+                        <>
+                            Keep template column names. Status defaults to
+                            active. Use YYYY-MM-DD for dates and format phone
+                            columns as text to preserve + and leading zeros.
+                            {module === 'tenants'
+                                ? ' Optional unit_id must be an existing unit ID.'
+                                : ' Status can be active, inactive or on_leave.'}
+                        </>
+                    )}
                 </p>
                 <form onSubmit={upload} className="space-y-4">
                     <div className="space-y-2">
