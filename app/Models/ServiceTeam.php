@@ -6,6 +6,7 @@ use Database\Factories\ServiceTeamFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -24,6 +25,10 @@ use Illuminate\Database\Eloquent\Model;
     'phone',
     'email',
     'status',
+    'staff_type',
+    'commission_percent',
+    'monthly_salary',
+    'monthly_allowances',
     'notes',
 ])]
 class ServiceTeam extends Model
@@ -38,6 +43,18 @@ class ServiceTeam extends Model
      */
     protected function casts(): array
     {
-        return [];
+        return ['commission_percent' => 'decimal:2', 'monthly_salary' => 'decimal:2', 'monthly_allowances' => 'decimal:2'];
+    }
+
+    /** @return HasMany<TechnicianPayout, $this> */
+    public function technicianPayouts(): HasMany
+    {
+        return $this->hasMany(TechnicianPayout::class);
+    }
+
+    /** @return HasMany<PayrollEntry, $this> */
+    public function payrollEntries(): HasMany
+    {
+        return $this->hasMany(PayrollEntry::class);
     }
 }

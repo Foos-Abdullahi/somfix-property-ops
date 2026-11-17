@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFinanceRequest;
 use App\Http\Requests\UpdateFinanceRequest;
 use App\Models\Finance;
+use App\Models\FinanceSetting;
 use App\Models\Job;
 use App\Models\Property;
 use App\Models\Tenant;
 use App\Models\Unit;
+use App\Services\Finance\FinanceReport;
+use App\Services\Finance\Ledger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,32 +20,19 @@ use Inertia\Response;
 class FinanceController extends Controller
 {
     /**
-     * Display the main Finance module overview.
+     * Finance overview: profit, receivables, cash movement and what needs attention.
      */
-    public function index(): Response
+    public function index(Request $request, FinanceReport $report): Response
     {
-        $finances = Finance::query()
-            ->with(['property', 'unit', 'tenant'])
-            ->latest()
-            ->get();
-
-        $invoices = $finances->where('type', 'invoice')->values();
-        $quotes = $finances->where('type', 'quote')->values();
+        $year = min(max($request->integer('year') ?: (int) now()->format('Y'), 2000), 2100);
+        $ledger = new Ledger;
 
         return Inertia::render('finance/index', [
-            'finances' => $finances,
-            'invoices' => $invoices,
-            'quotations' => $quotes,
-            'stats' => [
-                'totalRecords' => $finances->count(),
-                'totalAmount' => (float) $finances->sum('amount'),
-                'totalPaid' => (float) $finances->sum('paid_amount'),
-                'totalBalance' => (float) $finances->sum('balance'),
-                'invoicesCount' => $invoices->count(),
-                'quotationsCount' => $quotes->count(),
-                'invoicedAmount' => (float) $invoices->sum('amount'),
-                'quotedAmount' => (float) $quotes->sum('amount'),
-            ],
+            ...$report->overview($year),
+            'recent' => $ledger->entries(now()->subDays(45), now())->take(8)->values(),
+            'overdueInvoices' => Finance::query()->where('type', 'invoice')->whereIn('status', FinanceReport::BILLED)->where('balance', '>', 0)
+                ->whereDate('due_date', '<', now())->orderBy('due_date')->take(5)->get(['id', 'invoice_number', 'title', 'recipient_name', 'balance', 'due_date']),
+            'years' => range((int) now()->format('Y') + 1, (int) now()->format('Y') - 5),
         ]);
     }
 
@@ -103,9 +93,12 @@ class FinanceController extends Controller
     /**
      * Show the Invoice creation form.
      */
-    public function createInvoice(): Response
+    public function createInvoice(Request $request): Response
     {
-        return Inertia::render('finance/invoices/create', $this->formCatalog());
+        return Inertia::render('finance/invoices/create', [
+            ...$this->formCatalog(),
+            'selectedJobId' => $request->integer('job_id') ?: null,
+        ]);
     }
 
     /**
@@ -319,10 +312,10 @@ class FinanceController extends Controller
         return Inertia::render('finance/print', [
             'finance' => $finance,
             'company' => [
-                'name' => config('app.name', 'SOMFIX Property Ops'),
-                'address' => config('company.address', ''),
-                'phone' => config('company.phone', ''),
-                'email' => config('company.email', ''),
+                'name' => FinanceSetting::get('company_name', config('app.name', 'SOMFIX')),
+                'address' => FinanceSetting::get('company_address', ''),
+                'phone' => FinanceSetting::get('company_phone', ''),
+                'email' => FinanceSetting::get('company_email', ''),
             ],
         ]);
     }
