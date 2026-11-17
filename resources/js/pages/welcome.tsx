@@ -331,7 +331,7 @@ function ServiceCards({ home = false }: { home?: boolean }) {
         </div>
     );
 }
-function ContactForm() {
+function ContactForm({ serviceOptions }: { serviceOptions?: string[] }) {
     const form = useForm<{
         name: string;
         phone: string;
@@ -394,11 +394,13 @@ function ContactForm() {
                     value={form.data.service}
                     onChange={(e) => form.setData('service', e.target.value)}
                 >
-                    {[
-                        ...services.map((s) => s[0]),
-                        'Property management',
-                        'Not sure',
-                    ].map((s) => (
+                    {(
+                        serviceOptions ?? [
+                            ...services.map((s) => s[0]),
+                            'Property management',
+                            'Not sure',
+                        ]
+                    ).map((s) => (
                         <option key={s}>{s}</option>
                     ))}
                 </select>
@@ -462,8 +464,10 @@ function ContactForm() {
 }
 export default function Welcome({
     publicPage = 'home',
+    serviceOptions,
 }: {
     publicPage?: string;
+    serviceOptions?: string[];
 }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [heading, title, description] = metadata[publicPage] ?? metadata.home;
@@ -871,7 +875,7 @@ export default function Welcome({
                                     directly on WhatsApp.
                                 </p>
                             </div>
-                            <ContactForm />
+                            <ContactForm serviceOptions={serviceOptions} />
                         </section>
                     )}
                     <section className="repair-cta">

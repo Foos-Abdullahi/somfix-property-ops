@@ -11,6 +11,7 @@ use App\Models\JobMaterial;
 use App\Models\Lead;
 use App\Models\Payment;
 use App\Models\Property;
+use App\Models\ServiceCatalog;
 use App\Models\ServiceTeam;
 use App\Models\Unit;
 use App\Models\WorkOrder;
@@ -114,7 +115,7 @@ class SalesController extends Controller
         return Inertia::render('sales/leads/index', ['leads' => Lead::query()->with('customer:id,name')->latest()->get()]);
     }
 
-    public function leadCreate(): Response { return Inertia::render('sales/leads/form', $this->catalog()); }
+    public function leadCreate(): Response { return Inertia::render('sales/leads/form', [...$this->catalog(), 'services' => ServiceCatalog::pickerOptions()]); }
 
     public function leadStore(Request $request): RedirectResponse
     {
@@ -123,7 +124,7 @@ class SalesController extends Controller
     }
 
     public function leadShow(Lead $lead): Response { return Inertia::render('sales/leads/show', ['lead' => $lead->load(['customer', 'property', 'unit'])]); }
-    public function leadEdit(Lead $lead): Response { return Inertia::render('sales/leads/form', ['lead' => $lead, ...$this->catalog()]); }
+    public function leadEdit(Lead $lead): Response { return Inertia::render('sales/leads/form', ['lead' => $lead, ...$this->catalog(), 'services' => ServiceCatalog::pickerOptions()]); }
 
     public function leadUpdate(Request $request, Lead $lead): RedirectResponse
     {

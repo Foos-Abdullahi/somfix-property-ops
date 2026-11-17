@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RepairRequest;
+use App\Models\ServiceCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +23,7 @@ class MyRepairRequestController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'phone' => ['required', 'string', 'max:40'],
             'area' => ['nullable', 'string', 'max:120'],
-            'service' => ['required', Rule::in(RepairRequestController::SERVICES)],
+            'service' => ['required', Rule::in(ServiceCatalog::requestOptions())],
             'message' => ['nullable', 'string', 'max:3000'],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);

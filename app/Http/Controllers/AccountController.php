@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RepairRequest;
+use App\Models\ServiceCatalog;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
@@ -31,6 +32,7 @@ class AccountController extends Controller
                 'bio' => $user->bio,
                 'member_since' => $user->created_at?->toIso8601String(),
             ],
+            'serviceOptions' => ServiceCatalog::requestOptions(),
             'passwordRules' => Password::defaults()->toPasswordRulesString(),
             'requestStats' => [
                 'total' => $user->repairRequests()->count(),

@@ -52,6 +52,19 @@ Audit history starts when the migration is installed and records Eloquent record
 
 The platform combines property records with the SOMFIX repair workflow. A tenant or staff member reports a problem, the request is triaged, quoted, scheduled, assigned to a technician, completed, invoiced, paid, and retained in the property's maintenance history.
 
+## Service list and request flow
+
+The **Service List** (`/service-list`) is the single list of services SOMFIX offers (name, category, starting price, unit, duration, active/inactive). It is not linked to any customer, tenant or property. Records can be added by hand or imported from Excel (.xlsx) or CSV with the downloadable template.
+
+How it connects to the rest of the system:
+
+1. **Service List** – only *active* services appear in the "Service needed" dropdown on the public website and in the customer account portal. "Not sure" is always available.
+2. **Website / customer request** – the customer picks a service; the request is saved under Website Requests.
+3. **Convert to lead** – staff convert the request. This creates (or reuses) the **Customer** by phone and a **Lead** whose service is the chosen service and whose estimated value starts at the service's price.
+4. **Lead → Job → Work order → Invoice → Payment** – the normal sales and finance workflow continues from the lead.
+
+On staff lead forms the service is chosen from the Service List, and choosing it fills the estimated value when it is empty. Each service's detail page shows how many requests, leads and jobs use it. Renaming a service updates existing requests and leads; deactivating it hides it from new forms while keeping history.
+
 ## Recommended implementation
 
 - Backend: Laravel 12, REST/API resources, queues and policies

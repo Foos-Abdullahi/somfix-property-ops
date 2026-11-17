@@ -18,11 +18,13 @@ use App\Http\Controllers\ServiceTeamController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WorkOrderController;
+use App\Models\ServiceCatalog;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', fn () => Inertia::render('welcome', ['serviceOptions' => ServiceCatalog::requestOptions()]))->name('home');
 foreach (['services', 'property-management', 'maintenance-plans', 'how-it-works', 'about', 'faq', 'contact'] as $page) {
-    Route::inertia('/'.$page, 'welcome', ['publicPage' => $page])->name('public.'.$page);
+    Route::get('/'.$page, fn () => Inertia::render('welcome', ['publicPage' => $page, 'serviceOptions' => ServiceCatalog::requestOptions()]))->name('public.'.$page);
 }
 Route::post('/repair-requests', [RepairRequestController::class, 'store'])->middleware('throttle:5,1')->name('repair-requests.store');
 Route::get('/repair-requests', [RepairRequestController::class, 'index'])->middleware('auth')->name('repair-requests.index');

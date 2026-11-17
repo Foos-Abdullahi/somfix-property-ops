@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreServiceCatalogRequest;
+use App\Models\Job;
+use App\Models\Lead;
+use App\Models\RepairRequest;
 use App\Models\ServiceCatalog;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -39,7 +43,16 @@ class ServiceCatalogController extends Controller
 
     public function show(ServiceCatalog $serviceList): Response
     {
-        return Inertia::render('service-list/show', ['service' => $serviceList]);
+        $leads = Lead::query()->whereRaw('lower(service_category) = ?', [mb_strtolower($serviceList->name)]);
+
+        return Inertia::render('service-list/show', [
+            'service' => $serviceList,
+            'usage' => [
+                'requests' => RepairRequest::query()->whereRaw('lower(service) = ?', [mb_strtolower($serviceList->name)])->count(),
+                'leads' => (clone $leads)->count(),
+                'jobs' => Job::query()->whereIn('lead_id', (clone $leads)->select('id'))->count(),
+            ],
+        ]);
     }
 
     public function edit(ServiceCatalog $serviceList): Response
@@ -49,7 +62,15 @@ class ServiceCatalogController extends Controller
 
     public function update(StoreServiceCatalogRequest $request, ServiceCatalog $serviceList): RedirectResponse
     {
-        $serviceList->update($request->validated());
+        DB::transaction(function () use ($request, $serviceList) {
+            $oldName = $serviceList->name;
+            $serviceList->update($request->validated());
+            // Keep requests and leads pointing at the renamed service.
+            if ($oldName !== $serviceList->name) {
+                RepairRequest::query()->where('service', $oldName)->update(['service' => $serviceList->name]);
+                Lead::query()->where('service_category', $oldName)->update(['service_category' => $serviceList->name]);
+            }
+        });
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Service updated.']);
 
         return to_route('service-list.show', $serviceList);
