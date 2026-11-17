@@ -52,6 +52,8 @@ jobs:
           cache: npm
 
       - name: Test and build
+        env:
+          NODE_OPTIONS: --dns-result-order=ipv4first
         run: |
           composer install --no-interaction --prefer-dist
           cp .env.example .env
