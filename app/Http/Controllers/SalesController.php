@@ -14,6 +14,7 @@ use App\Models\Property;
 use App\Models\ServiceTeam;
 use App\Models\Unit;
 use App\Models\WorkOrder;
+use App\Services\Finance\InvoiceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -224,12 +225,10 @@ class SalesController extends Controller
     public function recordPayment(Request $request, Finance $finance): RedirectResponse
     {
         abort_unless($finance->type === 'invoice', 404);
-        $data = $request->validate(['amount' => ['required', 'numeric', 'gt:0', 'lte:'.$finance->balance], 'method' => ['required', Rule::in(['cash', 'evc_plus', 'bank_transfer', 'other'])], 'reference' => ['nullable', 'string', 'max:255'], 'paid_at' => ['required', 'date'], 'notes' => ['nullable', 'string']]);
+        $data = $request->validate(['amount' => ['required', 'numeric', 'gt:0', 'lte:'.$finance->balance], 'method' => ['required', Rule::in(array_keys(config('finance.payment_methods')))], 'reference' => ['nullable', 'string', 'max:255'], 'paid_at' => ['required', 'date'], 'notes' => ['nullable', 'string']]);
         DB::transaction(function () use ($data, $finance, $request): void {
             Payment::create(['payment_number' => $this->nextNumber('PAY'), 'finance_id' => $finance->id, ...$data, 'received_by' => $request->user()?->name]);
-            $paid = (float) $finance->payments()->sum('amount');
-            $balance = max(0, (float) $finance->amount - $paid);
-            $finance->update(['paid_amount' => $paid, 'balance' => $balance, 'paid_date' => $balance == 0.0 ? $data['paid_at'] : null, 'status' => $balance == 0.0 ? 'paid' : 'partially_paid']);
+            app(InvoiceService::class)->recalculate($finance);
         });
         return back()->with('toast', ['type' => 'success', 'message' => 'Payment recorded successfully.']);
     }

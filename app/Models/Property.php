@@ -24,6 +24,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'name',
     'property_type',
     'owner_name',
+    'owner_phone',
+    'management_fee_type',
+    'management_fee_percent',
+    'management_fee_fixed',
     'district',
     'city',
     'address',
@@ -45,6 +49,8 @@ class Property extends Model
     {
         return [
             'units_count' => 'integer',
+            'management_fee_percent' => 'decimal:2',
+            'management_fee_fixed' => 'decimal:2',
         ];
     }
 
@@ -52,5 +58,23 @@ class Property extends Model
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);
+    }
+
+    /** @return HasMany<RentCollection, $this> */
+    public function rentCollections(): HasMany
+    {
+        return $this->hasMany(RentCollection::class);
+    }
+
+    /** @return HasMany<PropertyExpense, $this> */
+    public function propertyExpenses(): HasMany
+    {
+        return $this->hasMany(PropertyExpense::class);
+    }
+
+    /** @return HasMany<OwnerPayout, $this> */
+    public function ownerPayouts(): HasMany
+    {
+        return $this->hasMany(OwnerPayout::class);
     }
 }

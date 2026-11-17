@@ -19,4 +19,6 @@ class Job extends Model
     /** @return HasMany<JobLabor, $this> */ public function labors(): HasMany { return $this->hasMany(JobLabor::class); }
     /** @return HasMany<Finance, $this> */ public function finances(): HasMany { return $this->hasMany(Finance::class); }
     /** @return HasMany<WorkOrder, $this> */ public function workOrders(): HasMany { return $this->hasMany(WorkOrder::class); }
+    /** @return HasMany<Expense, $this> */ public function expenses(): HasMany { return $this->hasMany(Expense::class); }
+    /** @return HasMany<TechnicianPayout, $this> */ public function technicianPayouts(): HasMany { return $this->hasMany(TechnicianPayout::class); }
 }
