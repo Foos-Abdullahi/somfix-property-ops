@@ -384,9 +384,51 @@ body[data-scroll-locked] {
         overflow: visible !important;
     }
 
+    /* Zero page margin removes the browser's own URL/date header and footer. */
     @page {
         size: landscape;
-        margin: 10mm;
+        margin: 0;
+    }
+
+    [data-slot="sidebar-inset"] > div,
+    main {
+        padding: 0 !important;
+    }
+
+    [data-slot="sidebar-inset"] {
+        padding: 12mm !important;
+    }
+
+    .print-table {
+        border: 1px solid #000;
+    }
+
+    .print-table thead th {
+        background: #eee !important;
+        border-bottom: 1px solid #000 !important;
+        color: #000 !important;
+    }
+
+    .print-table tr {
+        break-inside: avoid;
+    }
+
+    .print-table thead {
+        display: table-header-group;
+    }
+
+    .print-table tfoot {
+        display: table-footer-group;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    section {
+        border: 0 !important;
+        box-shadow: none !important;
     }
 }
 

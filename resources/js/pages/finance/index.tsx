@@ -34,6 +34,7 @@ export default function FinanceReports({ catalog, activeReport, dataset, year, y
         <>
             <Head title="Finance Reports" />
             <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5 p-4 md:p-6">
+                <div className={dataset ? "no-print" : undefined}>
                 <PageHeader
                     title="Finance reports"
                     description="Every finance report in one place, with download to Excel or CSV and print. How SOMFIX earns: maintenance service fees and property management fees. Rent and materials are passed through at cost and are never counted as income."
@@ -49,6 +50,7 @@ export default function FinanceReports({ catalog, activeReport, dataset, year, y
                         </>
                     }
                 />
+                </div>
 
                 <div className="no-print flex flex-wrap gap-1.5 rounded-xl border border-border/70 bg-card p-1.5">
                     {[{ key: null as string | null, title: 'Overview' }, ...catalog].map((c) => (
