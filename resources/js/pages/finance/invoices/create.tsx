@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useEffect } from 'react';
 import type { FormEvent } from 'react';
+import { CustomerPicker, type CustomerOption } from '@/components/finance/customer-picker';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -88,12 +89,14 @@ export default function CreateInvoicePage({
     properties,
     units,
     tenants,
+    customers = [],
     jobs = [],
     selectedJobId = null,
 }: {
     properties: PropertyOption[];
     units: UnitOption[];
     tenants: TenantOption[];
+    customers?: CustomerOption[];
     jobs?: { id: number; job_number: string; title: string }[];
     selectedJobId?: number | null;
 }) {
@@ -337,6 +340,16 @@ export default function CreateInvoicePage({
                                     <User className="size-3.5" />
                                     Bill To (Recipient)
                                 </div>
+                                <CustomerPicker
+                                    customers={customers}
+                                    className={inputClass}
+                                    onPick={(customer) => {
+                                        if (!customer) return;
+                                        form.setData('recipient_name', customer.name);
+                                        form.setData('recipient_email', customer.email ?? '');
+                                        form.setData('_recipient_address', customer.address ?? '');
+                                    }}
+                                />
                                 <div className="space-y-2">
                                     <Label>Select Tenant</Label>
                                     <Select

@@ -144,3 +144,12 @@ it('serves the finance reports hub at /finance-report and redirects the old /fin
     $this->get('/finance/reports/invoices/export?format=xlsx')->assertOk();
     $this->get('/finance/reports/nope/export')->assertNotFound();
 });
+
+it('offers sales customers on the invoice and quotation forms', function () {
+    $this->actingAs(financeUser());
+    Customer::create(['name' => 'Acme Fixes', 'type' => 'individual', 'phone' => '252611111111', 'email' => 'a@acme.test', 'status' => 'active']);
+
+    foreach (['/finance/invoices/create', '/finance/quotations/create'] as $url) {
+        $this->get($url)->assertOk()->assertInertia(fn (Assert $p) => $p->has('customers', 1)->where('customers.0.name', 'Acme Fixes'));
+    }
+});

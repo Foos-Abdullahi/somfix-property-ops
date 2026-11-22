@@ -9,6 +9,7 @@ import {
     User,
 } from 'lucide-react';
 import type { FormEvent } from 'react';
+import { CustomerPicker, type CustomerOption } from '@/components/finance/customer-picker';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -87,11 +88,13 @@ export default function CreateQuotePage({
     properties,
     units,
     tenants,
+    customers = [],
     selectedJobId,
 }: {
     properties: PropertyOption[];
     units: UnitOption[];
     tenants: TenantOption[];
+    customers?: CustomerOption[];
     selectedJobId?: number | null;
 }) {
     const form = useForm<QuoteFormValues>({
@@ -335,6 +338,16 @@ export default function CreateQuotePage({
                                     <User className="size-3.5" />
                                     Prepared For
                                 </div>
+                                <CustomerPicker
+                                    customers={customers}
+                                    className={inputClass}
+                                    onPick={(customer) => {
+                                        if (!customer) return;
+                                        form.setData('recipient_name', customer.name);
+                                        form.setData('recipient_email', customer.email ?? '');
+                                        form.setData('_recipient_address', customer.address ?? '');
+                                    }}
+                                />
                                 <div className="space-y-2">
                                     <Label>Select Tenant (Optional)</Label>
                                     <Select

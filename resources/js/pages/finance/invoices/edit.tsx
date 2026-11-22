@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useEffect } from 'react';
 import type { FormEvent } from 'react';
+import { CustomerPicker, type CustomerOption } from '@/components/finance/customer-picker';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -95,11 +96,13 @@ export default function EditInvoicePage({
     properties,
     units,
     tenants,
+    customers = [],
 }: {
     finance: InvoiceRecord;
     properties: PropertyOption[];
     units: UnitOption[];
     tenants: TenantOption[];
+    customers?: CustomerOption[];
 }) {
     const initialLineItems: LineItem[] =
         finance.line_items && finance.line_items.length > 0
@@ -256,6 +259,15 @@ export default function EditInvoicePage({
                         </div>
                         <div className="grid gap-5 p-5 md:grid-cols-2">
                             <div className="space-y-4">
+                                <CustomerPicker
+                                    customers={customers}
+                                    className={inputClass}
+                                    onPick={(customer) => {
+                                        if (!customer) return;
+                                        form.setData('recipient_name', customer.name);
+                                        form.setData('recipient_email', customer.email ?? '');
+                                    }}
+                                />
                                 <div className="space-y-2">
                                     <Label>Tenant</Label>
                                     <Select

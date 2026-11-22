@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFinanceRequest;
 use App\Http\Requests\UpdateFinanceRequest;
+use App\Models\Customer;
 use App\Models\Finance;
 use App\Models\FinanceSetting;
 use App\Models\Job;
@@ -418,6 +419,7 @@ class FinanceController extends Controller
             'units' => Unit::query()->orderBy('unit_number')->get(['id', 'unit_number']),
             'tenants' => Tenant::query()->orderBy('first_name')->get(['id', 'first_name', 'last_name']),
             'jobs' => Job::query()->orderByDesc('created_at')->get(['id', 'job_number', 'title']),
+            'customers' => Customer::query()->orderBy('name')->get(['id', 'name', 'email', 'phone', 'address']),
         ];
     }
 }
