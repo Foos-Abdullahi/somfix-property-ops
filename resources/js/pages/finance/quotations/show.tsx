@@ -422,7 +422,7 @@ ShowQuotePage.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({
     breadcrumbs: [
         {
             title: 'Finance',
-            href: '/finance',
+            href: '/finance-report',
         },
         {
             title: 'Quotations',

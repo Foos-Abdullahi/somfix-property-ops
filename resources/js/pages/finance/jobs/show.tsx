@@ -133,4 +133,4 @@ export default function JobFinanceShow({ job, summary, request }: { job: Any; su
         </>
     );
 }
-JobFinanceShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Jobs', href: '/finance/jobs' }] });
+JobFinanceShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Jobs', href: '/finance/jobs' }] });

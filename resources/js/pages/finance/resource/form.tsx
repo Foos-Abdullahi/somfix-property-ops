@@ -100,4 +100,4 @@ export default function ResourceForm({ resource, record, defaults, options }: { 
     );
 }
 
-ResourceForm.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }] });
+ResourceForm.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }] });

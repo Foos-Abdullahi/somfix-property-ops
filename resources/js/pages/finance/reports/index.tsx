@@ -58,6 +58,6 @@ export default function Reports({ report, years }: { report: Any; years: number[
         </>
     );
 }
-Reports.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Profit & loss', href: '/finance/reports' }] });
+Reports.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Profit & loss', href: '/finance/reports' }] });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Any = Record<string, any>;

@@ -11,7 +11,7 @@ export type ReportColumn = { key: string; label: string; type: 'text' | 'date' |
 export type ReportRow = Record<string, any>;
 export type Dataset = { key: string; title: string; description: string; year: number; columns: ReportColumn[]; rows: ReportRow[]; totals: Record<string, number> };
 
-const exportUrl = (key: string, year: number, format: 'csv' | 'xlsx') => `/finance/reports/${key}/export?format=${format}&year=${year}`;
+const exportUrl = (key: string, year: number, format: 'csv' | 'xlsx' = 'xlsx') => `/finance/reports/${key}/export?format=${format}&year=${year}`;
 
 export function ReportTable({ dataset }: { dataset: Dataset }) {
     const money = useMoney();
@@ -55,7 +55,7 @@ export function ReportTable({ dataset }: { dataset: Dataset }) {
             flush
             action={
                 <div className="no-print flex flex-wrap items-center justify-end gap-2">
-                    <Button size="sm" variant="outline" asChild><a href={exportUrl(dataset.key, dataset.year, 'csv')}><Download className="size-4" />CSV / Excel</a></Button>
+                    <Button size="sm" variant="outline" asChild><a href={exportUrl(dataset.key, dataset.year, 'xlsx')}><Download className="size-4" />Excel</a></Button>
                     <Button size="sm" variant="outline" onClick={() => window.print()}><Printer className="size-4" />Print</Button>
                 </div>
             }

@@ -53,4 +53,4 @@ export default function Ledger({ entries, totals, kinds, period }: { entries: En
         </>
     );
 }
-Ledger.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Cash ledger', href: '/finance/ledger' }] });
+Ledger.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Cash ledger', href: '/finance/ledger' }] });

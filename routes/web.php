@@ -19,6 +19,7 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WorkOrderController;
 use App\Models\ServiceCatalog;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -151,7 +152,10 @@ Route::middleware('auth')->group(function () {
         Route::get('create/quote', [FinanceController::class, 'createQuote'])->name('create.quote');
         Route::get('{finance}/print', [FinanceController::class, 'print'])->name('print');
     });
-    Route::resource('finance', FinanceController::class);
+    // Finance Reports hub (keeps the finance.index name). /finance is kept as a redirect for old links.
+    Route::get('finance-report', [FinanceController::class, 'index'])->name('finance.index');
+    Route::get('finance', fn (Request $request) => redirect()->route('finance.index', $request->query()))->name('finance.legacy');
+    Route::resource('finance', FinanceController::class)->except(['index']);
     Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
 });
 

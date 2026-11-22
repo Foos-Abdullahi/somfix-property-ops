@@ -40,4 +40,4 @@ export default function FinanceSettings({ settings }: { settings: S }) {
         </>
     );
 }
-FinanceSettings.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Settings', href: '/finance/settings' }] });
+FinanceSettings.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Settings', href: '/finance/settings' }] });

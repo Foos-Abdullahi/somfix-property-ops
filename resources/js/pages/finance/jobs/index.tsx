@@ -46,4 +46,4 @@ export default function JobsFinance({ jobs, stats }: { jobs: JobSummary[]; stats
         </>
     );
 }
-JobsFinance.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Jobs', href: '/finance/jobs' }] });
+JobsFinance.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Jobs', href: '/finance/jobs' }] });

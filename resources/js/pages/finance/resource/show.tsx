@@ -128,4 +128,4 @@ export default function ResourceShow({ resource, record, detail, options }: { re
     );
 }
 
-ResourceShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }] });
+ResourceShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }] });

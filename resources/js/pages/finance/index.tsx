@@ -21,7 +21,7 @@ export default function FinanceReports({ catalog, activeReport, dataset, year, y
     overdueInvoices: { id: number; invoice_number: string; title: string; recipient_name: string | null; balance: string; due_date: string }[];
 }) {
     const money = useMoney();
-    const go = (report: string | null, y: number | string = year) => router.get('/finance', { year: y, ...(report ? { report } : {}) }, { preserveScroll: true, preserveState: true });
+    const go = (report: string | null, y: number | string = year) => router.get('/finance-report', { year: y, ...(report ? { report } : {}) }, { preserveScroll: true, preserveState: true });
     const attention = [
         kpis.overdueCount > 0 && { icon: AlertTriangle, text: `${kpis.overdueCount} overdue invoice(s) worth ${money(kpis.overdue)}`, href: '/finance/invoices', tone: 'text-red-600 dark:text-red-300' },
         kpis.commissionsDueCount > 0 && { icon: Coins, text: `${money(kpis.commissionsDue)} commission owed to ${kpis.commissionsDueCount} job(s)`, href: '/finance/commissions', tone: 'text-amber-600 dark:text-amber-300' },
@@ -161,4 +161,4 @@ export default function FinanceReports({ catalog, activeReport, dataset, year, y
     );
 }
 
-FinanceReports.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Reports', href: '/finance' }] });
+FinanceReports.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Reports', href: '/finance-report' }] });

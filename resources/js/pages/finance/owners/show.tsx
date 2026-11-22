@@ -47,4 +47,4 @@ export default function OwnerShow({ property, position, period, collections, exp
         </>
     );
 }
-OwnerShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Owners', href: '/finance/owners' }] });
+OwnerShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Owners', href: '/finance/owners' }] });

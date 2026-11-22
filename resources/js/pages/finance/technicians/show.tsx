@@ -69,4 +69,4 @@ export default function TechnicianShow({ technician, effectivePercent, commissio
         </>
     );
 }
-TechnicianShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Technician pay', href: '/finance/technicians' }] });
+TechnicianShow.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Technician pay', href: '/finance/technicians' }] });

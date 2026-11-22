@@ -3,12 +3,13 @@
 use App\Models\Customer;
 use App\Models\Expense;
 use App\Models\Finance;
+use App\Models\Inventory;
 use App\Models\Job;
 use App\Models\JobMaterial;
-use App\Models\Inventory;
 use App\Models\OwnerPayout;
 use App\Models\PayrollEntry;
 use App\Models\Property;
+use App\Models\RentCollection;
 use App\Models\Role;
 use App\Models\ServiceTeam;
 use App\Models\TechnicianPayout;
@@ -91,7 +92,7 @@ it('splits rent into SOMFIX fee and owner money and blocks over-paying owners', 
 
     $this->post('/finance/rent', ['property_id' => $property->id, 'rent_month' => now()->toDateString(), 'received_date' => now()->toDateString(), 'rent_due' => 1000, 'amount_collected' => 900, 'payment_method' => 'cash'])->assertSessionHasNoErrors();
     $this->post('/finance/rent', ['property_id' => $fixed->id, 'rent_month' => now()->toDateString(), 'received_date' => now()->toDateString(), 'amount_collected' => 400, 'payment_method' => 'cash'])->assertSessionHasNoErrors();
-    $rows = \App\Models\RentCollection::orderBy('id')->get();
+    $rows = RentCollection::orderBy('id')->get();
     expect((float) $rows[0]->fee_amount)->toBe(90.0)->and((float) $rows[0]->net_to_owner)->toBe(810.0)->and((float) $rows[0]->arrears)->toBe(100.0)
         ->and((float) $rows[1]->fee_amount)->toBe(20.0);
 
@@ -111,7 +112,7 @@ it('builds the overview and exports the ledger', function () {
     billedJob();
     Expense::create(['expense_number' => 'EXP-1', 'expense_date' => now(), 'category' => 'Marketing', 'description' => 'Ads', 'amount' => 50, 'payment_method' => 'cash', 'status' => 'paid']);
     $this->actingAs(financeUser());
-    $this->get('/finance')->assertOk()->assertInertia(fn (Assert $p) => $p->component('finance/index')->where('kpis.receivables', 300)->where('kpis.spentThisMonth', 50));
+    $this->get('/finance-report')->assertOk()->assertInertia(fn (Assert $p) => $p->component('finance/index')->where('kpis.receivables', 300)->where('kpis.spentThisMonth', 50));
     $this->get('/finance/ledger?export=csv')->assertOk()->assertHeader('content-type', 'text/csv; charset=UTF-8');
     foreach (['jobs', 'technicians', 'owners', 'settings', 'payments', 'expenses', 'commissions', 'payroll', 'rent', 'property-expenses', 'owner-payouts'] as $page) {
         $this->get('/finance/'.$page)->assertOk();
@@ -131,5 +132,15 @@ it('saves finance settings and uses the fee defaults', function () {
     $this->put('/finance/settings', ['company_name' => 'SOMFIX', 'currency' => 'usd', 'mgmt_fee_percent' => 12, 'mgmt_fee_fixed' => 30, 'technician_commission_percent' => 55])->assertSessionHasNoErrors();
     $property = Property::factory()->create(['management_fee_type' => 'percent', 'management_fee_percent' => null]);
     $this->post('/finance/rent', ['property_id' => $property->id, 'rent_month' => now()->toDateString(), 'received_date' => now()->toDateString(), 'amount_collected' => 100, 'payment_method' => 'cash']);
-    expect((float) \App\Models\RentCollection::sole()->fee_amount)->toBe(12.0);
+    expect((float) RentCollection::sole()->fee_amount)->toBe(12.0);
+});
+
+it('serves the finance reports hub at /finance-report and redirects the old /finance url', function () {
+    $this->actingAs(financeUser());
+
+    $this->get('/finance?year=2025&report=invoices')->assertRedirect('/finance-report?year=2025&report=invoices');
+    $this->get('/finance-report?report=invoices')->assertOk()->assertInertia(fn (Assert $p) => $p->component('finance/index')->where('activeReport', 'invoices')->where('dataset.key', 'invoices'));
+    $this->get('/finance/reports/invoices/export?format=csv')->assertOk()->assertHeader('content-type', 'text/csv; charset=UTF-8');
+    $this->get('/finance/reports/invoices/export?format=xlsx')->assertOk();
+    $this->get('/finance/reports/nope/export')->assertNotFound();
 });

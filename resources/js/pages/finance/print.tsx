@@ -526,7 +526,7 @@ export default function FinancePrint({ finance, company }: PrintPageProps) {
 
 FinancePrint.layout = {
     breadcrumbs: [
-        { title: 'Finance', href: '/finance' },
+        { title: 'Finance', href: '/finance-report' },
         { title: 'Print Document' },
     ],
 };

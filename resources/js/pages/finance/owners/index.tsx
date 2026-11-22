@@ -66,4 +66,4 @@ export default function OwnersIndex({ owners, stats, defaults }: { owners: Owner
         </>
     );
 }
-OwnersIndex.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Owners', href: '/finance/owners' }] });
+OwnersIndex.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Owners', href: '/finance/owners' }] });

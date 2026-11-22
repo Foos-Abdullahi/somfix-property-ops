@@ -73,4 +73,4 @@ export default function TechniciansFinance({ team, stats, defaults }: { team: Me
         </>
     );
 }
-TechniciansFinance.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Technician pay', href: '/finance/technicians' }] });
+TechniciansFinance.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }, { title: 'Technician pay', href: '/finance/technicians' }] });

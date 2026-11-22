@@ -143,5 +143,5 @@ export default function ResourceIndex({ resource, records, stats, options }: { r
     );
 }
 
-ResourceIndex.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }] });
+ResourceIndex.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance-report' }] });
 export { Wallet };

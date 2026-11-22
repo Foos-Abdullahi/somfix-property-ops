@@ -101,7 +101,7 @@ it('creates roles and enforces their permissions on operational routes', functio
     $this->actingAs($user)->get('/properties')->assertOk();
     $this->get('/properties/create')->assertForbidden();
     $this->post('/properties', [])->assertForbidden();
-    $this->get('/finance')->assertForbidden();
+    $this->get('/finance-report')->assertForbidden();
     $this->actingAs($admin)->put('/settings/roles/'.$role->id, ['name' => $role->name, 'description' => '', 'permissions' => []])->assertSessionHasNoErrors();
     $this->actingAs($user->fresh())->get('/properties')->assertForbidden();
     $this->actingAs($admin)->delete('/settings/roles/'.$role->id)->assertSessionHasErrors('role');
