@@ -55,8 +55,7 @@ export function ReportTable({ dataset }: { dataset: Dataset }) {
             flush
             action={
                 <div className="no-print flex flex-wrap items-center justify-end gap-2">
-                    <Button size="sm" variant="outline" asChild><a href={exportUrl(dataset.key, dataset.year, 'csv')}><Download className="size-4" />CSV</a></Button>
-                    <Button size="sm" variant="outline" asChild><a href={exportUrl(dataset.key, dataset.year, 'xlsx')}><FileSpreadsheet className="size-4" />Excel</a></Button>
+                    <Button size="sm" variant="outline" asChild><a href={exportUrl(dataset.key, dataset.year, 'csv')}><Download className="size-4" />CSV / Excel</a></Button>
                     <Button size="sm" variant="outline" onClick={() => window.print()}><Printer className="size-4" />Print</Button>
                 </div>
             }
