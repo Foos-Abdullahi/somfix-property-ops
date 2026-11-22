@@ -16,6 +16,7 @@ export type ServiceRow = {
     price: string | null;
     duration: string | null;
     status: 'active' | 'inactive';
+    images?: string[] | null;
 };
 
 export const serviceColumns: ColumnDef<ServiceRow>[] = [
@@ -23,13 +24,24 @@ export const serviceColumns: ColumnDef<ServiceRow>[] = [
         accessorKey: 'name',
         header: 'Service',
         cell: ({ row }) => (
-            <div className="max-w-xs">
-                <p className="font-semibold">{row.original.name}</p>
-                {row.original.description && (
-                    <p className="truncate text-xs text-muted-foreground">
-                        {row.original.description}
-                    </p>
+            <div className="flex max-w-xs items-center gap-3">
+                {row.original.images?.[0] ? (
+                    <img
+                        src={row.original.images[0]}
+                        alt=""
+                        className="size-10 shrink-0 rounded-lg border border-border/70 object-cover"
+                    />
+                ) : (
+                    <div className="size-10 shrink-0 rounded-lg border border-dashed border-border/70 bg-secondary/30" />
                 )}
+                <div className="min-w-0">
+                    <p className="font-semibold">{row.original.name}</p>
+                    {row.original.description && (
+                        <p className="truncate text-xs text-muted-foreground">
+                            {row.original.description}
+                        </p>
+                    )}
+                </div>
             </div>
         ),
     },

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -29,6 +30,7 @@ class StoreServiceCatalogRequest extends FormRequest
             'duration' => ['nullable', 'string', 'max:100'],
             'status' => ['required', Rule::in(['active', 'inactive'])],
             'notes' => ['nullable', 'string'],
+            ...ImageUploads::rules(),
         ];
     }
 
@@ -38,6 +40,7 @@ class StoreServiceCatalogRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'name.required' => 'Please enter the service name.',
             'name.unique' => 'This service is already in the list.',
             'category.required' => 'Please enter a category.',

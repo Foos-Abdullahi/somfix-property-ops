@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'monthly_salary',
     'monthly_allowances',
     'notes',
+    'images',
 ])]
 class ServiceTeam extends Model
 {
@@ -43,7 +44,7 @@ class ServiceTeam extends Model
      */
     protected function casts(): array
     {
-        return ['commission_percent' => 'decimal:2', 'monthly_salary' => 'decimal:2', 'monthly_allowances' => 'decimal:2'];
+        return ['images' => 'array', 'commission_percent' => 'decimal:2', 'monthly_salary' => 'decimal:2', 'monthly_allowances' => 'decimal:2'];
     }
 
     /** @return HasMany<TechnicianPayout, $this> */

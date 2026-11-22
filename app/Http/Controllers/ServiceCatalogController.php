@@ -7,6 +7,7 @@ use App\Models\Job;
 use App\Models\Lead;
 use App\Models\RepairRequest;
 use App\Models\ServiceCatalog;
+use App\Support\ImageUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -35,7 +36,9 @@ class ServiceCatalogController extends Controller
 
     public function store(StoreServiceCatalogRequest $request): RedirectResponse
     {
-        $service = ServiceCatalog::create($request->validated());
+        $service = ServiceCatalog::create(
+            ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'services'),
+        );
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Service added to the list.']);
 
         return to_route('service-list.show', $service);
@@ -64,7 +67,9 @@ class ServiceCatalogController extends Controller
     {
         DB::transaction(function () use ($request, $serviceList) {
             $oldName = $serviceList->name;
-            $serviceList->update($request->validated());
+            $serviceList->update(
+                ImageUploads::apply($request->validated(), $serviceList->images ?? [], $request->file('new_images', []), 'services'),
+            );
             // Keep requests and leads pointing at the renamed service.
             if ($oldName !== $serviceList->name) {
                 RepairRequest::query()->where('service', $oldName)->update(['service' => $serviceList->name]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -31,6 +32,7 @@ class StoreServiceTeamRequest extends FormRequest
             'status' => ['required', Rule::in(['active', 'inactive', 'on_leave'])],
             'district' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
+            ...ImageUploads::rules(1),
         ];
     }
 
@@ -42,6 +44,7 @@ class StoreServiceTeamRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'name.required' => 'Please enter a name.',
             'name.max' => 'The name may not be greater than 255 characters.',
             'specialization.required' => 'Please enter a specialization.',

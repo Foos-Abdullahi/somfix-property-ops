@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ImageUpload } from '@/components/image-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -23,6 +24,8 @@ export type ServiceTeamFormValues = {
     email: string;
     status: 'active' | 'inactive' | 'on_leave';
     notes: string;
+    images: string[];
+    new_images: File[];
 };
 const inputClass =
     'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
@@ -42,13 +45,19 @@ export function ServiceTeamForm({
         email: serviceTeam?.email ?? '',
         status: serviceTeam?.status ?? 'active',
         notes: serviceTeam?.notes ?? '',
+        images: serviceTeam?.images ?? [],
+        new_images: [],
     });
+    const imageError = Object.entries(form.errors).find(
+        ([key]) => key.startsWith('images') || key.startsWith('new_images'),
+    )?.[1];
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (mode === 'create') {
-            form.post(store.url());
+            form.post(store.url(), { forceFormData: true });
         } else {
-            form.put(update.url(serviceTeam!.id));
+            form.transform((data) => ({ ...data, _method: 'put' }));
+            form.post(update.url(serviceTeam!.id), { forceFormData: true });
         }
     };
     return (
@@ -121,6 +130,18 @@ export function ServiceTeamForm({
                         </Select>
                         <InputError message={form.errors.status} />
                     </div>
+                    <ImageUpload
+                        className="md:col-span-2"
+                        label="Photo"
+                        multiple={false}
+                        urls={form.data.images}
+                        files={form.data.new_images}
+                        onUrlsChange={(urls) => form.setData('images', urls)}
+                        onFilesChange={(files) =>
+                            form.setData('new_images', files)
+                        }
+                        error={imageError}
+                    />
                     <div className="space-y-2 md:col-span-2">
                         <Label>Notes</Label>
                         <Textarea

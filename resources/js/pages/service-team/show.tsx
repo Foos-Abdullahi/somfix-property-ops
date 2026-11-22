@@ -1,4 +1,5 @@
 import { HardHat } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { label } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/service-team';
 
@@ -11,6 +12,7 @@ type RecordDetail = {
     email: string;
     status: string;
     notes: string | null;
+    images: string[] | null;
 };
 
 export default function ServiceTeamShow({
@@ -32,7 +34,13 @@ export default function ServiceTeamShow({
                     ],
                 },
             ]}
-            sections={[{ title: 'Team notes', text: serviceTeam.notes }]}
+            sections={[
+                {
+                    title: 'Photos',
+                    content: <ImageGallery images={serviceTeam.images} />,
+                },
+                { title: 'Team notes', text: serviceTeam.notes },
+            ]}
             status={serviceTeam.status}
             icon={HardHat}
             backHref={index.url()}

@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
     'duration',
     'status',
     'notes',
+    'images',
 ])]
 class ServiceCatalog extends Model
 {
@@ -37,7 +38,7 @@ class ServiceCatalog extends Model
 
     protected function casts(): array
     {
-        return ['price' => 'decimal:2'];
+        return ['price' => 'decimal:2', 'images' => 'array'];
     }
 
     /**

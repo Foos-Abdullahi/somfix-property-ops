@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +31,7 @@ class UpdateServiceTeamRequest extends StoreServiceTeamRequest
             'status' => ['sometimes', Rule::in(['active', 'inactive', 'on_leave'])],
             'district' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
+            ...ImageUploads::rules(1),
         ];
     }
 }

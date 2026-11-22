@@ -111,3 +111,31 @@ test('renaming a service keeps requests and leads linked and shows usage', funct
     $this->get(route('service-list.show', $service))
         ->assertInertia(fn ($page) => $page->where('usage.requests', 1)->where('usage.leads', 1)->where('usage.jobs', 0));
 });
+
+test('services accept uploaded images and image links, and removed files are deleted', function () {
+    Illuminate\Support\Facades\Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $this->post(route('service-list.store'), [
+        'name' => 'Roof repair',
+        'category' => 'Building',
+        'status' => 'active',
+        'images' => ['https://example.com/roof.jpg'],
+        'new_images' => [UploadedFile::fake()->image('roof.png')],
+    ])->assertRedirect();
+
+    $service = ServiceCatalog::where('name', 'Roof repair')->sole();
+    expect($service->images)->toHaveCount(2)->and($service->images[0])->toBe('https://example.com/roof.jpg');
+    $stored = $service->images[1];
+    Illuminate\Support\Facades\Storage::disk('public')->assertExists(substr($stored, strlen('/storage/')));
+
+    $this->put(route('service-list.update', $service), [
+        'name' => 'Roof repair', 'category' => 'Building', 'status' => 'active',
+        'images' => ['https://example.com/roof.jpg'],
+    ])->assertRedirect();
+    Illuminate\Support\Facades\Storage::disk('public')->assertMissing(substr($stored, strlen('/storage/')));
+
+    $this->post(route('service-list.store'), [
+        'name' => 'Bad', 'category' => 'X', 'status' => 'active', 'images' => ['javascript:alert(1)'],
+    ])->assertSessionHasErrors('images.0');
+});

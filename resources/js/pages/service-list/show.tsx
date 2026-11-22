@@ -1,4 +1,5 @@
 import { Wrench } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { money } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/service-list';
 
@@ -12,6 +13,7 @@ type ServiceDetail = {
     duration: string | null;
     status: string;
     notes: string | null;
+    images: string[] | null;
 };
 
 export default function ServiceListShow({
@@ -53,6 +55,10 @@ export default function ServiceListShow({
                 },
             ]}
             sections={[
+                {
+                    title: 'Images',
+                    content: <ImageGallery images={service.images} />,
+                },
                 { title: 'Description', text: service.description },
                 {
                     title: 'How it connects',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreServiceTeamRequest;
 use App\Http\Requests\UpdateServiceTeamRequest;
 use App\Models\ServiceTeam;
+use App\Support\ImageUploads;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,7 +44,9 @@ class ServiceTeamController extends Controller
      */
     public function store(StoreServiceTeamRequest $request): RedirectResponse
     {
-        $serviceTeam = ServiceTeam::create($request->validated());
+        $serviceTeam = ServiceTeam::create(
+            ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'service-team'),
+        );
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -78,7 +81,9 @@ class ServiceTeamController extends Controller
      */
     public function update(UpdateServiceTeamRequest $request, ServiceTeam $serviceTeam): RedirectResponse
     {
-        $serviceTeam->update($request->validated());
+        $serviceTeam->update(
+            ImageUploads::apply($request->validated(), $serviceTeam->images ?? [], $request->file('new_images', []), 'service-team'),
+        );
 
         Inertia::flash('toast', [
             'type' => 'success',
