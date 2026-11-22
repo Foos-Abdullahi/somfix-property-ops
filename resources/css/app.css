@@ -344,3 +344,52 @@ body[data-scroll-locked] {
     margin-right: 0 !important;
     padding-right: 0 !important;
 }
+
+/* Printing (finance reports): hide app chrome, keep the report. */
+@media print {
+    [data-slot="sidebar"],
+    [data-slot="sidebar-trigger"],
+    header,
+    .no-print {
+        display: none !important;
+    }
+
+    [data-slot="sidebar-inset"] {
+        margin: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+
+    html,
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .print-only {
+        display: block !important;
+    }
+
+    .print-table {
+        font-size: 10px !important;
+    }
+
+    .print-table th,
+    .print-table td {
+        position: static !important;
+        padding: 3px 6px !important;
+    }
+
+    .print-scroll {
+        overflow: visible !important;
+    }
+
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+}
+
+.print-only {
+    display: none;
+}

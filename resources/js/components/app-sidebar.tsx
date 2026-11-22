@@ -112,7 +112,7 @@ const operationsNavItems: NavItem[] = [
 ];
 
 const financeNavItems: NavItem[] = [
-    { title: 'Overview', href: financeIndex(), icon: Wallet },
+    { title: 'Reports', href: financeIndex(), icon: FileBarChart },
     { title: 'Job Profitability', href: '/finance/jobs', icon: Briefcase },
     { title: 'Invoices', href: '/finance/invoices', icon: Receipt },
     { title: 'Quotations', href: '/finance/quotations', icon: FileText },

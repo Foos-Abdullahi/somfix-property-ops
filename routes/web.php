@@ -142,6 +142,7 @@ Route::middleware('auth')->group(function () {
         // Accounting
         Route::get('ledger', [FinanceModule\LedgerController::class, 'index'])->name('ledger.index');
         Route::get('reports', [FinanceModule\ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/{report}/export', [FinanceModule\ReportController::class, 'export'])->name('reports.export');
         Route::get('settings', [FinanceModule\SettingsController::class, 'index'])->name('settings.index');
         Route::put('settings', [FinanceModule\SettingsController::class, 'update'])->name('settings.update');
 

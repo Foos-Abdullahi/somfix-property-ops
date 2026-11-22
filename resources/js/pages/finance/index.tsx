@@ -5,6 +5,7 @@ import { AgingBar, DonutChart, TrendChart, type Slice } from '@/components/finan
 import { formatDate } from '@/components/finance/format';
 import { EmptyState, FilterSelect, KpiGrid, PageHeader, Panel, StatusBadge, useMoney } from '@/components/finance/kit';
 import { Button } from '@/components/ui/button';
+import { ReportTable, type Dataset } from '@/components/finance/report-table';
 import { cn } from '@/lib/utils';
 import type { BreadcrumbItem } from '@/types';
 
@@ -12,12 +13,15 @@ type Kpis = Record<string, number>;
 type Entry = { key: string; date: string; direction: 'in' | 'out'; fund: string; title: string; party: string | null; amount: number; kind_label: string; url: string; job_number: string | null };
 type JobRow = { id: number; job_number: string; title: string; customer: string | null; billed: number; net_margin: number; margin_pct: number | null };
 
-export default function FinanceOverview({ year, years, kpis, trend, aging, revenueMix, costMix, topJobs, lossJobs, recent, overdueInvoices }: {
-    year: number; years: number[]; kpis: Kpis; trend: { month: string; revenue: number; expenses: number; profit: number }[]; aging: { current: number; d1_30: number; d31_60: number; d60_plus: number };
+type CatalogItem = { key: string; title: string; group: string; description: string };
+
+export default function FinanceReports({ catalog, activeReport, dataset, year, years, kpis, trend, aging, revenueMix, costMix, topJobs, lossJobs, recent, overdueInvoices }: {
+    catalog: CatalogItem[]; activeReport: string | null; dataset: Dataset | null; year: number; years: number[]; kpis: Kpis; trend: { month: string; revenue: number; expenses: number; profit: number }[]; aging: { current: number; d1_30: number; d31_60: number; d60_plus: number };
     revenueMix: Slice[]; costMix: Slice[]; topJobs: JobRow[]; lossJobs: number; recent: Entry[];
     overdueInvoices: { id: number; invoice_number: string; title: string; recipient_name: string | null; balance: string; due_date: string }[];
 }) {
     const money = useMoney();
+    const go = (report: string | null, y: number | string = year) => router.get('/finance', { year: y, ...(report ? { report } : {}) }, { preserveScroll: true, preserveState: true });
     const attention = [
         kpis.overdueCount > 0 && { icon: AlertTriangle, text: `${kpis.overdueCount} overdue invoice(s) worth ${money(kpis.overdue)}`, href: '/finance/invoices', tone: 'text-red-600 dark:text-red-300' },
         kpis.commissionsDueCount > 0 && { icon: Coins, text: `${money(kpis.commissionsDue)} commission owed to ${kpis.commissionsDueCount} job(s)`, href: '/finance/commissions', tone: 'text-amber-600 dark:text-amber-300' },
@@ -28,15 +32,15 @@ export default function FinanceOverview({ year, years, kpis, trend, aging, reven
 
     return (
         <>
-            <Head title="Finance Overview" />
+            <Head title="Finance Reports" />
             <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5 p-4 md:p-6">
                 <PageHeader
-                    title="Finance overview"
-                    description="How SOMFIX earns: maintenance service fees and property management fees. Rent and materials are passed through at cost and are never counted as income."
+                    title="Finance reports"
+                    description="Every finance report in one place, with download to Excel or CSV and print. How SOMFIX earns: maintenance service fees and property management fees. Rent and materials are passed through at cost and are never counted as income."
                     icon={Wallet}
                     actions={
                         <>
-                            <FilterSelect label="Year" value={String(year)} onChange={(v) => router.get('/finance', { year: v === 'all' ? year : v }, { preserveScroll: true })} options={years.map((y) => ({ value: String(y), label: String(y) }))} />
+                            <FilterSelect label="Year" value={String(year)} onChange={(v) => go(activeReport, v === 'all' ? year : v)} options={years.map((y) => ({ value: String(y), label: String(y) }))} />
                             <Can permission="finance.manage">
                                 <Button asChild size="sm" variant="outline"><Link href="/finance/expenses/create"><Plus className="size-4" />Expense</Link></Button>
                                 <Button asChild size="sm" variant="outline"><Link href="/finance/payments/create"><HandCoins className="size-4" />Payment</Link></Button>
@@ -46,6 +50,15 @@ export default function FinanceOverview({ year, years, kpis, trend, aging, reven
                     }
                 />
 
+                <div className="no-print flex flex-wrap gap-1.5 rounded-xl border border-border/70 bg-card p-1.5">
+                    {[{ key: null as string | null, title: 'Overview' }, ...catalog].map((c) => (
+                        <button key={c.key ?? 'overview'} type="button" onClick={() => go(c.key)} className={cn('rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors', activeReport === c.key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground')}>{c.title}</button>
+                    ))}
+                </div>
+
+                {dataset && <ReportTable key={`${dataset.key}-${dataset.year}`} dataset={dataset} />}
+
+                {!dataset && (<>
                 <KpiGrid
                     items={[
                         { title: `Revenue ${year}`, value: kpis.revenue, icon: TrendingUp, tone: 'primary', hint: `${money(kpis.maintenanceFees, { compact: true })} maintenance · ${money(kpis.managementFees, { compact: true })} management`, compact: true },
@@ -140,9 +153,10 @@ export default function FinanceOverview({ year, years, kpis, trend, aging, reven
                         </ul>
                     ) : <EmptyState icon={Wallet} title="No money movement yet" description="Record a payment, rent collection or expense to start the ledger." />}
                 </Panel>
+                </>)}
             </div>
         </>
     );
 }
 
-FinanceOverview.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }] });
+FinanceReports.layout = (): { breadcrumbs: BreadcrumbItem[] } => ({ breadcrumbs: [{ title: 'Finance', href: '/finance' }, { title: 'Reports', href: '/finance' }] });

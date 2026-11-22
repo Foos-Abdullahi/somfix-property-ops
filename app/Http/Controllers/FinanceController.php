@@ -12,6 +12,7 @@ use App\Models\Tenant;
 use App\Models\Unit;
 use App\Services\Finance\FinanceReport;
 use App\Services\Finance\Ledger;
+use App\Services\Finance\ReportCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,13 +23,18 @@ class FinanceController extends Controller
     /**
      * Finance overview: profit, receivables, cash movement and what needs attention.
      */
-    public function index(Request $request, FinanceReport $report): Response
+    public function index(Request $request, FinanceReport $report, ReportCatalog $catalog): Response
     {
         $year = min(max($request->integer('year') ?: (int) now()->format('Y'), 2000), 2100);
         $ledger = new Ledger;
+        $definitions = $catalog->definitions();
+        $active = array_key_exists((string) $request->query('report'), $definitions) ? (string) $request->query('report') : null;
 
         return Inertia::render('finance/index', [
             ...$report->overview($year),
+            'catalog' => collect($definitions)->map(fn (array $d, string $key) => ['key' => $key, ...$d])->values(),
+            'activeReport' => $active,
+            'dataset' => $active ? $catalog->build($active, $year) : null,
             'recent' => $ledger->entries(now()->subDays(45), now())->take(8)->values(),
             'overdueInvoices' => Finance::query()->where('type', 'invoice')->whereIn('status', FinanceReport::BILLED)->where('balance', '>', 0)
                 ->whereDate('due_date', '<', now())->orderBy('due_date')->take(5)->get(['id', 'invoice_number', 'title', 'recipient_name', 'balance', 'due_date']),
