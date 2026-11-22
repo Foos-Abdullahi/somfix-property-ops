@@ -189,6 +189,7 @@ export function AppSidebar() {
             const path = href.split('?')[0];
             const settings: Record<string, string> = {
                 '/repair-requests': 'maintenance.view',
+                '/finance-report': 'finance.view',
                 '/settings/users': 'users.manage',
                 '/settings/roles': 'roles.manage',
                 '/settings/audit-log': 'audit-log.view',
