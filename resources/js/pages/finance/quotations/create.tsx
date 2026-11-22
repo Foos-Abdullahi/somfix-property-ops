@@ -231,7 +231,7 @@ export default function CreateQuotePage({
     return (
         <>
             <Head title="Create Quotation — SOMFIX" />
-            <div className="w-full p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 {selectedJobId && (
                     <div className="mb-4 rounded border border-primary/30 bg-primary/5 p-3 text-sm">
                         This quotation will be linked to Job #{selectedJobId}.

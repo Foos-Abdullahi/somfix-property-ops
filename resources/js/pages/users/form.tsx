@@ -65,7 +65,7 @@ export default function UserEditor({
         (role) => String(role.id) === form.data.role_id,
     );
     return (
-        <div className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-6">
+        <div className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6">
             <Head title={user ? 'Edit user' : 'Create user'} />
             <header>
                 <h1 className="text-2xl font-bold">

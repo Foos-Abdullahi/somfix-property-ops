@@ -64,12 +64,14 @@ export function TenantForm({
     };
     return (
         <form onSubmit={submit} className="space-y-6">
-            <section className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
-                <h2 className="font-semibold">Tenant profile</h2>
-                <p className="mt-1 text-xs text-muted-foreground">
-                    Contact information and current unit assignment.
-                </p>
-                <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <section className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
+                <div className="border-b border-border/70 bg-secondary/35 px-5 py-4">
+                    <h2 className="font-semibold">Tenant profile</h2>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                        Contact information and current unit assignment.
+                    </p>
+                </div>
+                <div className="grid gap-5 p-5 md:grid-cols-2">
                     <Field
                         label="First name"
                         value={form.data.first_name}
@@ -170,18 +172,19 @@ export function TenantForm({
                         error={form.errors.move_in_date}
                     />
                 </div>
-                <div className="mt-5 space-y-2">
+                <div className="space-y-2 px-5 pb-5">
                     <Label>Notes</Label>
                     <Textarea
                         value={form.data.notes}
                         onChange={(event) =>
                             form.setData('notes', event.target.value)
                         }
+                        className="min-h-28 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20"
                         placeholder="Communication preferences or service notes."
                     />
                 </div>
             </section>
-            <div className="flex justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
                 <Button asChild variant="outline">
                     <Link href={index()}>
                         <ArrowLeft />

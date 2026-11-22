@@ -14,7 +14,7 @@ export default function TenantEdit({
     return (
         <>
             <Head title="Edit tenant — SOMFIX" />
-            <div className="w-full p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 <h1 className="text-2xl font-bold">Edit tenant</h1>
                 <p className="mt-1 mb-6 text-sm text-muted-foreground">
                     Keep tenant details and their accommodation assignment

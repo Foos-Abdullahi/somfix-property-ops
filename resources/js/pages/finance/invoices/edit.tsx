@@ -231,7 +231,7 @@ export default function EditInvoicePage({
     return (
         <>
             <Head title={`Edit Invoice ${finance.invoice_number} — SOMFIX`} />
-            <div className="w-full p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 <div className="mb-6 flex items-center gap-2">
                     <Button asChild variant="ghost" size="sm">
                         <Link href={`/finance/invoices/${finance.id}`}>

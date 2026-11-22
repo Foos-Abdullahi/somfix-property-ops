@@ -20,7 +20,7 @@ export default function PaymentCreate({ invoice }: { invoice: any }) {
             <Head title={`Record Payment ${invoice.invoice_number} — SOMFIX`} />
             <form
                 onSubmit={submit}
-                className="mx-auto max-w-xl space-y-5 p-4 md:p-6"
+                className="mx-auto w-full max-w-5xl space-y-5 p-4 md:p-6"
             >
                 <div>
                     <h1 className="text-lg font-semibold">Record payment</h1>

@@ -33,7 +33,7 @@ export default function RoleEditor({
         ...new Set(Object.keys(permissions).map((key) => key.split('.')[0])),
     ];
     return (
-        <div className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-6">
+        <div className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6">
             <Head title={role ? 'Edit role' : 'Create role'} />
             <header>
                 <h1 className="text-2xl font-bold">

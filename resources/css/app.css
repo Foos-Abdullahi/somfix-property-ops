@@ -330,3 +330,17 @@
         animation: fin-draw 1100ms ease-out both;
     }
 }
+
+/*
+ * Radix Select/Dialog lock page scroll while open. Reserve the scrollbar
+ * gutter and neutralise the injected padding/margin so the page layout
+ * (grids, forms) does not jump or reflow when a dropdown opens.
+ */
+html {
+    scrollbar-gutter: stable;
+}
+
+body[data-scroll-locked] {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+}

@@ -9,7 +9,7 @@ export default function RequestCreate({
     return (
         <>
             <Head title="Add demo request — SOMFIX" />
-            <div className="w-full space-y-6 p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6">
                 <header>
                     <h1 className="page-title-enter text-lg font-semibold">
                         Add demo request

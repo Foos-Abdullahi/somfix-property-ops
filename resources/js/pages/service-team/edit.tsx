@@ -13,7 +13,7 @@ export default function ServiceTeamEdit({
     return (
         <>
             <Head title="Edit service team member — SOMFIX" />
-            <div className="w-full p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 <h1 className="text-2xl font-bold">Edit service team member</h1>
                 <p className="mt-1 mb-6 text-sm text-muted-foreground">
                     Update service team member details and availability.

@@ -13,7 +13,7 @@ export default function InventoryEdit({
     return (
         <>
             <Head title="Edit inventory item — SOMFIX" />
-            <div className="w-full p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 <h1 className="text-2xl font-bold">Edit inventory item</h1>
                 <p className="mt-1 mb-6 text-sm text-muted-foreground">
                     Update inventory item details and stock levels.

@@ -216,7 +216,7 @@ export default function EditQuotePage({
     return (
         <>
             <Head title={`Edit Quotation ${finance.invoice_number} — SOMFIX`} />
-            <div className="w-full p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 <div className="mb-6 flex items-center gap-2">
                     <Button asChild variant="ghost" size="sm">
                         <Link href={`/finance/quotations/${finance.id}`}>
