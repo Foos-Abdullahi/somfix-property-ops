@@ -1,4 +1,5 @@
 import { Wrench } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { date, label, money } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/maintenance';
 
@@ -20,6 +21,7 @@ type Maintenance = {
     estimated_cost: number | null;
     actual_cost: number | null;
     notes: string | null;
+    images: string[] | null;
     created_at: string;
     updated_at: string;
     property?: {
@@ -89,6 +91,10 @@ export default function MaintenanceShow({
                 },
             ]}
             sections={[
+                {
+                    title: 'Photos',
+                    content: <ImageGallery images={maintenance.images} />,
+                },
                 { title: 'Request description', text: maintenance.description },
                 ...(maintenance.notes &&
                 maintenance.notes !== maintenance.description

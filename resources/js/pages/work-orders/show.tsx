@@ -1,4 +1,5 @@
 import { ClipboardList } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { date, label } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/work-orders';
 
@@ -13,6 +14,7 @@ type RecordDetail = {
     estimated_hours: string | null;
     actual_hours: string | null;
     notes: string | null;
+    images: string[] | null;
     maintenance: { title: string; category: string; priority: string } | null;
     service_team: { name: string; specialization: string } | null;
 };
@@ -64,6 +66,10 @@ export default function WorkOrderShow({
                 },
             ]}
             sections={[
+                {
+                    title: 'Photos',
+                    content: <ImageGallery images={workOrder.images} />,
+                },
                 { title: 'Work description', text: workOrder.description },
                 ...(workOrder.notes && workOrder.notes !== workOrder.description
                     ? [{ title: 'Notes', text: workOrder.notes }]

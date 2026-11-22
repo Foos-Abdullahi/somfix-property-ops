@@ -5,6 +5,7 @@ import { CustomerSelect } from '@/components/customer-select';
 import type { CustomerOption } from '@/components/customer-select';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ImageUpload } from '@/components/image-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -34,6 +35,8 @@ export type MaintenanceFormValues = {
     estimated_cost: string;
     actual_cost: string;
     notes: string;
+    images: string[];
+    new_images: File[];
 };
 
 type MaintenanceFormProps = {
@@ -80,6 +83,8 @@ export function MaintenanceForm({
         estimated_cost: maintenance?.estimated_cost ?? '',
         actual_cost: maintenance?.actual_cost ?? '',
         notes: maintenance?.notes ?? '',
+        images: maintenance?.images ?? [],
+        new_images: [],
     });
 
     const managed = form.data.property_id !== '';
@@ -87,16 +92,21 @@ export function MaintenanceForm({
         (unit) => String(unit.property_id) === form.data.property_id,
     );
 
+    const imageError = Object.entries(form.errors).find(
+        ([key]) => key.startsWith('images') || key.startsWith('new_images'),
+    )?.[1];
+
     function submit(event: FormEvent<HTMLFormElement>): void {
         event.preventDefault();
 
         if (mode === 'create') {
-            form.post(store.url());
+            form.post(store.url(), { forceFormData: true });
 
             return;
         }
 
-        form.put(update.url(maintenance!.id));
+        form.transform((data) => ({ ...data, _method: 'put' }));
+        form.post(update.url(maintenance!.id), { forceFormData: true });
     }
 
     return (
@@ -172,7 +182,9 @@ export function MaintenanceForm({
                                     <SelectValue placeholder="Select a unit" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value={NONE}>No unit</SelectItem>
+                                    <SelectItem value={NONE}>
+                                        No unit
+                                    </SelectItem>
                                     {propertyUnits.map((unit) => (
                                         <SelectItem
                                             key={unit.id}
@@ -217,7 +229,9 @@ export function MaintenanceForm({
                                 <SelectTrigger
                                     id="tenant_id"
                                     className={`w-full ${fieldClassName}`}
-                                    aria-invalid={Boolean(form.errors.tenant_id)}
+                                    aria-invalid={Boolean(
+                                        form.errors.tenant_id,
+                                    )}
                                 >
                                     <SelectValue placeholder="Select a tenant" />
                                 </SelectTrigger>
@@ -228,7 +242,8 @@ export function MaintenanceForm({
                                             key={tenant.id}
                                             value={String(tenant.id)}
                                         >
-                                            {tenant.first_name} {tenant.last_name}
+                                            {tenant.first_name}{' '}
+                                            {tenant.last_name}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -467,6 +482,17 @@ export function MaintenanceForm({
                         />
                         <InputError message={form.errors.actual_cost} />
                     </div>
+                    <ImageUpload
+                        className="md:col-span-2"
+                        label="Photos of the issue"
+                        urls={form.data.images}
+                        files={form.data.new_images}
+                        onUrlsChange={(urls) => form.setData('images', urls)}
+                        onFilesChange={(files) =>
+                            form.setData('new_images', files)
+                        }
+                        error={imageError}
+                    />
                     <div className="space-y-2 md:col-span-2">
                         <Label htmlFor="notes">Notes</Label>
                         <Textarea

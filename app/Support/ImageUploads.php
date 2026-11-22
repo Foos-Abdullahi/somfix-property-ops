@@ -32,6 +32,16 @@ class ImageUploads
         ];
     }
 
+    /** Delete the stored files of a record that is being removed. */
+    public static function purge(?array $images): void
+    {
+        foreach ($images ?? [] as $url) {
+            if (str_starts_with($url, '/storage/')) {
+                Storage::disk('public')->delete(substr($url, strlen('/storage/')));
+            }
+        }
+    }
+
     /**
      * Apply the submitted images to a record's data and delete files that were removed.
      *

@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ImageUpload } from '@/components/image-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -25,6 +26,8 @@ export type UnitFormValues = {
     monthly_rent: string;
     status: 'vacant' | 'occupied' | 'maintenance' | 'inactive';
     notes: string;
+    images: string[];
+    new_images: File[];
 };
 type PropertyOption = { id: number; name: string };
 const inputClass =
@@ -48,13 +51,19 @@ export function UnitForm({
         monthly_rent: unit?.monthly_rent ?? '0',
         status: unit?.status ?? 'vacant',
         notes: unit?.notes ?? '',
+        images: unit?.images ?? [],
+        new_images: [],
     });
+    const imageError = Object.entries(form.errors).find(
+        ([key]) => key.startsWith('images') || key.startsWith('new_images'),
+    )?.[1];
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (mode === 'create') {
-            form.post(store.url());
+            form.post(store.url(), { forceFormData: true });
         } else {
-            form.put(update.url(unit!.id));
+            form.transform((data) => ({ ...data, _method: 'put' }));
+            form.post(update.url(unit!.id), { forceFormData: true });
         }
     };
     return (
@@ -185,6 +194,15 @@ export function UnitForm({
                     </Select>
                     <InputError message={form.errors.status} />
                 </div>
+                <ImageUpload
+                    className="md:col-span-2"
+                    label="Unit images"
+                    urls={form.data.images}
+                    files={form.data.new_images}
+                    onUrlsChange={(urls) => form.setData('images', urls)}
+                    onFilesChange={(files) => form.setData('new_images', files)}
+                    error={imageError}
+                />
                 <div className="mt-5 space-y-2">
                     <Label>Notes</Label>
                     <Textarea

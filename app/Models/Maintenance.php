@@ -45,6 +45,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'estimated_cost',
     'actual_cost',
     'notes',
+    'images',
 ])]
 class Maintenance extends Model
 {
@@ -59,6 +60,7 @@ class Maintenance extends Model
     protected function casts(): array
     {
         return [
+            'images' => 'array',
             'scheduled_date' => 'date',
             'completed_date' => 'date',
             'estimated_cost' => 'decimal:2',

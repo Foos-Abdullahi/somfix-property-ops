@@ -42,3 +42,16 @@ export function ImageGallery({ images }: { images?: string[] | null }) {
         </>
     );
 }
+
+/** Small square picture for table rows; an empty placeholder keeps rows aligned. */
+export function RecordThumb({ images }: { images?: string[] | null }) {
+    return images?.[0] ? (
+        <img
+            src={images[0]}
+            alt=""
+            className="size-10 shrink-0 rounded-lg border border-border/70 object-cover"
+        />
+    ) : (
+        <div className="size-10 shrink-0 rounded-lg border border-dashed border-border/70 bg-secondary/30" />
+    );
+}

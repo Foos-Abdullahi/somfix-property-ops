@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'units_count',
     'status',
     'notes',
+    'images',
 ])]
 class Property extends Model
 {
@@ -48,6 +49,7 @@ class Property extends Model
     protected function casts(): array
     {
         return [
+            'images' => 'array',
             'units_count' => 'integer',
             'management_fee_percent' => 'decimal:2',
             'management_fee_fixed' => 'decimal:2',

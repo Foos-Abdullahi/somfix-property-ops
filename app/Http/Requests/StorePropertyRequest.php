@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -33,6 +34,7 @@ class StorePropertyRequest extends FormRequest
             'units_count' => ['required', 'integer', 'min:0', 'max:10000'],
             'status' => ['required', Rule::in(['active', 'inactive'])],
             'notes' => ['nullable', 'string', 'max:5000'],
+            ...ImageUploads::rules(),
         ];
     }
 
@@ -44,6 +46,7 @@ class StorePropertyRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'name.required' => 'Please enter a property name.',
             'name.max' => 'Property name must be 255 characters or less.',
             'property_type.required' => 'Please select a property type.',

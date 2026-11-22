@@ -1,4 +1,5 @@
 import { DoorOpen } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { label, money } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/units';
 
@@ -13,6 +14,7 @@ type RecordDetail = {
     monthly_rent: string;
     status: string;
     notes: string | null;
+    images: string[] | null;
 };
 
 export default function UnitShow({ unit }: { unit: RecordDetail }) {
@@ -30,6 +32,10 @@ export default function UnitShow({ unit }: { unit: RecordDetail }) {
                 },
             ]}
             sections={[
+                {
+                    title: 'Photos',
+                    content: <ImageGallery images={unit.images} />,
+                },
                 {
                     title: 'Unit layout',
                     fields: [

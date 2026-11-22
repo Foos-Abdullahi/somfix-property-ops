@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ImageUpload } from '@/components/image-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -25,6 +26,8 @@ export type TenantFormValues = {
     status: 'active' | 'inactive';
     move_in_date: string;
     notes: string;
+    images: string[];
+    new_images: File[];
 };
 type UnitOption = {
     id: number;
@@ -53,13 +56,19 @@ export function TenantForm({
         status: tenant?.status ?? 'active',
         move_in_date: tenant?.move_in_date ?? '',
         notes: tenant?.notes ?? '',
+        images: tenant?.images ?? [],
+        new_images: [],
     });
+    const imageError = Object.entries(form.errors).find(
+        ([key]) => key.startsWith('images') || key.startsWith('new_images'),
+    )?.[1];
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (mode === 'create') {
-            form.post(store.url());
+            form.post(store.url(), { forceFormData: true });
         } else {
-            form.put(update.url(tenant!.id));
+            form.transform((data) => ({ ...data, _method: 'put' }));
+            form.post(update.url(tenant!.id), { forceFormData: true });
         }
     };
     return (
@@ -172,6 +181,16 @@ export function TenantForm({
                         error={form.errors.move_in_date}
                     />
                 </div>
+                <ImageUpload
+                    className="md:col-span-2"
+                    label="Tenant photo"
+                    multiple={false}
+                    urls={form.data.images}
+                    files={form.data.new_images}
+                    onUrlsChange={(urls) => form.setData('images', urls)}
+                    onFilesChange={(files) => form.setData('new_images', files)}
+                    error={imageError}
+                />
                 <div className="space-y-2 px-5 pb-5">
                     <Label>Notes</Label>
                     <Textarea

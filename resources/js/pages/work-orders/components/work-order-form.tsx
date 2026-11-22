@@ -3,6 +3,7 @@ import { useId, type FormEvent } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ImageUpload } from '@/components/image-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -27,6 +28,8 @@ export type WorkOrderFormValues = {
     estimated_hours: string;
     actual_hours: string;
     notes: string;
+    images: string[];
+    new_images: File[];
 };
 type MaintenanceOption = {
     id: number;
@@ -67,13 +70,19 @@ export function WorkOrderForm({
         estimated_hours: workOrder?.estimated_hours ?? '',
         actual_hours: workOrder?.actual_hours ?? '',
         notes: workOrder?.notes ?? '',
+        images: workOrder?.images ?? [],
+        new_images: [],
     });
+    const imageError = Object.entries(form.errors).find(
+        ([key]) => key.startsWith('images') || key.startsWith('new_images'),
+    )?.[1];
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (mode === 'create') {
-            form.post(store.url());
+            form.post(store.url(), { forceFormData: true });
         } else {
-            form.put(update.url(workOrder!.id));
+            form.transform((data) => ({ ...data, _method: 'put' }));
+            form.post(update.url(workOrder!.id), { forceFormData: true });
         }
     };
     return (
@@ -274,6 +283,17 @@ export function WorkOrderForm({
                         />
                         <InputError message={form.errors.description} />
                     </div>
+                    <ImageUpload
+                        className="md:col-span-2"
+                        label="Work order photos"
+                        urls={form.data.images}
+                        files={form.data.new_images}
+                        onUrlsChange={(urls) => form.setData('images', urls)}
+                        onFilesChange={(files) =>
+                            form.setData('new_images', files)
+                        }
+                        error={imageError}
+                    />
                     <div className="space-y-2 md:col-span-2">
                         <Label>Notes</Label>
                         <Textarea

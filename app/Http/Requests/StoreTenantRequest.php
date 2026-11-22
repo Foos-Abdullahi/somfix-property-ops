@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -34,6 +35,7 @@ class StoreTenantRequest extends FormRequest
             'status' => ['required', Rule::in(['active', 'inactive'])],
             'move_in_date' => ['nullable', 'date'],
             'notes' => ['nullable', 'string', 'max:5000'],
+            ...ImageUploads::rules(),
         ];
     }
 
@@ -45,6 +47,7 @@ class StoreTenantRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'unit_id.exists' => 'The selected unit does not exist.',
             'first_name.required' => 'Please enter the first name.',
             'first_name.max' => 'First name must be 100 characters or less.',

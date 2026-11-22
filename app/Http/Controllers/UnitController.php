@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUnitRequest;
 use App\Http\Requests\UpdateUnitRequest;
 use App\Models\Property;
 use App\Models\Unit;
+use App\Support\ImageUploads;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -35,7 +36,7 @@ class UnitController extends Controller
 
     public function store(StoreUnitRequest $request): RedirectResponse
     {
-        $unit = Unit::create($request->validated());
+        $unit = Unit::create(ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'units'));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Unit created successfully.']);
 
@@ -57,7 +58,7 @@ class UnitController extends Controller
 
     public function update(UpdateUnitRequest $request, Unit $unit): RedirectResponse
     {
-        $unit->update($request->validated());
+        $unit->update(ImageUploads::apply($request->validated(), $unit->images ?? [], $request->file('new_images', []), 'units'));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Unit updated successfully.']);
 
@@ -67,6 +68,7 @@ class UnitController extends Controller
     public function destroy(Unit $unit): RedirectResponse
     {
         $unit->delete();
+        ImageUploads::purge($unit->images);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Unit deleted successfully.']);
 

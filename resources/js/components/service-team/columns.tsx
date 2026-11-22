@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye } from 'lucide-react';
 import { Can } from '@/components/can';
+import { RecordThumb } from '@/components/image-gallery';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, show } from '@/routes/service-team';
@@ -9,6 +10,7 @@ import { edit, show } from '@/routes/service-team';
 export type ServiceTeamRow = {
     id: number;
     name: string;
+    images?: string[] | null;
     specialization: string;
     district: string | null;
     phone: string;
@@ -25,11 +27,14 @@ export const serviceTeamColumns: ColumnDef<ServiceTeamRow>[] = [
         accessorKey: 'name',
         header: 'Name',
         cell: ({ row }) => (
-            <div>
-                <p className="font-semibold">{row.original.name}</p>
-                <p className="text-xs text-muted-foreground">
-                    {row.original.specialization}
-                </p>
+            <div className="flex items-center gap-3">
+                <RecordThumb images={row.original.images} />
+                <div className="min-w-0">
+                    <p className="font-semibold">{row.original.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                        {row.original.specialization}
+                    </p>
+                </div>
             </div>
         ),
     },

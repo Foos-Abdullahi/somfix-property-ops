@@ -139,3 +139,17 @@ test('services accept uploaded images and image links, and removed files are del
         'name' => 'Bad', 'category' => 'X', 'status' => 'active', 'images' => ['javascript:alert(1)'],
     ])->assertSessionHasErrors('images.0');
 });
+
+test('property, unit, tenant and inventory forms accept images', function () {
+    Illuminate\Support\Facades\Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $property = App\Models\Property::factory()->create();
+    $this->put(route('properties.update', $property), array_merge(
+        $property->only(['name', 'property_type', 'address', 'city', 'district', 'status', 'units_count']),
+        ['images' => ['https://example.com/p.jpg'], 'new_images' => [UploadedFile::fake()->image('p.png')]],
+    ))->assertSessionHasNoErrors();
+    expect($property->fresh()->images)->toHaveCount(2);
+    $this->delete(route('properties.destroy', $property));
+    expect(Illuminate\Support\Facades\Storage::disk('public')->allFiles())->toBeEmpty();
+});

@@ -84,6 +84,7 @@ class ServiceCatalogController extends Controller
     public function destroy(ServiceCatalog $serviceList): RedirectResponse
     {
         $serviceList->delete();
+        ImageUploads::purge($serviceList->images);
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Service deleted.']);
 
         return to_route('service-list.index');

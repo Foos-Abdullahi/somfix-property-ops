@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -39,6 +40,7 @@ class StoreMaintenanceRequest extends FormRequest
             'estimated_cost' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'actual_cost' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'notes' => ['nullable', 'string', 'max:5000'],
+            ...ImageUploads::rules(),
         ];
     }
 
@@ -50,6 +52,7 @@ class StoreMaintenanceRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'property_id.exists' => 'The selected property does not exist.',
             'unit_id.exists' => 'The selected unit does not exist.',
             'tenant_id.exists' => 'The selected tenant does not exist.',

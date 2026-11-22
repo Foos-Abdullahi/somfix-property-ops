@@ -1,4 +1,5 @@
 import { Package } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { label, money } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/inventory';
 
@@ -17,6 +18,7 @@ type RecordDetail = {
     total_value: string;
     status: string;
     notes: string | null;
+    images: string[] | null;
 };
 
 export default function InventoryShow({
@@ -61,6 +63,10 @@ export default function InventoryShow({
                 },
             ]}
             sections={[
+                {
+                    title: 'Images',
+                    content: <ImageGallery images={inventory.images} />,
+                },
                 { title: 'Item description', text: inventory.description },
                 ...(inventory.notes && inventory.notes !== inventory.description
                     ? [{ title: 'Notes', text: inventory.notes }]

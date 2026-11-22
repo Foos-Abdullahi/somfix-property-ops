@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye } from 'lucide-react';
 import { Can } from '@/components/can';
+import { RecordThumb } from '@/components/image-gallery';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, show } from '@/routes/properties';
@@ -9,6 +10,7 @@ import { edit, show } from '@/routes/properties';
 export type PropertyRow = {
     id: number;
     name: string;
+    images?: string[] | null;
     property_type: string;
     owner_name: string | null;
     district: string | null;
@@ -31,11 +33,14 @@ export const propertyColumns: ColumnDef<PropertyRow>[] = [
         accessorKey: 'name',
         header: 'Property',
         cell: ({ row }) => (
-            <div>
-                <p className="font-semibold">{row.original.name}</p>
-                <p className="text-xs text-muted-foreground">
-                    {row.original.property_type}
-                </p>
+            <div className="flex items-center gap-3">
+                <RecordThumb images={row.original.images} />
+                <div className="min-w-0">
+                    <p className="font-semibold">{row.original.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                        {row.original.property_type}
+                    </p>
+                </div>
             </div>
         ),
     },

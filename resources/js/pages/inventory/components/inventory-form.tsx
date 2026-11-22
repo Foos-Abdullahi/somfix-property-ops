@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ImageUpload } from '@/components/image-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -29,6 +30,8 @@ export type InventoryFormValues = {
     total_value: string;
     status: 'in_stock' | 'low_stock' | 'out_of_stock' | 'discontinued';
     notes: string;
+    images: string[];
+    new_images: File[];
 };
 const inputClass =
     'h-10 rounded-xl border-border/70 bg-background shadow-none focus-visible:ring-primary/20';
@@ -54,13 +57,19 @@ export function InventoryForm({
         total_value: inventory?.total_value ?? '0',
         status: inventory?.status ?? 'in_stock',
         notes: inventory?.notes ?? '',
+        images: inventory?.images ?? [],
+        new_images: [],
     });
+    const imageError = Object.entries(form.errors).find(
+        ([key]) => key.startsWith('images') || key.startsWith('new_images'),
+    )?.[1];
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (mode === 'create') {
-            form.post(store.url());
+            form.post(store.url(), { forceFormData: true });
         } else {
-            form.put(update.url(inventory!.id));
+            form.transform((data) => ({ ...data, _method: 'put' }));
+            form.post(update.url(inventory!.id), { forceFormData: true });
         }
     };
     return (
@@ -207,6 +216,17 @@ export function InventoryForm({
                         />
                         <InputError message={form.errors.description} />
                     </div>
+                    <ImageUpload
+                        className="md:col-span-2"
+                        label="Item images"
+                        urls={form.data.images}
+                        files={form.data.new_images}
+                        onUrlsChange={(urls) => form.setData('images', urls)}
+                        onFilesChange={(files) =>
+                            form.setData('new_images', files)
+                        }
+                        error={imageError}
+                    />
                     <div className="space-y-2 md:col-span-2">
                         <Label>Notes</Label>
                         <Textarea

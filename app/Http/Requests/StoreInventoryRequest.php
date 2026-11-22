@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -37,6 +38,7 @@ class StoreInventoryRequest extends FormRequest
             'total_value' => ['required', 'numeric', 'min:0'],
             'status' => ['required', Rule::in(['in_stock', 'low_stock', 'out_of_stock', 'discontinued'])],
             'notes' => ['nullable', 'string'],
+            ...ImageUploads::rules(),
         ];
     }
 
@@ -48,6 +50,7 @@ class StoreInventoryRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'name.required' => 'Please enter an item name.',
             'name.max' => 'The name may not be greater than 255 characters.',
             'description.required' => 'Please enter a description.',

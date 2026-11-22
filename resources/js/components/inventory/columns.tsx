@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye } from 'lucide-react';
+import { RecordThumb } from '@/components/image-gallery';
 import { Badge, badgeToneClasses } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Can } from '@/components/can';
@@ -9,6 +10,7 @@ import { edit, show } from '@/routes/inventory';
 export type InventoryRow = {
     id: number;
     name: string;
+    images?: string[] | null;
     sku: string;
     category: string;
     unit_of_measure: string;
@@ -29,11 +31,14 @@ export const inventoryColumns: ColumnDef<InventoryRow>[] = [
         accessorKey: 'name',
         header: 'Name',
         cell: ({ row }) => (
-            <div>
-                <p className="font-semibold">{row.original.name}</p>
-                <p className="text-xs text-muted-foreground">
-                    {row.original.sku}
-                </p>
+            <div className="flex items-center gap-3">
+                <RecordThumb images={row.original.images} />
+                <div className="min-w-0">
+                    <p className="font-semibold">{row.original.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                        {row.original.sku}
+                    </p>
+                </div>
             </div>
         ),
     },

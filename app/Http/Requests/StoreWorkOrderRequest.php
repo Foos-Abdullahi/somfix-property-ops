@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -36,6 +37,7 @@ class StoreWorkOrderRequest extends FormRequest
             'estimated_hours' => ['nullable', 'numeric', 'min:0'],
             'actual_hours' => ['nullable', 'numeric', 'min:0'],
             'notes' => ['nullable', 'string'],
+            ...ImageUploads::rules(),
         ];
     }
 
@@ -47,6 +49,7 @@ class StoreWorkOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'maintenance_id.exists' => 'The selected maintenance request does not exist.',
             'job_id.exists' => 'The selected job does not exist.',
             'service_team_id.exists' => 'The selected service team member does not exist.',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use App\Models\Property;
+use App\Support\ImageUploads;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,7 +44,7 @@ class PropertyController extends Controller
      */
     public function store(StorePropertyRequest $request): RedirectResponse
     {
-        $property = Property::create($request->validated());
+        $property = Property::create(ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'properties'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -78,7 +79,7 @@ class PropertyController extends Controller
      */
     public function update(UpdatePropertyRequest $request, Property $property): RedirectResponse
     {
-        $property->update($request->validated());
+        $property->update(ImageUploads::apply($request->validated(), $property->images ?? [], $request->file('new_images', []), 'properties'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -94,6 +95,7 @@ class PropertyController extends Controller
     public function destroy(Property $property): RedirectResponse
     {
         $property->delete();
+        ImageUploads::purge($property->images);
 
         Inertia::flash('toast', [
             'type' => 'success',

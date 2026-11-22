@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
     'total_value',
     'status',
     'notes',
+    'images',
 ])]
 class Inventory extends Model
 {
@@ -51,6 +52,7 @@ class Inventory extends Model
     protected function casts(): array
     {
         return [
+            'images' => 'array',
             'opening_stock' => 'integer',
             'current_stock' => 'integer',
             'reorder_level' => 'integer',

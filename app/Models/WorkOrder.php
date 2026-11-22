@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'estimated_hours',
     'actual_hours',
     'notes',
+    'images',
 ])]
 class WorkOrder extends Model
 {
@@ -49,6 +50,7 @@ class WorkOrder extends Model
     protected function casts(): array
     {
         return [
+            'images' => 'array',
             'assigned_date' => 'date',
             'started_date' => 'date',
             'completed_date' => 'date',

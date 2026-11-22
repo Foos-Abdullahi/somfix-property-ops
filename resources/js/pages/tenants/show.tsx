@@ -1,4 +1,5 @@
 import { UserRound } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { date } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/tenants';
 
@@ -13,6 +14,7 @@ type RecordDetail = {
     status: string;
     move_in_date: string | null;
     notes: string | null;
+    images: string[] | null;
     unit: { unit_number: string; property: { name: string } } | null;
 };
 
@@ -37,6 +39,10 @@ export default function TenantShow({ tenant }: { tenant: RecordDetail }) {
                 },
             ]}
             sections={[
+                {
+                    title: 'Photo',
+                    content: <ImageGallery images={tenant.images} />,
+                },
                 {
                     title: 'Contact',
                     fields: [

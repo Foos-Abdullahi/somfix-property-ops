@@ -99,6 +99,7 @@ class ServiceTeamController extends Controller
     public function destroy(ServiceTeam $serviceTeam): RedirectResponse
     {
         $serviceTeam->delete();
+        ImageUploads::purge($serviceTeam->images);
 
         Inertia::flash('toast', [
             'type' => 'success',

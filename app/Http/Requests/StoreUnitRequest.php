@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -33,6 +34,7 @@ class StoreUnitRequest extends FormRequest
             'monthly_rent' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'status' => ['required', Rule::in(['vacant', 'occupied', 'maintenance', 'inactive'])],
             'notes' => ['nullable', 'string', 'max:5000'],
+            ...ImageUploads::rules(),
         ];
     }
 
@@ -44,6 +46,7 @@ class StoreUnitRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...ImageUploads::messages(),
             'property_id.required' => 'Please select a property.',
             'property_id.exists' => 'The selected property does not exist.',
             'unit_number.required' => 'Please enter a unit number.',

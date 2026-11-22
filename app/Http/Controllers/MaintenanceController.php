@@ -9,6 +9,7 @@ use App\Models\Maintenance;
 use App\Models\Property;
 use App\Models\Tenant;
 use App\Models\Unit;
+use App\Support\ImageUploads;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -63,7 +64,7 @@ class MaintenanceController extends Controller
      */
     public function store(StoreMaintenanceRequest $request): RedirectResponse
     {
-        $maintenance = Maintenance::create($request->validated());
+        $maintenance = Maintenance::create(ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'maintenance'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -115,7 +116,7 @@ class MaintenanceController extends Controller
      */
     public function update(UpdateMaintenanceRequest $request, Maintenance $maintenance): RedirectResponse
     {
-        $maintenance->update($request->validated());
+        $maintenance->update(ImageUploads::apply($request->validated(), $maintenance->images ?? [], $request->file('new_images', []), 'maintenance'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -131,6 +132,7 @@ class MaintenanceController extends Controller
     public function destroy(Maintenance $maintenance): RedirectResponse
     {
         $maintenance->delete();
+        ImageUploads::purge($maintenance->images);
 
         Inertia::flash('toast', [
             'type' => 'success',

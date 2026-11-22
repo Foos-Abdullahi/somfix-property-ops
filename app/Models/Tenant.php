@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'status',
     'move_in_date',
     'notes',
+    'images',
 ])]
 class Tenant extends Model
 {
@@ -37,6 +38,7 @@ class Tenant extends Model
     protected function casts(): array
     {
         return [
+            'images' => 'array',
             'move_in_date' => 'date',
         ];
     }

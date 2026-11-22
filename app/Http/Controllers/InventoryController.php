@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
 use App\Models\Inventory;
+use App\Support\ImageUploads;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -44,7 +45,7 @@ class InventoryController extends Controller
      */
     public function store(StoreInventoryRequest $request): RedirectResponse
     {
-        $inventory = Inventory::create($request->validated());
+        $inventory = Inventory::create(ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'inventory'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -79,7 +80,7 @@ class InventoryController extends Controller
      */
     public function update(UpdateInventoryRequest $request, Inventory $inventory): RedirectResponse
     {
-        $inventory->update($request->validated());
+        $inventory->update(ImageUploads::apply($request->validated(), $inventory->images ?? [], $request->file('new_images', []), 'inventory'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -95,6 +96,7 @@ class InventoryController extends Controller
     public function destroy(Inventory $inventory): RedirectResponse
     {
         $inventory->delete();
+        ImageUploads::purge($inventory->images);
 
         Inertia::flash('toast', [
             'type' => 'success',

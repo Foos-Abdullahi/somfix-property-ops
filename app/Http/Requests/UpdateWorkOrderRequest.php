@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -34,6 +35,7 @@ class UpdateWorkOrderRequest extends StoreWorkOrderRequest
             'estimated_hours' => ['nullable', 'numeric', 'min:0'],
             'actual_hours' => ['nullable', 'numeric', 'min:0'],
             'notes' => ['nullable', 'string'],
+            ...ImageUploads::rules(),
         ];
     }
 }

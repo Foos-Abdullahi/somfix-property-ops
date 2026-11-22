@@ -1,4 +1,5 @@
 import { Building2 } from 'lucide-react';
+import { ImageGallery } from '@/components/image-gallery';
 import DetailPage, { label } from '@/components/detail-page';
 import { destroy, edit, index } from '@/routes/properties';
 
@@ -13,6 +14,7 @@ type Property = {
     units_count: number;
     status: 'active' | 'inactive';
     notes: string | null;
+    images: string[] | null;
     created_at: string;
     updated_at: string;
 };
@@ -33,6 +35,10 @@ export default function PropertyShow({ property }: { property: Property }) {
                 },
             ]}
             sections={[
+                {
+                    title: 'Photos',
+                    content: <ImageGallery images={property.images} />,
+                },
                 {
                     title: 'Location',
                     fields: [

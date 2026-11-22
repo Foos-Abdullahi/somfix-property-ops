@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\ImageUploads;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -36,6 +37,7 @@ class UpdateInventoryRequest extends StoreInventoryRequest
             'total_value' => ['sometimes', 'numeric', 'min:0'],
             'status' => ['sometimes', Rule::in(['in_stock', 'low_stock', 'out_of_stock', 'discontinued'])],
             'notes' => ['nullable', 'string'],
+            ...ImageUploads::rules(),
         ];
     }
 }

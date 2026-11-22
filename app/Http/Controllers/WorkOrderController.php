@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateWorkOrderRequest;
 use App\Models\Maintenance;
 use App\Models\ServiceTeam;
 use App\Models\WorkOrder;
+use App\Support\ImageUploads;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -56,7 +57,7 @@ class WorkOrderController extends Controller
      */
     public function store(StoreWorkOrderRequest $request): RedirectResponse
     {
-        $workOrder = WorkOrder::create($request->validated());
+        $workOrder = WorkOrder::create(ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'work-orders'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -102,7 +103,7 @@ class WorkOrderController extends Controller
      */
     public function update(UpdateWorkOrderRequest $request, WorkOrder $workOrder): RedirectResponse
     {
-        $workOrder->update($request->validated());
+        $workOrder->update(ImageUploads::apply($request->validated(), $workOrder->images ?? [], $request->file('new_images', []), 'work-orders'));
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -118,6 +119,7 @@ class WorkOrderController extends Controller
     public function destroy(WorkOrder $workOrder): RedirectResponse
     {
         $workOrder->delete();
+        ImageUploads::purge($workOrder->images);
 
         Inertia::flash('toast', [
             'type' => 'success',

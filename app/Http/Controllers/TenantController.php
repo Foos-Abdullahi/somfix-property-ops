@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTenantRequest;
 use App\Http\Requests\UpdateTenantRequest;
 use App\Models\Tenant;
 use App\Models\Unit;
+use App\Support\ImageUploads;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -35,7 +36,7 @@ class TenantController extends Controller
 
     public function store(StoreTenantRequest $request): RedirectResponse
     {
-        $tenant = Tenant::create($request->validated());
+        $tenant = Tenant::create(ImageUploads::apply($request->validated(), [], $request->file('new_images', []), 'tenants'));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Tenant created successfully.']);
 
@@ -57,7 +58,7 @@ class TenantController extends Controller
 
     public function update(UpdateTenantRequest $request, Tenant $tenant): RedirectResponse
     {
-        $tenant->update($request->validated());
+        $tenant->update(ImageUploads::apply($request->validated(), $tenant->images ?? [], $request->file('new_images', []), 'tenants'));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Tenant updated successfully.']);
 
@@ -67,6 +68,7 @@ class TenantController extends Controller
     public function destroy(Tenant $tenant): RedirectResponse
     {
         $tenant->delete();
+        ImageUploads::purge($tenant->images);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Tenant deleted successfully.']);
 
