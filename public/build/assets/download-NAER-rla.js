@@ -1,0 +1,1 @@
+import{t as e}from"./createLucideIcon-Do4vOEQB.js";var t=e(`ArrowDownLeft`,[[`path`,{d:`M17 7 7 17`,key:`15tmo1`}],[`path`,{d:`M17 17H7V7`,key:`1org7z`}]]),n=e(`Download`,[[`path`,{d:`M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4`,key:`ih7n3h`}],[`polyline`,{points:`7 10 12 15 17 10`,key:`2ggqvy`}],[`line`,{x1:`12`,x2:`12`,y1:`15`,y2:`3`,key:`1vk2je`}]]);export{t as n,n as t};

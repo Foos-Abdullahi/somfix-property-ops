@@ -74,6 +74,11 @@ done
 /bin/mkdir -p "$PUBLIC_PATH/build" "$PUBLIC_PATH/images"
 /bin/cp -a public/build/. "$PUBLIC_PATH/build/"
 /bin/cp -a public/images/. "$PUBLIC_PATH/images/"
+# Uploaded images use Laravel's public disk and must be reachable at /storage.
+/bin/mkdir -p "$APP_PATH/storage/app/public"
+if ! /usr/bin/test -e "$PUBLIC_PATH/storage" && ! /usr/bin/test -L "$PUBLIC_PATH/storage"; then
+    /bin/ln -s "$APP_PATH/storage/app/public" "$PUBLIC_PATH/storage"
+fi
 for asset in apple-touch-icon.png favicon-32x32.png favicon.ico favicon.svg icon-192.png icon-512.png robots.txt site.webmanifest; do
     if /usr/bin/test -f "public/$asset"; then
         /bin/cp -a "public/$asset" "$PUBLIC_PATH/$asset"
